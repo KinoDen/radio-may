@@ -21,12 +21,17 @@
 .visualizer-foot{display:flex;justify-content:space-between;margin:4px 2px 0;color:#72563e;font:8px ui-monospace,monospace;letter-spacing:.08em}
 .cassette-stage{position:relative;width:min(100%,440px);margin:0 auto;line-height:0;filter:drop-shadow(0 8px 12px #0009)}
 .cassette{width:100%;display:block;border-radius:12px}
-.reel{position:absolute;width:9.6%;aspect-ratio:1;border-radius:50%;top:49.0%;opacity:.82;pointer-events:none;transform:rotate(0deg)}
-.reel.left{left:28.5%;background:repeating-conic-gradient(from 0deg,rgba(255,216,145,.88) 0deg 9deg,rgba(51,27,15,.92) 9deg 30deg);mask:radial-gradient(circle,transparent 0 25%,#000 29% 68%,transparent 72%)}
-.reel.right{left:62.2%;background:repeating-conic-gradient(from 12deg,rgba(255,216,145,.88) 0deg 9deg,rgba(51,27,15,.92) 9deg 30deg);mask:radial-gradient(circle,transparent 0 25%,#000 29% 68%,transparent 72%)}
-.reel:after{content:"";position:absolute;inset:36%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f0c27b,#633719 62%,#1b100b 100%);box-shadow:0 0 3px #ffdda0}
-.cassette-stage.playing .reel.left{animation:reelSpin 2.4s linear infinite}
-.cassette-stage.playing .reel.right{animation:reelSpin 1.9s linear infinite reverse}
+.cassette-brand{position:absolute;left:68%;top:61.5%;width:25%;min-height:8.5%;display:none;align-items:center;gap:6px;padding:5px 7px;border:1px solid #e7c58c;border-radius:5px;background:linear-gradient(135deg,rgba(31,19,13,.96),rgba(72,37,20,.94));box-shadow:0 2px 5px #0009,inset 0 1px #fff4;transform:rotate(-7deg);transform-origin:center;z-index:3;line-height:1.05;overflow:hidden}
+.cassette-brand.visible{display:flex}
+.cassette-brand-mark{width:25px;height:25px;flex:0 0 25px;display:grid;place-items:center;border-radius:4px;background:var(--brand-bg,#a94d20);color:#fff8e9;font-size:9px;font-weight:950;letter-spacing:-.04em;border:1px solid #fff5}
+.cassette-brand-copy{min-width:0;display:flex;flex-direction:column;gap:2px}
+.cassette-brand-name{font-size:clamp(7px,1.8vw,10px);font-weight:900;letter-spacing:.04em;color:#fff0d3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cassette-brand-caption{font-size:6px;color:#d9b98c;letter-spacing:.1em;white-space:nowrap}
+.reel{position:absolute;width:7.4%;aspect-ratio:1;pointer-events:none;transform-origin:50% 50%;background-size:100% 100%;background-repeat:no-repeat;filter:drop-shadow(0 0 1px rgba(0,0,0,.35))}
+.reel.left{left:31.3%;top:51.3%;background-image:url('reel-left.png')}
+.reel.right{left:64.3%;top:48.3%;background-image:url('reel-right.png')}
+.cassette-stage.playing .reel.left{animation:reelSpin 2.8s linear infinite}
+.cassette-stage.playing .reel.right{animation:reelSpin 2.15s linear infinite reverse}
 @keyframes reelSpin{to{transform:rotate(360deg)}}
 .now{margin:12px 0 10px;padding:12px 14px;border:1px solid #754522;border-radius:14px;background:#120d0b;display:flex;align-items:center;gap:12px}
 .live{font-size:10px;letter-spacing:.08em;color:#ff6b4a;white-space:nowrap}
@@ -46,7 +51,8 @@
 .stationlist{display:flex;flex-direction:column;gap:7px}
 .station{display:flex;align-items:center;gap:10px;padding:10px;border-radius:13px;background:linear-gradient(100deg,#342016,#24150f);border:1px solid #5c3b27;cursor:pointer;min-height:64px}
 .station.active{border-color:#e98935;box-shadow:inset 0 0 0 1px #e9893533,0 0 13px #f27c231c}
-.stationlogo{width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;background:#5a2c17;color:#f8d8a3;border:1px solid #bd7741;font-weight:900;font-size:12px}
+.stationlogo{width:44px;height:40px;flex:0 0 44px;border-radius:8px;display:grid;place-items:center;background:var(--brand-bg,#5a2c17);color:var(--brand-fg,#fff0d4);border:1px solid var(--brand-border,#bd7741);font-weight:950;font-size:10px;letter-spacing:-.04em;text-align:center;box-shadow:inset 0 1px #ffffff30,0 2px 4px #0004;overflow:hidden}
+.stationlogo span{display:block;max-width:100%;padding:0 2px;line-height:1.05;overflow:hidden;text-overflow:ellipsis}
 .stationinfo{min-width:0;flex:1}.stationname{font-weight:750;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stationtag{font-size:11px;color:#bda17e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stationstate{font-size:10px;color:#d99a4e;white-space:nowrap}
@@ -77,6 +83,10 @@ input[type=range]{flex:1;accent-color:#e9872c;min-width:0}
       <img class="cassette" src="cassette-logo.webp" alt="Винтажная кассета Радио Май">
       <span class="reel left" aria-hidden="true"></span>
       <span class="reel right" aria-hidden="true"></span>
+      <div class="cassette-brand" id="cassetteBrand" aria-hidden="true">
+        <span class="cassette-brand-mark" id="cassetteBrandMark"></span>
+        <span class="cassette-brand-copy"><span class="cassette-brand-name" id="cassetteBrandName"></span><span class="cassette-brand-caption">ON AIR / RADIO MAY</span></span>
+      </div>
     </div>
     <section class="now">
       <div class="nowtext"><div class="nowlabel">Сейчас выбрано</div><div class="nowname" id="nowName">Выбери радиостанцию</div><div class="nowdesc" id="nowDesc">22 станции в одной кассете</div></div>
@@ -330,11 +340,45 @@ function drawVisualizer(timestamp){
     vizCtx.fillRect(x,Math.max(1,h-peakValues[i]-5),barW,2);
   }
 }
+function stationBrand(s){
+  const key=s?.key||"";
+  if(key.startsWith("record")){
+    const variant={"record":"REC","record-russian":"RUS","record-90":"90s","record-rock":"ROCK","record-chill":"CHILL","record-deep":"DEEP","record-trance":"TRANCE"}[key]||"REC";
+    return {mark:variant,name:key==="record"?"RADIO RECORD":"RECORD",bg:"#c93224",fg:"#fff4d9",border:"#f1a45a"};
+  }
+  const brands={
+    pioneer:{mark:"PPR",name:"PIONEER FM",bg:"#d98b25",fg:"#24130c",border:"#f4c56c"},
+    zaycev:{mark:"Z",name:"ZAYCEV FM",bg:"#d83d72",fg:"#fff",border:"#f39ab4"},
+    maximum:{mark:"MAX",name:"MAXIMUM",bg:"#d9c33b",fg:"#241b0c",border:"#f6e58a"},
+    comedy:{mark:"CR",name:"COMEDY RADIO",bg:"#e78b27",fg:"#24150c",border:"#ffd08a"},
+    marusya:{mark:"М",name:"МАРУСЯ FM",bg:"#8b4fbd",fg:"#fff",border:"#d3a2ed"},
+    europa:{mark:"EU+",name:"EUROPA PLUS",bg:"#159db6",fg:"#fff",border:"#8ce6ef"},
+    dfm:{mark:"DFM",name:"DFM",bg:"#e44b36",fg:"#fff",border:"#ffad83"},
+    energy:{mark:"NRJ",name:"ENERGY",bg:"#d72d3e",fg:"#fff",border:"#ff9ca5"},
+    newradio:{mark:"NEW",name:"НОВОЕ РАДИО",bg:"#b44b83",fg:"#fff",border:"#efa8d0"},
+    autoradio:{mark:"АВТО",name:"АВТОРАДИО",bg:"#347da8",fg:"#fff",border:"#8dc5e4"},
+    retro:{mark:"RETRO",name:"РЕТРО FM",bg:"#777342",fg:"#fff5d4",border:"#c8bd7c"},
+    nashe:{mark:"НАШЕ",name:"НАШЕ РАДИО",bg:"#a7462e",fg:"#fff",border:"#e99a68"},
+    love:{mark:"LOVE",name:"LOVE RADIO",bg:"#d64d79",fg:"#fff",border:"#ffa9c4"},
+    dorozhnoe:{mark:"ДОР",name:"ДОРОЖНОЕ РАДИО",bg:"#477b55",fg:"#fff",border:"#a6d0a8"},
+    montecarlo:{mark:"MC",name:"MONTE CARLO",bg:"#9b9078",fg:"#1d1711",border:"#e1d4b8"}
+  };
+  return brands[key]||{mark:(s?.name||"FM").split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase(),name:s?.name||"RADIO",bg:"#79502f",fg:"#fff0d4",border:"#c69a68"};
+}
+function paintCassetteBrand(){
+  const sticker=$("#cassetteBrand"), brand=stationBrand(selected);
+  if(!selected){sticker.classList.remove("visible");return;}
+  $("#cassetteBrandMark").textContent=brand.mark;
+  $("#cassetteBrandName").textContent=brand.name;
+  $("#cassetteBrandMark").style.setProperty("--brand-bg",brand.bg);
+  sticker.classList.toggle("visible",vizActive);
+}
 function setVisualizer(active){
   vizActive=active;
   if(!vizFrame) vizFrame=requestAnimationFrame(drawVisualizer);
   $("#vizMode").textContent=active?"PLAYING":"STANDBY";
   $("#cassetteStage").classList.toggle("playing",active);
+  paintCassetteBrand();
 }
 setVisualizer(false);
 function saveFavs(){localStorage.setItem("radioMayFavs",JSON.stringify([...favorites]));}
@@ -352,15 +396,18 @@ function render(){
  if(!items.length){list.innerHTML='<div class="empty">Здесь пока пусто. Попробуй изменить поиск или добавить станции в избранное.</div>';return;}
  items.forEach(s=>{
   const row=document.createElement("div");row.className="station"+(selected?.id===s.id?" active":"");
-  const initials=s.name.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase();
-  row.innerHTML=`<div class="stationlogo">${initials}</div><div class="stationinfo"><div class="stationname"></div><div class="stationtag"></div></div><span class="stationstate">${s.stream?"ЭФИР":"СКОРО"}</span><button class="fav ${favorites.has(s.id)?"on":""}" title="В избранное">${favorites.has(s.id)?"♥":"♡"}</button>`;
+  const brand=stationBrand(s);
+  row.innerHTML=`<div class="stationlogo"><span></span></div><div class="stationinfo"><div class="stationname"></div><div class="stationtag"></div></div><span class="stationstate">${s.stream?"ЭФИР":"СКОРО"}</span><button class="fav ${favorites.has(s.id)?"on":""}" title="В избранное">${favorites.has(s.id)?"♥":"♡"}</button>`;
+  const logo=row.querySelector(".stationlogo");
+  logo.querySelector("span").textContent=brand.mark;
+  logo.style.setProperty("--brand-bg",brand.bg);logo.style.setProperty("--brand-fg",brand.fg);logo.style.setProperty("--brand-border",brand.border);
   row.querySelector(".stationname").textContent=s.name;row.querySelector(".stationtag").textContent=s.tagline;
   row.onclick=()=>selectStation(s);row.querySelector(".fav").onclick=e=>{e.stopPropagation();favorites.has(s.id)?favorites.delete(s.id):favorites.add(s.id);saveFavs();render()};
   list.append(row);
  });
 }
 function selectStation(s){
- selected=s;$("#nowName").textContent=s.name;$("#nowDesc").textContent=s.tagline;$("#live").innerHTML='<span class="dot"></span>READY';
+ selected=s;$("#nowName").textContent=s.name;$("#nowDesc").textContent=s.tagline;$("#live").innerHTML='<span class="dot"></span>READY';paintCassetteBrand();
  $("#status").textContent=s.stream?"Станция выбрана. Нажми Play.":"Поток этой станции пока не добавлен.";
  render();
 }
