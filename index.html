@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#21130f">
+<title>Радио Май — любимые станции</title>
+<style>
+:root{--bg:#1b100d;--panel:#2a1a14;--panel2:#352117;--cream:#f4dfb5;--muted:#c3a783;--orange:#f08a24;--red:#b9361f;--line:#785037;--gold:#e8b45f}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#63351c 0,#29170f 45%,#160d0a 100%);color:var(--cream);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+.app{max-width:540px;margin:auto;padding:16px 14px 30px}
+.top{display:flex;justify-content:space-between;align-items:center;margin:4px 2px 14px}
+.brand{font-weight:900;letter-spacing:.08em;font-size:14px;text-transform:uppercase;color:#f7d8a3}
+.subbrand{font-size:11px;color:var(--muted);letter-spacing:.12em}
+.iconbtn{border:1px solid #765037;background:#2c1b13;color:var(--cream);width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer}
+.deck{border:1px solid #8c572d;border-radius:22px;padding:12px;background:linear-gradient(145deg,#412417,#1d110d 65%);box-shadow:0 14px 35px #0008,inset 0 1px #e9b86b55}
+.eq{height:34px;display:flex;justify-content:center;align-items:end;gap:5px;margin:2px auto 8px}
+.eq i{display:block;width:8px;border-radius:3px 3px 0 0;background:linear-gradient(#ffca59,#d8491d);height:var(--h);opacity:.85}
+.eq.playing i{animation:equalize .65s ease-in-out infinite alternate}
+.eq.playing i:nth-child(2n){animation-delay:.22s}.eq.playing i:nth-child(3n){animation-delay:.4s}
+@keyframes equalize{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+.cassette{width:min(100%,440px);margin:0 auto;display:block;filter:drop-shadow(0 8px 12px #0009);border-radius:12px}
+.now{margin:12px 0 10px;padding:12px 14px;border:1px solid #754522;border-radius:14px;background:#120d0b;display:flex;align-items:center;gap:12px}
+.live{font-size:10px;letter-spacing:.08em;color:#ff6b4a;white-space:nowrap}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#f04c32;margin-right:5px;box-shadow:0 0 9px #f04c32}
+.nowtext{min-width:0;flex:1}.nowlabel{font-size:10px;color:#b99a72;text-transform:uppercase;letter-spacing:.12em}
+.nowname{font-size:17px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nowdesc{font-size:11px;color:#bda17e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.transport{display:flex;justify-content:center;gap:8px;margin:12px 0 16px}
+.key{width:57px;height:50px;border-radius:12px;border:1px solid #9a683a;background:linear-gradient(180deg,#f4d9a5,#c18a4e);color:#382014;font-size:21px;box-shadow:0 4px 0 #70411e, inset 0 1px #fff9;cursor:pointer}
+.key.main{width:72px;background:linear-gradient(180deg,#ef7c28,#b9361f);color:#fff1d8;border-color:#ffb35d;font-size:24px}
+.key:active{transform:translateY(3px);box-shadow:0 1px 0 #70411e}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0}
+.tab{padding:10px 6px;border-radius:11px;border:1px solid #62402b;background:#2b1a13;color:#d7bd95;font-size:12px;cursor:pointer}
+.tab.active{background:#a94d20;color:#fff0d1;border-color:#f3a13f}
+.search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #66442e;background:#160e0b;color:#f8e8ca;outline:none;margin-bottom:10px;font-size:14px}
+.search::placeholder{color:#987b5e}
+.stationlist{display:flex;flex-direction:column;gap:7px}
+.station{display:flex;align-items:center;gap:10px;padding:10px;border-radius:13px;background:linear-gradient(100deg,#342016,#24150f);border:1px solid #5c3b27;cursor:pointer;min-height:64px}
+.station.active{border-color:#e98935;box-shadow:inset 0 0 0 1px #e9893533,0 0 13px #f27c231c}
+.stationlogo{width:38px;height:38px;flex:0 0 38px;border-radius:50%;display:grid;place-items:center;background:#5a2c17;color:#f8d8a3;border:1px solid #bd7741;font-weight:900;font-size:12px}
+.stationinfo{min-width:0;flex:1}.stationname{font-weight:750;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stationtag{font-size:11px;color:#bda17e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stationstate{font-size:10px;color:#d99a4e;white-space:nowrap}
+.fav{border:0;background:none;color:#b99570;font-size:21px;cursor:pointer;padding:4px}
+.fav.on{color:#ff6d4d}
+.bottom{margin-top:14px;padding:12px;border:1px solid #5d3b27;border-radius:14px;background:#21130e}
+.volrow{display:flex;align-items:center;gap:10px;color:#d6b88e;font-size:13px}
+input[type=range]{flex:1;accent-color:#e9872c;min-width:0}
+.note{margin-top:12px;color:#94785c;font-size:10px;line-height:1.45;text-align:center}
+.empty{padding:24px;text-align:center;color:#bda17e;font-size:13px}
+.status{font-size:11px;color:#bda17e;margin-top:8px;min-height:16px}
+@media(min-width:600px){.app{padding-top:24px}.deck{padding:18px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div><div class="brand">◉ Радио Май</div><div class="subbrand">ТВОЯ МУЗЫКА. ТВОЙ ЭФИР.</div></div>
+    <button class="iconbtn" id="info" aria-label="О приложении">i</button>
+  </header>
+  <main class="deck">
+    <div class="eq" id="eq"></div>
+    <img class="cassette" src="cassette-logo.webp" alt="Винтажная кассета Радио Май">
+    <section class="now">
+      <div class="nowtext"><div class="nowlabel">Сейчас выбрано</div><div class="nowname" id="nowName">Выбери радиостанцию</div><div class="nowdesc" id="nowDesc">22 станции в одной кассете</div></div>
+      <div class="live" id="live"><span class="dot"></span>READY</div>
+    </section>
+    <div class="transport">
+      <button class="key" id="prev" title="Предыдущая станция">|◀</button>
+      <button class="key" id="stop" title="Стоп">■</button>
+      <button class="key main" id="play" title="Воспроизвести">▶</button>
+      <button class="key" id="pause" title="Пауза">Ⅱ</button>
+      <button class="key" id="next" title="Следующая станция">▶|</button>
+    </div>
+    <div class="status" id="status">Выбери станцию из списка. Прямые эфиры подключаются после проверки потоков.</div>
+  </main>
+  <nav class="tabs">
+    <button class="tab active" data-tab="all">◉ Станции</button>
+    <button class="tab" data-tab="favorites">♡ Избранное</button>
+    <button class="tab" data-tab="genres">♫ Жанры</button>
+  </nav>
+  <input class="search" id="search" placeholder="⌕  Найти радиостанцию..." autocomplete="off">
+  <section class="stationlist" id="stations"></section>
+  <footer class="bottom">
+    <div class="volrow"><span>🔉</span><input id="volume" type="range" min="0" max="1" step=".01" value=".8"><span>🔊</span><strong id="volpct">80%</strong></div>
+    <div class="note">Радио Май · Любимые станции в одном месте<br>Воспроизведение зависит от доступности официального интернет-потока и ограничений MAX.</div>
+  </footer>
+</div>
+<audio id="audio" preload="none" playsinline></audio>
+<script>
+const STATIONS = [
+  {
+    "id": 0,
+    "name": "Pioneer FM",
+    "tagline": "Главная станция",
+    "genre": "Избранное",
+    "key": "pioneer",
+    "stream": ""
+  },
+  {
+    "id": 1,
+    "name": "Zaycev FM",
+    "tagline": "Популярные хиты",
+    "genre": "Поп",
+    "key": "zaycev",
+    "stream": ""
+  },
+  {
+    "id": 2,
+    "name": "Record",
+    "tagline": "Танцевальная музыка",
+    "genre": "Dance",
+    "key": "record",
+    "stream": ""
+  },
+  {
+    "id": 3,
+    "name": "Record Russian Mix",
+    "tagline": "Русские танцевальные хиты",
+    "genre": "Dance",
+    "key": "record-russian",
+    "stream": ""
+  },
+  {
+    "id": 4,
+    "name": "Record Супердискотека 90-х",
+    "tagline": "Хиты 90-х",
+    "genre": "Ретро",
+    "key": "record-90",
+    "stream": ""
+  },
+  {
+    "id": 5,
+    "name": "Record Rock",
+    "tagline": "Рок-музыка",
+    "genre": "Rock",
+    "key": "record-rock",
+    "stream": ""
+  },
+  {
+    "id": 6,
+    "name": "Record Chill-Out",
+    "tagline": "Спокойная электронная музыка",
+    "genre": "Chill",
+    "key": "record-chill",
+    "stream": ""
+  },
+  {
+    "id": 7,
+    "name": "Record Deep",
+    "tagline": "Deep house",
+    "genre": "House",
+    "key": "record-deep",
+    "stream": ""
+  },
+  {
+    "id": 8,
+    "name": "Record Trancemission",
+    "tagline": "Транс",
+    "genre": "Electronic",
+    "key": "record-trance",
+    "stream": ""
+  },
+  {
+    "id": 9,
+    "name": "Радио MAXIMUM",
+    "tagline": "Рок без компромиссов",
+    "genre": "Rock",
+    "key": "maximum",
+    "stream": ""
+  },
+  {
+    "id": 10,
+    "name": "Comedy Radio",
+    "tagline": "Юмор и музыка",
+    "genre": "Разное",
+    "key": "comedy",
+    "stream": ""
+  },
+  {
+    "id": 11,
+    "name": "Маруся FM",
+    "tagline": "Современные хиты",
+    "genre": "Поп",
+    "key": "marusya",
+    "stream": ""
+  },
+  {
+    "id": 12,
+    "name": "Европа Плюс",
+    "tagline": "Современные хиты",
+    "genre": "Поп",
+    "key": "europa",
+    "stream": ""
+  },
+  {
+    "id": 13,
+    "name": "DFM",
+    "tagline": "Танцевальная музыка",
+    "genre": "Dance",
+    "key": "dfm",
+    "stream": ""
+  },
+  {
+    "id": 14,
+    "name": "Радио ENERGY",
+    "tagline": "Главные мировые хиты",
+    "genre": "Поп",
+    "key": "energy",
+    "stream": ""
+  },
+  {
+    "id": 15,
+    "name": "Новое Радио",
+    "tagline": "Русские хиты",
+    "genre": "Поп",
+    "key": "newradio",
+    "stream": ""
+  },
+  {
+    "id": 16,
+    "name": "Авторадио",
+    "tagline": "Музыка в дорогу",
+    "genre": "В дороге",
+    "key": "autoradio",
+    "stream": ""
+  },
+  {
+    "id": 17,
+    "name": "Ретро FM",
+    "tagline": "Хиты 70-х, 80-х и 90-х",
+    "genre": "Ретро",
+    "key": "retro",
+    "stream": ""
+  },
+  {
+    "id": 18,
+    "name": "Наше Радио",
+    "tagline": "Русский рок",
+    "genre": "Rock",
+    "key": "nashe",
+    "stream": ""
+  },
+  {
+    "id": 19,
+    "name": "Love Radio",
+    "tagline": "Поп и романтика",
+    "genre": "Поп",
+    "key": "love",
+    "stream": ""
+  },
+  {
+    "id": 20,
+    "name": "Дорожное радио",
+    "tagline": "Музыка для поездок",
+    "genre": "В дороге",
+    "key": "dorozhnoe",
+    "stream": ""
+  },
+  {
+    "id": 21,
+    "name": "Радио Монте-Карло",
+    "tagline": "Лаунж и классика",
+    "genre": "Chill",
+    "key": "montecarlo",
+    "stream": ""
+  }
+];
+const $ = s => document.querySelector(s);
+const audio = $("#audio");
+let selected = null, tab = "all", genre = null;
+let favorites = new Set(JSON.parse(localStorage.getItem("radioMayFavs") || "[]"));
+const eq = $("#eq");
+[10,18,26,15,30,22,13,25,17,9,20].forEach(h=>{const e=document.createElement("i");e.style.setProperty("--h",h+"px");eq.append(e)});
+function saveFavs(){localStorage.setItem("radioMayFavs",JSON.stringify([...favorites]));}
+function filtered(){
+ let q=$("#search").value.trim().toLowerCase();
+ return STATIONS.filter(s=>(tab!=="favorites"||favorites.has(s.id))&&(!q||(s.name+" "+s.tagline+" "+s.genre).toLowerCase().includes(q))&&(!genre||s.genre===genre));
+}
+function render(){
+ const list=$("#stations");list.innerHTML="";
+ if(tab==="genres"){
+   const genres=[...new Set(STATIONS.map(s=>s.genre))];
+   genres.forEach(g=>{let b=document.createElement("button");b.className="station";b.innerHTML=`<div class="stationlogo">♫</div><div class="stationinfo"><div class="stationname">${g}</div><div class="stationtag">${STATIONS.filter(s=>s.genre===g).length} станций</div></div><span>›</span>`;b.onclick=()=>{genre=g;tab="all";document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.tab==="all"));render()};list.append(b)});return;
+ }
+ const items=filtered();
+ if(!items.length){list.innerHTML='<div class="empty">Здесь пока пусто. Попробуй изменить поиск или добавить станции в избранное.</div>';return;}
+ items.forEach(s=>{
+  const row=document.createElement("div");row.className="station"+(selected?.id===s.id?" active":"");
+  const initials=s.name.split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase();
+  row.innerHTML=`<div class="stationlogo">${initials}</div><div class="stationinfo"><div class="stationname"></div><div class="stationtag"></div></div><span class="stationstate">${s.stream?"ЭФИР":"СКОРО"}</span><button class="fav ${favorites.has(s.id)?"on":""}" title="В избранное">${favorites.has(s.id)?"♥":"♡"}</button>`;
+  row.querySelector(".stationname").textContent=s.name;row.querySelector(".stationtag").textContent=s.tagline;
+  row.onclick=()=>selectStation(s);row.querySelector(".fav").onclick=e=>{e.stopPropagation();favorites.has(s.id)?favorites.delete(s.id):favorites.add(s.id);saveFavs();render()};
+  list.append(row);
+ });
+}
+function selectStation(s){
+ selected=s;$("#nowName").textContent=s.name;$("#nowDesc").textContent=s.tagline;$("#live").innerHTML='<span class="dot"></span>READY';
+ $("#status").textContent=s.stream?"Станция выбрана. Нажми Play.":"Станция добавлена в каталог. Прямой поток ещё не подключён — проверяем официальную ссылку.";
+ render();
+}
+async function play(){
+ if(!selected){$("#status").textContent="Сначала выбери радиостанцию.";return;}
+ if(!selected.stream){$("#status").textContent="Для этой станции пока не подключён проверенный аудиопоток.";return;}
+ if(audio.src!==selected.stream){audio.src=selected.stream;audio.load();}
+ try{await audio.play();$("#live").innerHTML='<span class="dot"></span>LIVE';$("#status").textContent="Воспроизведение началось.";eq.classList.add("playing");$("#play").textContent="▶";}
+ catch(e){$("#status").textContent="Не удалось запустить поток. Возможно, станция недоступна или требует другой формат.";eq.classList.remove("playing");}
+}
+function stop(){audio.pause();audio.removeAttribute("src");audio.load();eq.classList.remove("playing");$("#live").innerHTML='<span class="dot"></span>READY';$("#status").textContent="Воспроизведение остановлено.";}
+$("#play").onclick=play;$("#pause").onclick=()=>{audio.pause();eq.classList.remove("playing");$("#live").textContent="PAUSE";$("#status").textContent="Пауза.";};$("#stop").onclick=stop;
+function step(dir){if(!selected){selectStation(STATIONS[0]);return;}let i=STATIONS.findIndex(s=>s.id===selected.id);i=(i+dir+STATIONS.length)%STATIONS.length;selectStation(STATIONS[i]);if(STATIONS[i].stream)play();}
+$("#prev").onclick=()=>step(-1);$("#next").onclick=()=>step(1);
+$("#volume").oninput=e=>{audio.volume=Number(e.target.value);$("#volpct").textContent=Math.round(audio.volume*100)+"%";};audio.volume=.8;
+$("#search").oninput=render;
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;genre=null;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));render();});
+$("#info").onclick=()=>alert("Радио Май — каталог любимых интернет-радиостанций. Потоки добавляются после проверки доступности и условий вещания.");
+audio.addEventListener("playing",()=>{eq.classList.add("playing");$("#live").innerHTML='<span class="dot"></span>LIVE';});
+audio.addEventListener("waiting",()=>{$("#live").textContent="BUFFER";});
+audio.addEventListener("error",()=>{$("#live").textContent="ERROR";$("#status").textContent="Поток не загрузился. Проверим адрес и формат станции.";eq.classList.remove("playing");});
+render();
+</script>
+</body></html>

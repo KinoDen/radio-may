@@ -1,0 +1,178 @@
+[
+  {
+    "id": 0,
+    "name": "Pioneer FM",
+    "tagline": "Главная станция",
+    "genre": "Избранное",
+    "key": "pioneer",
+    "stream": ""
+  },
+  {
+    "id": 1,
+    "name": "Zaycev FM",
+    "tagline": "Популярные хиты",
+    "genre": "Поп",
+    "key": "zaycev",
+    "stream": ""
+  },
+  {
+    "id": 2,
+    "name": "Record",
+    "tagline": "Танцевальная музыка",
+    "genre": "Dance",
+    "key": "record",
+    "stream": ""
+  },
+  {
+    "id": 3,
+    "name": "Record Russian Mix",
+    "tagline": "Русские танцевальные хиты",
+    "genre": "Dance",
+    "key": "record-russian",
+    "stream": ""
+  },
+  {
+    "id": 4,
+    "name": "Record Супердискотека 90-х",
+    "tagline": "Хиты 90-х",
+    "genre": "Ретро",
+    "key": "record-90",
+    "stream": ""
+  },
+  {
+    "id": 5,
+    "name": "Record Rock",
+    "tagline": "Рок-музыка",
+    "genre": "Rock",
+    "key": "record-rock",
+    "stream": ""
+  },
+  {
+    "id": 6,
+    "name": "Record Chill-Out",
+    "tagline": "Спокойная электронная музыка",
+    "genre": "Chill",
+    "key": "record-chill",
+    "stream": ""
+  },
+  {
+    "id": 7,
+    "name": "Record Deep",
+    "tagline": "Deep house",
+    "genre": "House",
+    "key": "record-deep",
+    "stream": ""
+  },
+  {
+    "id": 8,
+    "name": "Record Trancemission",
+    "tagline": "Транс",
+    "genre": "Electronic",
+    "key": "record-trance",
+    "stream": ""
+  },
+  {
+    "id": 9,
+    "name": "Радио MAXIMUM",
+    "tagline": "Рок без компромиссов",
+    "genre": "Rock",
+    "key": "maximum",
+    "stream": ""
+  },
+  {
+    "id": 10,
+    "name": "Comedy Radio",
+    "tagline": "Юмор и музыка",
+    "genre": "Разное",
+    "key": "comedy",
+    "stream": ""
+  },
+  {
+    "id": 11,
+    "name": "Маруся FM",
+    "tagline": "Современные хиты",
+    "genre": "Поп",
+    "key": "marusya",
+    "stream": ""
+  },
+  {
+    "id": 12,
+    "name": "Европа Плюс",
+    "tagline": "Современные хиты",
+    "genre": "Поп",
+    "key": "europa",
+    "stream": ""
+  },
+  {
+    "id": 13,
+    "name": "DFM",
+    "tagline": "Танцевальная музыка",
+    "genre": "Dance",
+    "key": "dfm",
+    "stream": ""
+  },
+  {
+    "id": 14,
+    "name": "Радио ENERGY",
+    "tagline": "Главные мировые хиты",
+    "genre": "Поп",
+    "key": "energy",
+    "stream": ""
+  },
+  {
+    "id": 15,
+    "name": "Новое Радио",
+    "tagline": "Русские хиты",
+    "genre": "Поп",
+    "key": "newradio",
+    "stream": ""
+  },
+  {
+    "id": 16,
+    "name": "Авторадио",
+    "tagline": "Музыка в дорогу",
+    "genre": "В дороге",
+    "key": "autoradio",
+    "stream": ""
+  },
+  {
+    "id": 17,
+    "name": "Ретро FM",
+    "tagline": "Хиты 70-х, 80-х и 90-х",
+    "genre": "Ретро",
+    "key": "retro",
+    "stream": ""
+  },
+  {
+    "id": 18,
+    "name": "Наше Радио",
+    "tagline": "Русский рок",
+    "genre": "Rock",
+    "key": "nashe",
+    "stream": ""
+  },
+  {
+    "id": 19,
+    "name": "Love Radio",
+    "tagline": "Поп и романтика",
+    "genre": "Поп",
+    "key": "love",
+    "stream": ""
+  },
+  {
+    "id": 20,
+    "name": "Дорожное радио",
+    "tagline": "Музыка для поездок",
+    "genre": "В дороге",
+    "key": "dorozhnoe",
+    "stream": ""
+  },
+  {
+    "id": 21,
+    "name": "Радио Монте-Карло",
+    "tagline": "Лаунж и классика",
+    "genre": "Chill",
+    "key": "montecarlo",
+    "stream": ""
+  }
+]
