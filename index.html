@@ -3,261 +3,181 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#111315">
-<title>Радио Май — Hi-Fi Edition</title>
+<meta name="theme-color" content="#171522">
+<title>Радио Май — MAX RADIO</title>
 <style>
 :root{
- --bg:#090b0d;--case:#202428;--case2:#111518;--well:#050708;--edge:#778087;--edge2:#3e464c;
- --txt:#f4f2ee;--muted:#aab2b8;--gold:#ff9f19;--gold2:#ffd36b;--orange:#ef6a13;
- --green:#42df27;--yellow:#ffe12d;--red:#f12b22;--row:#171c20;--rowhi:#2a3035;
- --shadow:0 8px 22px #000b;--glass:#ffffff0b
+ --shell:#211f31;--shell2:#302d42;--edge:#77748e;--edge2:#45445b;
+ --screen:#020704;--green:#00ff4c;--green-dim:#7adf91;--green-dark:#092014;
+ --muted:#8e9abd;--gold:#d5c27a;--red:#ff343d;--text:#e0e4f5;
 }
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;color:var(--txt);background:radial-gradient(ellipse at 50% -20%,#353a3e 0,#161a1d 46%,#07090b 100%)}
-body{padding:8px}
-button,input{font:inherit}button{color:inherit;cursor:pointer}
-.app{width:min(100%,1660px);margin:auto}
-.metal{border:1px solid var(--edge);border-radius:15px;background:linear-gradient(145deg,#555b60 0,#2b3034 5%,#15191c 25%,#202529 72%,#080a0c 100%);box-shadow:inset 0 1px 1px #fff8,inset 0 -2px 3px #000d,var(--shadow);position:relative}
-.metal:after{content:"";pointer-events:none;position:absolute;inset:2px;border-radius:12px;background:repeating-linear-gradient(0deg,#fff00000 0 2px,#ffffff05 2px 3px);opacity:.32}
-.top{height:74px;display:flex;align-items:center;gap:16px;padding:7px 18px;margin-bottom:10px}
-.brand{font:italic 700 clamp(26px,3vw,42px) Georgia,serif;white-space:nowrap;text-shadow:0 2px 2px #000}
-.brand em{font-style:normal;color:var(--gold)}
-.brand small{display:block;font:9px Arial;letter-spacing:2px;color:#c6cbd0;margin-top:-1px}
-.ecg{width:72px;height:34px;flex:none}
-.ecg path{fill:none;stroke:var(--gold);stroke-width:3;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 5px #ff9d16);stroke-dasharray:140;animation:trace 2.3s linear infinite}
-@keyframes trace{to{stroke-dashoffset:-140}}
-.divider{height:36px;width:1px;background:linear-gradient(transparent,#aab0b5,transparent)}
-.toplabel{font-size:16px;white-space:nowrap}
-.meta{margin-left:auto;display:flex;align-items:center;gap:7px}
-.metabox,.themebtn,.infobtn{height:42px;border:1px solid #697279;border-radius:10px;background:linear-gradient(#343a3f,#111518);box-shadow:inset 0 1px #fff4,0 2px 4px #0009;padding:0 12px;display:flex;align-items:center;gap:7px;font-size:13px}
-.clock{font:20px "Courier New",monospace;letter-spacing:1px}
-.clock small{display:block;font:9px Arial;color:var(--muted);letter-spacing:0}
-.themebtn{padding:0 5px;gap:2px}.themebtn button{height:32px;width:34px;border:0;border-radius:7px;background:transparent;color:#bdc4c9}.themebtn button.active{background:linear-gradient(#ffc45a,#a95c08);color:#17100a;box-shadow:0 0 10px #ff9e1d88}
-.main{display:grid;grid-template-columns:minmax(0,2.12fr) minmax(390px,1fr);gap:10px}
-.left,.right{padding:12px;min-width:0}
-.hero{display:grid;grid-template-columns:260px 1fr;gap:18px;align-items:center;padding:7px 7px 12px;min-height:205px}
-.station-art{width:245px;height:184px;border:2px solid #778087;border-radius:17px;background:linear-gradient(145deg,#353b40,#080a0c 60%,#20262a);box-shadow:inset 0 0 0 5px #080a0c,inset 0 0 0 7px #747d83,0 4px 9px #000c;display:grid;place-items:center;overflow:hidden;position:relative}
-.station-art:before{content:"";position:absolute;inset:12px;border:1px solid #ffffff30;border-radius:11px}
-.station-art img{max-width:86%;max-height:78%;object-fit:contain;filter:drop-shadow(0 3px 5px #000);z-index:1}
-.station-art .fallback{font-size:58px;font-weight:900;letter-spacing:-4px;text-shadow:0 3px 5px #000}
-.hero-info{min-width:0}
-.station-title{font-size:clamp(25px,2.7vw,39px);font-weight:800;line-height:1.05;margin-bottom:7px}
-.station-sub{font-size:clamp(16px,1.7vw,22px);color:#d5d9dc;margin-bottom:15px}
-.pills{display:flex;gap:8px;flex-wrap:wrap}
-.pill{border:1px solid #7c858b;border-radius:20px;padding:7px 13px;background:linear-gradient(#444b50,#171c20);box-shadow:inset 0 1px #fff5,0 2px 3px #0008;font-size:12px}
-.live{margin-left:auto;color:#ff3832;border-color:#a32620;box-shadow:0 0 12px #f22a2a55}
-.trackline{display:flex;align-items:center;gap:10px;margin-top:13px;color:#e8e8e8;font:12px "Courier New",monospace}
-.progress{height:8px;border-radius:10px;background:#030405;border:1px solid #5c656b;flex:1;box-shadow:inset 0 2px 4px #000}
-.visuals{display:grid;grid-template-columns:1fr 1fr 2fr;gap:9px;margin:0 0 10px}
-.instrument{height:166px;border:1px solid #788188;border-radius:12px;background:linear-gradient(145deg,#343a3e,#101416 55%,#050708);box-shadow:inset 0 1px #fff5,inset 0 -3px 5px #000d,0 2px 5px #0008;padding:8px;position:relative;overflow:hidden}
-.instrument:before{content:"";position:absolute;inset:3px;border:1px solid #ffffff18;border-radius:9px;pointer-events:none}
-.inst-label{font: bold 10px Georgia,serif;letter-spacing:1.4px;color:var(--gold2);text-align:center;margin-bottom:4px}
-.vu-svg{width:100%;height:128px;display:block}
-.needle{transform-origin:150px 106px;transform:rotate(-24deg);transition:transform .12s linear;filter:drop-shadow(0 0 3px #ffb22b)}
-.spectrum{height:166px;padding:8px 10px 7px}
-.spectrum-head{display:flex;justify-content:space-between;font: bold 10px Georgia,serif;letter-spacing:1.5px;color:var(--gold2);margin:0 3px 7px}
-.bars{height:125px;display:flex;align-items:end;gap:3px;padding:5px 3px 0;border-bottom:2px solid #a77a21;background:repeating-linear-gradient(0deg,#080a0b 0 14px,#ffffff0d 14px 15px)}
-.bar{flex:1;min-width:2px;height:var(--h,12%);border-radius:2px 2px 0 0;background:linear-gradient(to top,var(--green) 0 42%,var(--yellow) 57%,#ff8b12 78%,var(--red) 100%);box-shadow:0 0 5px #76e72b55;transition:height .18s ease}
-.controls{height:82px;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px;border:1px solid #778087;border-radius:12px;background:linear-gradient(180deg,#454b50,#252b2f 45%,#101416);box-shadow:inset 0 1px #fff7,inset 0 -2px 3px #000b}
-.control{height:54px;min-width:57px;border:1px solid #a5adb2;border-radius:9px;background:linear-gradient(145deg,#f0f2f3 0,#8e989e 18%,#465057 50%,#b8c0c5 100%);color:#101518;text-shadow:0 1px #fff8;font-size:20px;font-weight:900;box-shadow:inset 0 1px 2px #fff, inset 0 -3px 4px #0007,0 3px 4px #000b;position:relative}
-.control:active{transform:translateY(2px);box-shadow:inset 0 3px 6px #0008}
-.control.play{height:66px;min-width:66px;border-radius:50%;background:radial-gradient(circle at 35% 25%,#ffe7a5,#ffae25 48%,#a44a00 100%);border:2px solid #ffcf72;box-shadow:0 0 0 3px #4d2a08,0 0 18px #ff9b20,inset 0 2px 3px #fff}
-.control.small{min-width:47px;height:48px;font-size:17px}
-.volume{display:flex;align-items:center;gap:8px;margin-left:14px;font-size:12px}
-.volume input{width:115px;accent-color:var(--gold)}
-.volval{min-width:32px}
-.hint{text-align:center;color:#aab1b6;font-size:10px;margin:7px 0 0}
-.right{display:flex;flex-direction:column;min-height:740px}
-.tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:9px}
-.tab{height:43px;border:1px solid #778087;border-radius:9px;background:linear-gradient(#41484d,#171c20);box-shadow:inset 0 1px #fff5,0 2px 3px #0009;font-size:13px}
-.tab.active{background:linear-gradient(#ffd06b,#d57b0c 55%,#8b4500);color:#1b1309;border-color:#ffca66;box-shadow:0 0 10px #ff9d1e66,inset 0 1px #fff}
-.search{height:42px;border:1px solid #7b858b;border-radius:8px;background:#050708;color:#fff;padding:0 13px;margin-bottom:9px;outline:none}
-.search:focus{border-color:var(--gold);box-shadow:0 0 0 2px #ff9f1933}
-.station-list{overflow:auto;min-height:0;max-height:calc(100vh - 230px);padding-right:4px;scrollbar-color:#8b969c #15191c;scrollbar-width:thin}
-.station-row{width:100%;min-height:61px;display:grid;grid-template-columns:92px minmax(0,1fr) 28px 30px;align-items:center;gap:10px;padding:5px 8px;margin-bottom:5px;text-align:left;border:1px solid #4c555b;border-radius:8px;background:linear-gradient(100deg,#30363a,#171c20 55%,#0d1012);box-shadow:inset 0 1px #ffffff12,0 2px 3px #0008}
-.station-row:hover{border-color:#d99a39;background:linear-gradient(100deg,#494039,#252a2d)}
-.station-row.active{border:1px solid #ffb83d;background:linear-gradient(100deg,#68400d,#302313 50%,#17130d);box-shadow:inset 0 0 0 1px #ffcf5a55,0 0 9px #ff9d1e44}
-.logo{width:88px;height:45px;border-radius:5px;background:#050607;display:grid;place-items:center;overflow:hidden;border:1px solid #6d767c}
-.logo img{width:100%;height:100%;object-fit:contain;background:#fff;padding:2px}
-.logo b{font-size:15px;color:#fff;text-align:center}
-.station-copy{min-width:0}
-.station-name{font-weight:800;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.station-tag{font-size:11px;color:#b9c0c5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
-.country{font:9px "Courier New",monospace;color:#aeb6bb;text-align:center}
-.fav{border:0;background:transparent;color:#c3cbd0;font-size:20px;padding:3px}
-.fav.on{color:#ffb83d;text-shadow:0 0 8px #ff9f19}
-.empty{color:#9ca6ad;text-align:center;padding:35px 10px}
-.bottom-country{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;padding:9px;border:1px solid #697279;border-radius:10px;background:linear-gradient(#33393d,#14181b)}
-.countrybtn{border:1px solid #6d777e;border-radius:7px;padding:8px 12px;background:linear-gradient(#3d4449,#171c20);font-size:12px}
-.countrybtn.active{background:linear-gradient(#ffd06b,#b76a0a);color:#1a1208;border-color:#ffd06b}
-body[data-theme="light"]{--bg:#d9dde0;--case:#d8dcdf;--case2:#c3c9cd;--well:#252a2d;--txt:#15191c;--muted:#5e686e;--row:#e1e5e7;--rowhi:#f5f6f7;background:radial-gradient(ellipse at 50% -20%,#fff 0,#cbd1d5 48%,#929ba1 100%);color:#171b1e}
-body[data-theme="light"] .metal{background:linear-gradient(145deg,#fff 0,#d9dee1 8%,#aeb7bd 30%,#e7eaec 70%,#8c969d 100%);border-color:#737d84}
-body[data-theme="light"] .toplabel,body[data-theme="light"] .station-sub{color:#30383d}
-body[data-theme="light"] .metabox,body[data-theme="light"] .themebtn,body[data-theme="light"] .infobtn{background:linear-gradient(#fff,#aeb8be);color:#172026;border-color:#77838a}
-body[data-theme="light"] .instrument{background:linear-gradient(145deg,#f8f9f9,#b7c0c5 60%,#e5e8e9)}
-body[data-theme="light"] .controls{background:linear-gradient(#eef1f2,#b5bec3 50%,#8d999f)}
-body[data-theme="light"] .station-row{background:linear-gradient(100deg,#f5f6f6,#d5dadd 55%,#bfc7cc);color:#161b1f}
-body[data-theme="light"] .station-row.active{background:linear-gradient(100deg,#ffe1a0,#eab85e 55%,#c48a35)}
-body[data-theme="light"] .station-tag,body[data-theme="light"] .country{color:#4c565d}
-body[data-theme="light"] .tab,body[data-theme="light"] .countrybtn{background:linear-gradient(#f8f9f9,#aeb8be);color:#1b2227}
-body[data-theme="light"] .tab.active,body[data-theme="light"] .countrybtn.active{background:linear-gradient(#ffd06b,#c47a17);color:#241708}
-body[data-theme="light"] .search{background:#f8f9f9;color:#15191c}
-body[data-theme="light"] .bottom-country{background:linear-gradient(#f0f2f3,#b3bdc2)}
-@media(max-width:1000px){.main{grid-template-columns:1fr}.right{min-height:550px}.station-list{max-height:560px}.hero{grid-template-columns:190px 1fr}.station-art{width:180px;height:155px}.visuals{grid-template-columns:1fr 1fr}.spectrum{grid-column:1/-1}}
-@media(max-width:600px){body{padding:4px}.top{height:auto;min-height:65px;gap:8px;padding:7px}.brand{font-size:25px}.ecg,.divider,.toplabel{display:none}.meta{gap:4px}.metabox{padding:0 6px;height:36px;font-size:10px}.clock{font-size:14px}.themebtn{height:36px}.main{gap:6px}.left,.right{padding:7px}.hero{grid-template-columns:100px 1fr;gap:10px;min-height:130px}.station-art{width:98px;height:110px}.station-art .fallback{font-size:34px}.station-title{font-size:22px}.station-sub{font-size:14px;margin-bottom:8px}.pill{font-size:10px;padding:5px 8px}.trackline{margin-top:7px}.visuals{grid-template-columns:1fr 1fr;gap:5px}.instrument{height:135px;padding:5px}.vu-svg{height:103px}.spectrum{grid-column:1/-1;height:135px}.bars{height:96px}.controls{gap:5px;height:72px}.control{min-width:43px;height:45px}.control.play{min-width:54px;height:54px}.control.small{min-width:38px;height:40px}.volume{margin-left:3px;gap:3px}.volume input{width:65px}.station-row{grid-template-columns:64px minmax(0,1fr) 22px 24px;gap:6px;min-height:54px}.logo{width:62px;height:38px}.station-name{font-size:12px}.station-tag{font-size:10px}.country{display:none}.tabs .tab{font-size:11px}.right{min-height:450px}}
+html,body{margin:0;min-height:100%;background:#090a0f;color:var(--text);font-family:Tahoma,Arial,sans-serif}
+body{padding:0}
+.app{width:min(100%,470px);margin:0 auto;padding:0 0 12px;background:linear-gradient(180deg,#171522,#242235 35%,#171522);min-height:100vh}
+.panel{margin:0 0 9px;border:2px solid #090a10;border-radius:5px;background:linear-gradient(180deg,#333044,#211f30 13%,#29273a 88%,#151421);box-shadow:inset 0 1px #ffffff24,0 2px 4px #000b;padding:3px}
+.headline{height:24px;display:flex;align-items:center;justify-content:center;gap:9px;color:#e4d78c;font:bold 10px monospace;letter-spacing:2px;text-shadow:0 0 4px #d9c76b}
+.headline:before,.headline:after{content:"";height:4px;flex:1;border-top:1px solid #c9b976;border-bottom:1px solid #59536c}
+.squares{display:flex;gap:3px;margin-left:3px}.squares i{width:9px;height:8px;border:1px solid #a4a2b7;display:block}
+.top-display{display:grid;grid-template-columns:90px minmax(0,1fr);gap:8px;padding:3px 2px 6px}
+.station-logo{height:90px;border:2px solid #77758b;border-radius:7px;background:linear-gradient(145deg,#7d1dc1,#551077);display:grid;place-items:center;overflow:hidden;box-shadow:inset 0 0 8px #0009}
+.station-logo img{width:100%;height:100%;object-fit:contain;padding:5px;background:#fff}
+.station-logo .fallback{font:36px monospace;color:white}
+.display-right{min-width:0;display:flex;flex-direction:column;gap:5px}
+.clockbox{height:61px;border:2px solid #44465a;border-radius:3px;background:var(--screen);padding:5px 8px;box-shadow:inset 0 0 8px #000}
+.clock{font:bold 29px monospace;letter-spacing:2px;color:var(--green);line-height:1.1;text-shadow:0 0 7px #00ff4c99}
+.date{font:10px monospace;color:var(--green-dim);margin-top:2px}
+.levels{height:45px;border:2px solid #555166;border-radius:3px;background:#030704;padding:3px 4px;display:grid;gap:3px}
+.level{display:grid;grid-template-columns:10px 1fr;gap:3px;align-items:center;color:var(--green-dim);font:10px monospace}
+.ledrow{display:grid;grid-template-columns:repeat(28,1fr);gap:2px;height:13px}
+.ledrow i{background:linear-gradient(90deg,#0b2515,#1b2413);border:1px solid #152719}
+.ledrow i.lit{background:#0f4c21;box-shadow:0 0 3px #00ff4c55}
+.spectrum{height:75px;background:#030604;border:2px solid #4a4657;border-radius:3px;margin:0 2px 7px;padding:4px;display:flex;align-items:end;gap:2px;overflow:hidden;position:relative}
+.spectrum:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent 0 5px,#172018 6px);pointer-events:none}
+.spectrum i{z-index:1;flex:1;height:var(--h);background:linear-gradient(to top,#00a72e 0%,#42b900 55%,#c7a900 82%,#d82c13 100%);opacity:.9}
+.spectrum.active i{animation:eq .48s ease-in-out infinite alternate}
+.spectrum.active i:nth-child(3n){animation-delay:.17s}.spectrum.active i:nth-child(4n){animation-delay:.3s}
+@keyframes eq{from{transform:scaleY(.3);transform-origin:bottom}to{transform:scaleY(1);transform-origin:bottom}}
+.nowplaying{margin:0 2px 5px;height:28px;border:2px solid #4d4b60;border-radius:3px;background:#020603;color:var(--green);font:bold 17px monospace;white-space:nowrap;overflow:hidden;padding:3px 5px;text-shadow:0 0 7px #00ff4c99}
+.meta{height:23px;display:flex;align-items:center;gap:10px;padding:0 4px;color:#9ba6c5;font:10px monospace}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--red);display:inline-block;box-shadow:0 0 7px var(--red);margin-right:4px}
+.meta .live{color:#ff777c}
+.controls{height:37px;display:flex;align-items:center;gap:5px;padding:1px 3px 5px}
+.key{width:36px;height:27px;border:1px solid #88869c;border-radius:3px;background:linear-gradient(#55536a,#262438);box-shadow:inset 0 1px #ffffff55,0 1px 2px #000;color:#eef0ff;font-size:14px;cursor:pointer;text-shadow:0 1px #000}
+.key:active{transform:translateY(1px);background:linear-gradient(#292638,#56536c)}
+.volume{margin-left:auto;display:flex;align-items:center;gap:5px;min-width:0}
+.volume input{width:100px;max-width:27vw;accent-color:#d8c76e}
+.volume span{font:10px monospace;color:#d8c76e}
+.status{font:10px monospace;color:#a6b0d1;padding:1px 4px 4px;min-height:17px}
+.weather-body{padding:3px}
+.city{height:32px;border:2px solid #424458;border-radius:3px;background:var(--screen);color:#8b9ab9;padding:7px 6px;font:10px monospace}
+.weather-card{height:78px;margin-top:6px;border:2px solid #48465b;border-radius:3px;background:#030704;display:flex;align-items:center;padding:7px 10px;gap:17px}
+.weather-icon{font-size:33px;line-height:1}
+.weather-text{font:10px monospace;color:var(--green-dim);line-height:1.6}
+.weather-text strong{display:block;font-size:13px;color:var(--green);font-weight:normal}
+.playlist-body{padding:4px 3px 3px}
+.filters{display:grid;grid-template-columns:1fr 1.08fr;gap:7px;margin-bottom:5px}
+.country,.search{height:31px;border:2px solid #424458;border-radius:3px;background:#030704;color:var(--green);padding:5px 7px;font:11px monospace;min-width:0}
+.country{appearance:auto}
+.search{color:#a8b0ca}
+.catalog-note{font:10px monospace;color:#8793b2;min-height:16px;padding:0 0 4px}
+.station-list{height:340px;overflow-y:auto;border:1px solid #172d1d;background:#020603;scrollbar-color:#366c45 #11151a;scrollbar-width:thin}
+.station{height:51px;display:grid;grid-template-columns:39px minmax(0,1fr) 22px;align-items:center;gap:8px;padding:4px 6px;border-bottom:1px solid #102317;cursor:pointer}
+.station:hover{background:#0a2815}
+.station.active{background:#103d1f;box-shadow:inset 3px 0 #00e84a}
+.station img{width:38px;height:38px;object-fit:contain;border-radius:4px;background:#fff;padding:2px}
+.station .fallback{width:38px;height:38px;border-radius:4px;display:grid;place-items:center;color:white;font:bold 20px monospace;background:linear-gradient(135deg,#8e148c,#1d7e35)}
+.station-name{font:16px monospace;color:var(--green);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.station-desc{font:10px monospace;color:#80bc8e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.star{color:#9397a9;font-size:18px;text-align:center;cursor:pointer}.star.on{color:#f0d45f}
+.light{--shell:#d9dce8;--shell2:#f2f3f8;--edge:#858ba0;--screen:#101710;--text:#282c3b;background:#d8dbe5}
+.light .app{background:linear-gradient(#e6e8ef,#c4c9d7)}
+.light .panel{background:linear-gradient(#f7f8fb,#c4c8d5)}
+.light .headline{color:#76611d}
+.light .station-list{background:#080d09}
+@media(min-width:700px){.app{margin:14px auto;box-shadow:0 8px 35px #0009;border-radius:7px;overflow:hidden}.station-list{height:360px}}
 </style>
 </head>
-<body data-theme="dark">
+<body>
 <div class="app">
-<header class="top metal">
- <div class="brand">Радио <em>Май</em><small>ТВОЯ МУЗЫКА. ТВОЙ ЭФИР.</small></div>
- <svg class="ecg" viewBox="0 0 100 40" aria-hidden="true"><path d="M2 22h23l8-13 8 24 10-19 8 8h39"/></svg>
- <div class="divider"></div><div class="toplabel">Интернет-радио</div>
- <div class="meta">
-  <div class="metabox">📍 <span id="city">Воронеж</span></div>
-  <div class="metabox">🌦 <span id="weather">Погода</span></div>
-  <div class="metabox clock"><span id="clock">--:--</span><small id="date">--</small></div>
-  <div class="themebtn"><button id="darkBtn" class="active" title="Тёмная тема">☀</button><button id="lightBtn" title="Светлая тема">☾</button></div>
-  <button class="infobtn" id="infoBtn">i</button>
- </div>
-</header>
-<main class="main">
-<section class="left metal">
- <div class="hero">
-  <div class="station-art" id="heroArt"><div class="fallback">RM</div></div>
-  <div class="hero-info">
-   <div class="station-title" id="heroName">Выбери радиостанцию</div>
-   <div class="station-sub" id="heroTag">Любимые станции в одном месте</div>
-   <div class="pills"><span class="pill">◉ INTERNET RADIO</span><span class="pill">MP3 / AAC</span><span class="pill">▥ STEREO</span><span class="pill live" id="liveState">● READY</span></div>
-   <div class="trackline"><span id="elapsed">00:00</span><div class="progress"></div><span>∞</span></div>
+ <section class="panel">
+  <div class="headline">MAX RADIO <span class="squares"><i></i><i></i><i></i></span></div>
+  <div class="top-display">
+   <div class="station-logo" id="heroLogo"><div class="fallback">RM</div></div>
+   <div class="display-right">
+    <div class="clockbox"><div class="clock" id="clock">21:59:28</div><div class="date" id="date">Москва ср, 11 нояб.</div></div>
+    <div class="levels">
+     <div class="level">L <div class="ledrow" id="ledL"></div></div>
+     <div class="level">R <div class="ledrow" id="ledR"></div></div>
+    </div>
+   </div>
   </div>
- </div>
- <div class="visuals">
-  <div class="instrument"><div class="inst-label">VU METER · LEFT</div>
-   <svg class="vu-svg" viewBox="0 0 300 130"><path d="M45 105 Q150 -18 255 105" fill="none" stroke="#f5c95f" stroke-width="3"/><g stroke="#f5c95f" stroke-width="2"><path d="M45 105l-8 8M67 75l-9-6M95 49l-6-10M125 33l-2-12M175 33l2-12M205 49l6-10M233 75l9-6M255 105l8 8"/></g><text x="150" y="91" text-anchor="middle" fill="#ffe19a" font-family="Georgia" font-size="20">VU</text><text x="150" y="116" text-anchor="middle" fill="#ffe19a" font-family="Georgia" font-size="13">L</text><path class="needle" id="needleL" d="M150 106L73 57" stroke="#fff0b0" stroke-width="3" stroke-linecap="round"/><circle cx="150" cy="106" r="5" fill="#f6bd4c"/></svg>
+  <div class="spectrum" id="spectrum"></div>
+  <div class="nowplaying" id="nowplaying">▸ Станция не выбрана</div>
+  <div class="meta"><span class="live"><i class="dot"></i><span id="liveText">СТАНЦИЯ НЕДОСТУПНА</span></span><span id="quality">VIZ-SIM</span><span style="margin-left:auto">320 kbps · MP3</span></div>
+  <div class="controls">
+   <button class="key" id="prev" title="Предыдущая">|◀</button>
+   <button class="key" id="play" title="Play">▶</button>
+   <button class="key" id="pause" title="Пауза">Ⅱ</button>
+   <button class="key" id="stop" title="Стоп">■</button>
+   <button class="key" id="next" title="Следующая">▶|</button>
+   <button class="key" id="mute" title="Звук">◖))</button>
+   <label class="volume"><input id="volume" type="range" min="0" max="1" step=".01" value=".8"><span id="volpct">80%</span></label>
   </div>
-  <div class="instrument"><div class="inst-label">VU METER · RIGHT</div>
-   <svg class="vu-svg" viewBox="0 0 300 130"><path d="M45 105 Q150 -18 255 105" fill="none" stroke="#f5c95f" stroke-width="3"/><g stroke="#f5c95f" stroke-width="2"><path d="M45 105l-8 8M67 75l-9-6M95 49l-6-10M125 33l-2-12M175 33l2-12M205 49l6-10M233 75l9-6M255 105l8 8"/></g><text x="150" y="91" text-anchor="middle" fill="#ffe19a" font-family="Georgia" font-size="20">VU</text><text x="150" y="116" text-anchor="middle" fill="#ffe19a" font-family="Georgia" font-size="13">R</text><path class="needle" id="needleR" d="M150 106L73 57" stroke="#fff0b0" stroke-width="3" stroke-linecap="round"/><circle cx="150" cy="106" r="5" fill="#f6bd4c"/></svg>
+  <div class="status" id="status">● Выбери станцию из списка</div>
+ </section>
+ <section class="panel">
+  <div class="headline">ПОГОДА · ГОРОД <span class="squares"><i></i><i></i><i></i></span></div>
+  <div class="weather-body">
+   <input class="city" id="city" value="Воронеж, Россия" aria-label="Город">
+   <div class="weather-card"><div class="weather-icon" id="weatherIcon">🌤️</div><div class="weather-text"><strong id="weatherTemp">Погода недоступна</strong><span id="weatherDesc">Подключение к погодному сервису не настроено</span></div></div>
   </div>
-  <div class="instrument spectrum"><div class="spectrum-head"><span>SPECTRUM ANALYZER</span><span id="specStatus">48 BAND · STANDBY</span></div><div class="bars" id="bars"></div></div>
- </div>
- <div class="controls">
-  <button class="control small" id="listBtn" title="Список">☷</button>
-  <button class="control" id="prevBtn" title="Предыдущая">|◀</button>
-  <button class="control" id="stopBtn" title="Стоп">■</button>
-  <button class="control play" id="playBtn" title="Воспроизвести">▶</button>
-  <button class="control" id="nextBtn" title="Следующая">▶|</button>
-  <div class="volume">🔊 <input id="volume" type="range" min="0" max="1" step=".01" value=".8"><span class="volval" id="volVal">80%</span></div>
-  <button class="control small" id="favCurrent" title="В избранное">☆</button>
- </div>
- <div class="hint" id="hint">Выбери станцию справа и нажми Play.</div>
- <div class="bottom-country" id="countryFilters">
-  <button class="countrybtn active" data-country="Все страны">🌐 Все страны</button>
-  <button class="countrybtn" data-country="Россия">🇷🇺 Россия</button>
-  <button class="countrybtn" data-country="Великобритания">🇬🇧 Великобритания</button>
-  <button class="countrybtn" data-country="США">🇺🇸 США</button>
-  <button class="countrybtn" data-country="Франция">🇫🇷 Франция</button>
-  <button class="countrybtn" data-country="Германия">🇩🇪 Германия</button>
-  <button class="countrybtn" data-country="Швейцария">🇨🇭 Швейцария</button>
- </div>
-</section>
-<aside class="right metal">
- <div class="tabs"><button class="tab active" data-tab="stations">◉ Станции</button><button class="tab" data-tab="favorites">☆ Избранное</button><button class="tab" data-tab="recent">◷ Недавние</button></div>
- <input class="search" id="search" placeholder="⌕  Найти радиостанцию..." autocomplete="off">
- <div class="station-list" id="stationList"></div>
-</aside>
-</main>
+ </section>
+ <section class="panel">
+  <div class="headline">ПЛЕЙЛИСТ <span class="squares"><i></i><i></i><i></i></span></div>
+  <div class="playlist-body">
+   <div class="filters">
+    <select class="country" id="country"><option>Россия</option><option>Все станции</option><option>Великобритания</option><option>США</option><option>Франция</option><option>Германия</option></select>
+    <input class="search" id="search" placeholder="⌕ Поиск станции..." autocomplete="off">
+   </div>
+   <div class="catalog-note" id="catalogNote">Каталог радиостанций</div>
+   <div class="station-list" id="stationList"></div>
+  </div>
+ </section>
 </div>
-<audio id="audio" preload="none" crossorigin="anonymous"></audio>
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<audio id="audio" preload="none" playsinline></audio>
 <script>
-const STATIONS = [{"id": "pioneer", "name": "Pioneer FM", "tagline": "Электронная музыка", "genre": "Электроника", "country": "Россия", "flag": "🇷🇺", "domain": "pionerfm.ru", "stream": "https://ppr.status-media.ru/ppr128.mp3", "fallback": ["https://ppr90.status-media.ru/ppr_90.mp3", "https://ppr90.status-media.ru/ru-wave.mp3"]}, {"id": "record", "name": "Radio Record", "tagline": "Танцевальная музыка 24/7", "genre": "Танцевальная", "country": "Россия", "flag": "🇷🇺", "domain": "radiorecord.ru", "stream": "https://radiorecord.hostingradio.ru/rr_main96.aacp"}, {"id": "maximum", "name": "Радио Максимум", "tagline": "Рок без компромиссов", "genre": "Рок", "country": "Россия", "flag": "🇷🇺", "domain": "maximum.ru", "stream": "https://maximum.hostingradio.ru/maximum96.aacp"}, {"id": "europa", "name": "Европа Плюс", "tagline": "Хиты. Новая музыка", "genre": "Поп", "country": "Россия", "flag": "🇷🇺", "domain": "europaplus.ru", "stream": "https://europaplus.hostingradio.ru:8014/europaplus320.mp3"}, {"id": "dfm", "name": "DFM", "tagline": "Танцевальная музыка", "genre": "Танцевальная", "country": "Россия", "flag": "🇷🇺", "domain": "dfm.ru", "stream": "https://dfm.hostingradio.ru/dfm96.aacp"}, {"id": "marusya", "name": "Маруся FM", "tagline": "Русские и мировые хиты", "genre": "Поп", "country": "Россия", "flag": "🇷🇺", "domain": "marus.fm", "stream": "https://radio-holding.ru:9433/marusya_default"}, {"id": "love", "name": "Love Radio", "tagline": "Музыка о любви", "genre": "Поп", "country": "Россия", "flag": "🇷🇺", "domain": "loveradio.ru", "stream": "https://air2.volna.top/LoveRadio-MSK"}, {"id": "comedy", "name": "Comedy Radio", "tagline": "Юмор. Шоу. Хиты", "genre": "Разговорное", "country": "Россия", "flag": "🇷🇺", "domain": "comedy-radio.ru", "stream": "https://hls-01-gpm.hostingradio.ru/comedyradio8552/128/playlist.m3u8"}, {"id": "zaycev", "name": "Zaycev FM", "tagline": "Популярные хиты", "genre": "Поп", "country": "Россия", "flag": "🇷🇺", "domain": "zaycev.fm", "stream": "https://abs.zaycev.fm/pop256k"}, {"id": "record-russian", "name": "Record Russian Mix", "tagline": "Русские танцевальные хиты", "genre": "Танцевальная", "country": "Россия", "flag": "🇷🇺", "domain": "radiorecord.ru", "stream": "https://radiorecord.hostingradio.ru/rus96.aacp"}, {"id": "record-90", "name": "Record Супердискотека 90-х", "tagline": "Хиты 90-х", "genre": "Ретро", "country": "Россия", "flag": "🇷🇺", "domain": "radiorecord.ru", "stream": "https://radiorecord.hostingradio.ru/sd9096.aacp"}, {"id": "record-rock", "name": "Record Rock", "tagline": "Рок-музыка", "genre": "Рок", "country": "Россия", "flag": "🇷🇺", "domain": "radiorecord.ru", "stream": "https://radiorecord.hostingradio.ru/rock96.aacp"}, {"id": "record-chill", "name": "Record Chill-Out", "tagline": "Спокойная электроника", "genre": "Chillout", "country": "Россия", "flag": "🇷🇺", "domain": "radiorecord.ru", "stream": "https://radiorecord.hostingradio.ru/chil96.aacp"}, {"id": "record-deep", "name": "Record Deep", "tagline": "Deep house", "genre": "Электроника", "country": "Россия", "flag": "🇷🇺", "domain": "radiorecord.ru", "stream": "https://radiorecord.hostingradio.ru/deep96.aacp"}, {"id": "record-trance", "name": "Record Trancemission", "tagline": "Транс", "genre": "Электроника", "country": "Россия", "flag": "🇷🇺", "domain": "radiorecord.ru", "stream": "https://radiorecord.hostingradio.ru/tm96.aacp"}, {"id": "montecarlo", "name": "Радио Монте-Карло", "tagline": "Лаунж и классика", "genre": "Chillout", "country": "Россия", "flag": "🇷🇺", "domain": "montecarlo.ru", "stream": "https://montecarlo.hostingradio.ru/montecarlo96.aacp"}, {"id": "nashe", "name": "Наше Радио", "tagline": "Русский рок", "genre": "Рок", "country": "Россия", "flag": "🇷🇺", "domain": "nashe.ru", "stream": "https://nashe1.hostingradio.ru/nashe-128.mp3", "fallback": ["https://nashe.streamr.ru/nashe-128.mp3"]}, {"id": "retro", "name": "Ретро FM", "tagline": "Золотые хиты 70–90-х", "genre": "Ретро", "country": "Россия", "flag": "🇷🇺", "domain": "retrofm.ru", "stream": "https://retroserver.streamr.ru:8043/retro128"}, {"id": "rusradio", "name": "Русское Радио", "tagline": "Главные русские песни", "genre": "Поп", "country": "Россия", "flag": "🇷🇺", "domain": "rusradio.ru", "stream": "https://rusradio.hostingradio.ru/rusradio96.aacp"}, {"id": "vanya", "name": "Радио Ваня", "tagline": "Поп и танцевальные хиты", "genre": "Поп", "country": "Россия", "flag": "🇷🇺", "domain": "radiovanya.ru", "stream": "https://icecast-radiovanya.cdnvideo.ru/radiovanya"}, {"id": "mixadance", "name": "Mixadance FM", "tagline": "Электроника и dance", "genre": "Электроника", "country": "Россия", "flag": "🇷🇺", "domain": "mixadance.fm", "stream": "https://stream.mixadance.fm/mixadance"}, {"id": "business", "name": "Business FM", "tagline": "Новости и бизнес", "genre": "Новости", "country": "Россия", "flag": "🇷🇺", "domain": "bfm.ru", "stream": "https://bfmstream.bfm.ru:8004/fm64"}, {"id": "kexp", "name": "KEXP 90.3", "tagline": "Indie. Alternative. Discovery", "genre": "Инди / Альтернатива", "country": "США", "flag": "🇺🇸", "domain": "kexp.org", "stream": "https://kexp.streamguys1.com/kexp160.aac"}, {"id": "wfmu", "name": "WFMU", "tagline": "Freeform radio from New Jersey", "genre": "Разное", "country": "США", "flag": "🇺🇸", "domain": "wfmu.org", "stream": "https://stream0.wfmu.org/freeform-128k.mp3"}, {"id": "somafm", "name": "SomaFM Groove Salad", "tagline": "Ambient. Downtempo. Chill", "genre": "Chillout", "country": "США", "flag": "🇺🇸", "domain": "somafm.com", "stream": "https://ice1.somafm.com/groovesalad-128-mp3"}, {"id": "somadrone", "name": "SomaFM Drone Zone", "tagline": "Атмосферная музыка", "genre": "Chillout", "country": "США", "flag": "🇺🇸", "domain": "somafm.com", "stream": "https://ice1.somafm.com/dronezone-128-mp3"}, {"id": "capital", "name": "Capital FM", "tagline": "The UK's No.1 Hit Music Station", "genre": "Поп", "country": "Великобритания", "flag": "🇬🇧", "domain": "capitalfm.com", "stream": "https://media-ssl.musicradio.com/CapitalUK"}, {"id": "heart80", "name": "Heart 80s", "tagline": "The best of the 80s", "genre": "Ретро", "country": "Великобритания", "flag": "🇬🇧", "domain": "heart.co.uk", "stream": "https://media-ssl.musicradio.com/Heart80sMP3"}, {"id": "bbcworld", "name": "BBC World Service", "tagline": "News. Stories. Global voices", "genre": "Новости", "country": "Великобритания", "flag": "🇬🇧", "domain": "bbc.co.uk", "stream": "https://stream.live.vc.bbcmedia.co.uk/bbc_world_service"}, {"id": "fip", "name": "FIP", "tagline": "La musique éclectique", "genre": "Разное", "country": "Франция", "flag": "🇫🇷", "domain": "fip.fr", "stream": "https://stream.radiofrance.fr/fip/fip_hifi.m3u8"}, {"id": "swissjazz", "name": "Radio Swiss Jazz", "tagline": "Jazz. Soul. Blues", "genre": "Джаз", "country": "Швейцария", "flag": "🇨🇭", "domain": "radioswissjazz.ch", "stream": "https://stream.srg-ssr.ch/srgssr/rsj/mp3/128"}, {"id": "m2hits", "name": "M2 Hits", "tagline": "Les hits d'aujourd'hui", "genre": "Поп", "country": "Франция", "flag": "🇫🇷", "domain": "m2radio.fr", "stream": "https://live.m2stream.fr/m2hit-128.mp3"}, {"id": "m2rock", "name": "M2 Rock", "tagline": "Rock non-stop", "genre": "Рок", "country": "Франция", "flag": "🇫🇷", "domain": "m2radio.fr", "stream": "https://live.m2stream.fr/m2rock-128.mp3"}, {"id": "80s80s", "name": "80s80s", "tagline": "80s hits radio", "genre": "Ретро", "country": "Германия", "flag": "🇩🇪", "domain": "80s80s.de", "stream": "https://streams.80s80s.de/80s80s/mp3-192/radiosure/"}, {"id": "bbc1", "name": "BBC Radio 1", "tagline": "New music, chart hits & dance", "genre": "Поп / Электроника", "country": "Великобритания", "flag": "🇬🇧", "domain": "bbc.co.uk", "stream": "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_one"}, {"id": "bbc2", "name": "BBC Radio 2", "tagline": "Great music and popular classics", "genre": "Поп / Ретро", "country": "Великобритания", "flag": "🇬🇧", "domain": "bbc.co.uk", "stream": "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_two"}, {"id": "franceinter", "name": "France Inter", "tagline": "Actualité, culture et musique", "genre": "Новости / Разное", "country": "Франция", "flag": "🇫🇷", "domain": "radiofrance.fr", "stream": "https://icecast.radiofrance.fr/franceinter-midfi.mp3"}, {"id": "deutschlandfunk", "name": "Deutschlandfunk", "tagline": "Nachrichten und Hintergrund", "genre": "Новости", "country": "Германия", "flag": "🇩🇪", "domain": "deutschlandfunk.de", "stream": "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3"}];
-const $=s=>document.querySelector(s);
-const audio=$("#audio");
-let current=-1, tab="stations", country="Все страны", favorites=new Set(JSON.parse(localStorage.getItem("radioMayFavs")||"[]")), recent=JSON.parse(localStorage.getItem("radioMayRecent")||"[]"), hls=null, ctx=null, analyser=null, dataArray=null, raf=0;
-const bars=$("#bars");
-for(let i=0;i<48;i++){const b=document.createElement("i");b.className="bar";b.style.setProperty("--h","2%");bars.appendChild(b)}
-function logoUrl(s){return "https://www.google.com/s2/favicons?domain="+encodeURIComponent(s.logo||"")+"&sz=128"}
-function fallback(s){return (s.short||s.name.replace(/[^A-Za-zА-Яа-я0-9]/g,"").slice(0,3)||"FM").toUpperCase()}
-function setLogo(container,s,small=false){
- container.innerHTML="";
- const img=document.createElement("img");img.src=logoUrl(s);img.alt=s.name;img.loading="lazy";
- img.onerror=()=>{container.innerHTML='<b>'+fallback(s)+'</b>'};
- container.appendChild(img);
-}
+const STATIONS=[{"id": 0, "name": "Pioneer FM", "tagline": "Главная станция", "genre": "Избранное", "key": "pioneer", "stream": "", "logoDomain": "pioneerfm.ru"}, {"id": 1, "name": "Zaycev FM", "tagline": "Популярные хиты", "genre": "Поп", "key": "zaycev", "stream": "", "logoDomain": "zaycev.fm"}, {"id": 2, "name": "Record", "tagline": "Танцевальная музыка", "genre": "Dance", "key": "record", "stream": "", "logoDomain": "radiorecord.ru"}, {"id": 3, "name": "Record Russian Mix", "tagline": "Русские танцевальные хиты", "genre": "Dance", "key": "record-russian", "stream": "", "logoDomain": "radiorecord.ru"}, {"id": 4, "name": "Record Супердискотека 90-х", "tagline": "Хиты 90-х", "genre": "Ретро", "key": "record-90", "stream": "", "logoDomain": "radiorecord.ru"}, {"id": 5, "name": "Record Rock", "tagline": "Рок-музыка", "genre": "Rock", "key": "record-rock", "stream": "", "logoDomain": "radiorecord.ru"}, {"id": 6, "name": "Record Chill-Out", "tagline": "Спокойная электронная музыка", "genre": "Chill", "key": "record-chill", "stream": "", "logoDomain": "radiorecord.ru"}, {"id": 7, "name": "Record Deep", "tagline": "Deep house", "genre": "House", "key": "record-deep", "stream": "", "logoDomain": "radiorecord.ru"}, {"id": 8, "name": "Record Trancemission", "tagline": "Транс", "genre": "Electronic", "key": "record-trance", "stream": "", "logoDomain": "radiorecord.ru"}, {"id": 9, "name": "Радио MAXIMUM", "tagline": "Рок без компромиссов", "genre": "Rock", "key": "maximum", "stream": "", "logoDomain": "maximum.ru"}, {"id": 10, "name": "Comedy Radio", "tagline": "Юмор и музыка", "genre": "Разное", "key": "comedy", "stream": "", "logoDomain": "comedy radio.ru"}, {"id": 11, "name": "Маруся FM", "tagline": "Современные хиты", "genre": "Поп", "key": "marusya", "stream": "", "logoDomain": "marus.fm"}, {"id": 12, "name": "Европа Плюс", "tagline": "Современные хиты", "genre": "Поп", "key": "europa", "stream": "", "logoDomain": "europaplus.ru"}, {"id": 13, "name": "DFM", "tagline": "Танцевальная музыка", "genre": "Dance", "key": "dfm", "stream": "", "logoDomain": "dfm.ru"}, {"id": 14, "name": "Радио ENERGY", "tagline": "Главные мировые хиты", "genre": "Поп", "key": "energy", "stream": "", "logoDomain": "nrj.ru"}, {"id": 15, "name": "Новое Радио", "tagline": "Русские хиты", "genre": "Поп", "key": "newradio", "stream": "", "logoDomain": "newradio.ru"}, {"id": 16, "name": "Авторадио", "tagline": "Музыка в дорогу", "genre": "В дороге", "key": "autoradio", "stream": "", "logoDomain": "avtoradio.ru"}, {"id": 17, "name": "Ретро FM", "tagline": "Хиты 70-х, 80-х и 90-х", "genre": "Ретро", "key": "retro", "stream": "", "logoDomain": "retrofm.ru"}, {"id": 18, "name": "Наше Радио", "tagline": "Русский рок", "genre": "Rock", "key": "nashe", "stream": "", "logoDomain": "nashe.ru"}, {"id": 19, "name": "Love Radio", "tagline": "Поп и романтика", "genre": "Поп", "key": "love", "stream": "", "logoDomain": "loveradio.ru"}, {"id": 20, "name": "Дорожное радио", "tagline": "Музыка для поездок", "genre": "В дороге", "key": "dorozhnoe", "stream": "", "logoDomain": "dorognoe.ru"}, {"id": 21, "name": "Радио Монте-Карло", "tagline": "Лаунж и классика", "genre": "Chill", "key": "montecarlo", "stream": "", "logoDomain": "montecarlo.ru"}];
+const $=s=>document.querySelector(s),audio=$("#audio");
+let selected=null,playing=false,favorites=new Set(JSON.parse(localStorage.getItem("radioMayFavs")||"[]"));
+function favicon(s){return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(s.logoDomain||"radio.ru")}&sz=128`}
+function makeLedRow(id){for(let i=0;i<28;i++){let x=document.createElement("i");$(id).append(x)}}
+makeLedRow("#ledL");makeLedRow("#ledR");
+for(let i=0;i<48;i++){let x=document.createElement("i");x.style.setProperty("--h",(8+Math.random()*65)+"%");$("#spectrum").append(x)}
+function updateClock(){let d=new Date();$("#clock").textContent=d.toLocaleTimeString("ru-RU",{hour12:false});$("#date").textContent=$("#city").value.split(",")[0]+" · "+d.toLocaleDateString("ru-RU",{weekday:"short",day:"2-digit",month:"short"})}
+setInterval(updateClock,1000);updateClock();
 function render(){
- const list=$("#stationList");list.innerHTML="";
- let items=STATIONS.map((s,i)=>({...s,_i:i}));
- if(tab==="favorites")items=items.filter(s=>favorites.has(s.id));
- if(tab==="recent")items=items.filter(s=>recent.includes(s.id)).sort((a,b)=>recent.indexOf(a.id)-recent.indexOf(b.id));
- if(country!=="Все страны")items=items.filter(s=>s.country===country);
- const q=$("#search").value.trim().toLowerCase();
- if(q)items=items.filter(s=>(s.name+" "+s.tagline+" "+s.genre+" "+s.country).toLowerCase().includes(q));
- if(!items.length){list.innerHTML='<div class="empty">Станции не найдены</div>';return}
+ let q=$("#search").value.trim().toLowerCase(),list=$("#stationList");list.innerHTML="";
+ let items=STATIONS.filter(s=>(!q||(s.name+" "+s.tagline+" "+s.genre).toLowerCase().includes(q)));
  items.forEach(s=>{
-  const row=document.createElement("button");row.className="station-row"+(s._i===current?" active":"");row.type="button";
-  const logo=document.createElement("div");logo.className="logo";setLogo(logo,s,true);
-  const copy=document.createElement("div");copy.className="station-copy";copy.innerHTML='<div class="station-name"></div><div class="station-tag"></div>';copy.querySelector(".station-name").textContent=s.name;copy.querySelector(".station-tag").textContent=s.tagline||s.genre||"";
-  const c=document.createElement("div");c.className="country";c.textContent=(s.country||"").slice(0,2).toUpperCase();
-  const fav=document.createElement("button");fav.type="button";fav.className="fav"+(favorites.has(s.id)?" on":"");fav.textContent=favorites.has(s.id)?"★":"☆";fav.title="Избранное";
-  fav.onclick=e=>{e.stopPropagation();toggleFav(s.id)};
-  row.append(logo,copy,c,fav);row.onclick=()=>selectStation(s._i,true);list.appendChild(row);
+  let row=document.createElement("div");row.className="station"+(selected&&selected.id===s.id?" active":"");
+  let img=document.createElement("img");img.src=favicon(s);img.alt=s.name;img.onerror=()=>{let f=document.createElement("div");f.className="fallback";f.textContent=s.name.slice(0,1).toUpperCase();img.replaceWith(f)};
+  let txt=document.createElement("div"),name=document.createElement("div"),desc=document.createElement("div");
+  name.className="station-name";name.textContent=s.name;desc.className="station-desc";desc.textContent="Россия · "+(s.tagline||s.genre||"Интернет-радио");txt.append(name,desc);
+  let star=document.createElement("div");star.className="star"+(favorites.has(s.id)?" on":"");star.textContent=favorites.has(s.id)?"★":"☆";
+  star.onclick=e=>{e.stopPropagation();favorites.has(s.id)?favorites.delete(s.id):favorites.add(s.id);localStorage.setItem("radioMayFavs",JSON.stringify([...favorites]));render()};
+  row.append(img,txt,star);row.onclick=()=>selectStation(s);list.append(row);
  });
+ $("#catalogNote").textContent=`${items.length} радиостанций · выбери станцию для прослушивания`;
 }
-function toggleFav(id){if(favorites.has(id))favorites.delete(id);else favorites.add(id);localStorage.setItem("radioMayFavs",JSON.stringify([...favorites]));render();updateFavCurrent()}
-function updateFavCurrent(){const s=STATIONS[current];$("#favCurrent").textContent=s&&favorites.has(s.id)?"★":"☆"}
-function selectStation(i,autoplay=false){
- current=i;const s=STATIONS[i];$("#heroName").textContent=s.name;$("#heroTag").textContent=s.tagline||s.genre||"Интернет-радио";setLogo($("#heroArt"),s);$("#liveState").textContent="● READY";$("#hint").textContent="Станция выбрана. Нажми Play для воспроизведения.";updateFavCurrent();render();if(autoplay)play();
+function selectStation(s){
+ selected=s;$("#nowplaying").textContent="▸ "+s.name+" — "+(s.tagline||s.genre);
+ let box=$("#heroLogo");box.innerHTML="";let img=document.createElement("img");img.src=favicon(s);img.alt=s.name;img.onerror=()=>{box.innerHTML='<div class="fallback">'+s.name.slice(0,1).toUpperCase()+'</div>'};box.append(img);
+ $("#status").textContent=s.stream?"Станция выбрана. Нажми Play.":"Поток этой станции пока не подключён.";
+ $("#liveText").textContent=s.stream?"ГОТОВА К ЭФИРУ":"СТАНЦИЯ НЕДОСТУПНА";
+ render();
 }
-function stop(){audio.pause();if(hls){hls.destroy();hls=null}$("#playBtn").textContent="▶";$("#liveState").textContent="● READY";$("#specStatus").textContent="48 BAND · STANDBY";$("#hint").textContent="Воспроизведение остановлено.";cancelAnimationFrame(raf);animateIdle()}
+function meter(active){
+ playing=active;$("#spectrum").classList.toggle("active",active);
+ ["#ledL","#ledR"].forEach(id=>[...$(id).children].forEach((x,i)=>x.classList.toggle("lit",active&&i<7+Math.floor(Math.random()*12))));
+}
 function play(){
- if(current<0){selectStation(0,false)}
- const s=STATIONS[current];if(!s||!s.stream){$("#hint").textContent="Для этой станции пока нет адреса потока.";return}
- if(hls){hls.destroy();hls=null}
- audio.pause();audio.src="";
- const url=s.stream;
- if(url.includes(".m3u8")&&window.Hls&&Hls.isSupported()){hls=new Hls();hls.loadSource(url);hls.attachMedia(audio)}
- else{audio.src=url}
- audio.volume=Number($("#volume").value);
- audio.play().then(()=>{$("#playBtn").textContent="Ⅱ";$("#liveState").textContent="● LIVE";$("#specStatus").textContent="48 BAND · ON AIR";$("#hint").textContent="Эфир подключён: "+s.name;recent=[s.id,...recent.filter(x=>x!==s.id)].slice(0,12);localStorage.setItem("radioMayRecent",JSON.stringify(recent));render();startVisuals()}).catch(e=>{$("#hint").textContent="Не удалось подключиться к потоку. Попробуй другую станцию или проверь доступность эфира.";$("#liveState").textContent="● ERROR";});
+ if(!selected){$("#status").textContent="Сначала выбери радиостанцию.";return}
+ if(!selected.stream){$("#status").textContent="Станция выбрана, но проверенный аудиопоток ещё не добавлен.";return}
+ if(audio.src!==selected.stream){audio.src=selected.stream;audio.load()}
+ audio.play().then(()=>{meter(true);$("#liveText").textContent="В ЭФИРЕ"}).catch(()=>{$("#status").textContent="Не удалось подключиться к потоку."});
 }
-function startVisuals(){
- if(!ctx){try{ctx=new (window.AudioContext||window.webkitAudioContext)();const src=ctx.createMediaElementSource(audio);analyser=ctx.createAnalyser();analyser.fftSize=128;src.connect(analyser);analyser.connect(ctx.destination);dataArray=new Uint8Array(analyser.frequencyBinCount)}catch(e){ctx=null}}
- if(ctx&&ctx.state==="suspended")ctx.resume();
- cancelAnimationFrame(raf);
- const els=[...bars.children];
- function draw(){
-  let vals=[];
-  if(analyser){analyser.getByteFrequencyData(dataArray);for(let i=0;i<48;i++){const v=dataArray[Math.min(dataArray.length-1,Math.floor(i*dataArray.length/48))]/255;vals.push(v)}} 
-  else{for(let i=0;i<48;i++)vals.push(.12+Math.random()*.65)}
-  els.forEach((b,i)=>b.style.height=Math.max(2,vals[i]*100)+"%");
-  const avg=vals.reduce((a,b)=>a+b,0)/vals.length;
-  $("#needleL").style.transform=`rotate(${-38+avg*76}deg)`;$("#needleR").style.transform=`rotate(${-32+avg*66}deg)`;
-  raf=requestAnimationFrame(draw);
- }
- draw();
-}
-function animateIdle(){const els=[...bars.children];els.forEach(b=>b.style.height="2%");$("#needleL").style.transform="rotate(-24deg)";$("#needleR").style.transform="rotate(-24deg)"}
-$("#playBtn").onclick=()=>audio.paused?play():audio.pause();
-audio.onpause=()=>{$("#playBtn").textContent="▶";if(current>=0&&audio.currentSrc)$("#liveState").textContent="● PAUSED"};
-audio.onplaying=()=>{$("#playBtn").textContent="Ⅱ";$("#liveState").textContent="● LIVE"};
-$("#stopBtn").onclick=stop;
-$("#nextBtn").onclick=()=>selectStation((current+1)%STATIONS.length,true);
-$("#prevBtn").onclick=()=>selectStation((current-1+STATIONS.length)%STATIONS.length,true);
-$("#volume").oninput=e=>{audio.volume=Number(e.target.value);$("#volVal").textContent=Math.round(e.target.value*100)+"%"};
-$("#favCurrent").onclick=()=>{if(current>=0)toggleFav(STATIONS[current].id)};
-$("#listBtn").onclick=()=>$("#search").focus();
+$("#play").onclick=play;$("#pause").onclick=()=>{audio.pause();meter(false);$("#liveText").textContent="ПАУЗА"};
+$("#stop").onclick=()=>{audio.pause();audio.removeAttribute("src");audio.load();meter(false);$("#liveText").textContent="ОСТАНОВЛЕНО"};
+function step(n){let i=selected?STATIONS.findIndex(s=>s.id===selected.id):-1;i=(i+n+STATIONS.length)%STATIONS.length;selectStation(STATIONS[i])}
+$("#prev").onclick=()=>step(-1);$("#next").onclick=()=>step(1);
+$("#volume").oninput=e=>{audio.volume=+e.target.value;$("#volpct").textContent=Math.round(audio.volume*100)+"%"};
+$("#mute").onclick=()=>{audio.muted=!audio.muted;$("#mute").textContent=audio.muted?"×":"◖))"};
 $("#search").oninput=render;
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));render()});
-document.querySelectorAll(".countrybtn").forEach(b=>b.onclick=()=>{country=b.dataset.country;document.querySelectorAll(".countrybtn").forEach(x=>x.classList.toggle("active",x===b));tab="stations";document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.tab==="stations"));render()});
-function setTheme(t){document.body.dataset.theme=t;$("#darkBtn").classList.toggle("active",t==="dark");$("#lightBtn").classList.toggle("active",t==="light");localStorage.setItem("radioMayTheme",t)}
-$("#darkBtn").onclick=()=>setTheme("dark");$("#lightBtn").onclick=()=>setTheme("light");setTheme(localStorage.getItem("radioMayTheme")||"dark");
-function tick(){const d=new Date();$("#clock").textContent=d.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"});$("#date").textContent=d.toLocaleDateString("ru-RU",{weekday:"short",day:"numeric",month:"short"}).toUpperCase()}
-tick();setInterval(tick,1000);
-$("#infoBtn").onclick=()=>alert("Радио Май — интернет-радио. Доступность потоков зависит от вещателя и региона.");
-$("#city").onclick=()=>{const c=prompt("Город для погоды:", "Воронеж");if(c)$("#city").textContent=c};
-$("#weather").textContent="обновляется";
-render();animateIdle();
+$("#city").onchange=updateClock;
+audio.addEventListener("playing",()=>{meter(true);$("#liveText").textContent="В ЭФИРЕ"});
+audio.addEventListener("error",()=>{meter(false);$("#liveText").textContent="ОШИБКА ПОТОКА"});
+setInterval(()=>{if(playing){["#ledL","#ledR"].forEach(id=>[...$(id).children].forEach((x,i)=>x.classList.toggle("lit",i<5+Math.floor(Math.random()*20))))}},160);
+render();
 </script>
-</body>
-</html>
+</body></html>
