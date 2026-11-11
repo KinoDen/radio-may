@@ -14,12 +14,20 @@
 .subbrand{font-size:11px;color:var(--muted);letter-spacing:.12em}
 .iconbtn{border:1px solid #765037;background:#2c1b13;color:var(--cream);width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer}
 .deck{border:1px solid #8c572d;border-radius:22px;padding:12px;background:linear-gradient(145deg,#412417,#1d110d 65%);box-shadow:0 14px 35px #0008,inset 0 1px #e9b86b55}
-.eq{height:34px;display:flex;justify-content:center;align-items:end;gap:5px;margin:2px auto 8px}
-.eq i{display:block;width:8px;border-radius:3px 3px 0 0;background:linear-gradient(#ffca59,#d8491d);height:var(--h);opacity:.85}
-.eq.playing i{animation:equalize .65s ease-in-out infinite alternate}
-.eq.playing i:nth-child(2n){animation-delay:.22s}.eq.playing i:nth-child(3n){animation-delay:.4s}
-@keyframes equalize{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
-.cassette{width:min(100%,440px);margin:0 auto;display:block;filter:drop-shadow(0 8px 12px #0009);border-radius:12px}
+ .visualizer-wrap{margin:2px auto 10px;padding:8px 10px 7px;border:1px solid #694329;border-radius:10px;background:linear-gradient(180deg,#100d0b,#090807);box-shadow:inset 0 0 16px #000}
+.visualizer-head{display:flex;justify-content:space-between;align-items:center;margin:0 2px 5px;color:#9c805f;font:9px/1.2 ui-monospace,monospace;letter-spacing:.16em}
+.visualizer-head span:last-child{color:#d17a35}
+#visualizer{display:block;width:100%;height:74px;image-rendering:pixelated}
+.visualizer-foot{display:flex;justify-content:space-between;margin:4px 2px 0;color:#72563e;font:8px ui-monospace,monospace;letter-spacing:.08em}
+.cassette-stage{position:relative;width:min(100%,440px);margin:0 auto;line-height:0;filter:drop-shadow(0 8px 12px #0009)}
+.cassette{width:100%;display:block;border-radius:12px}
+.reel{position:absolute;width:9.6%;aspect-ratio:1;border-radius:50%;top:49.0%;opacity:.82;pointer-events:none;transform:rotate(0deg)}
+.reel.left{left:28.5%;background:repeating-conic-gradient(from 0deg,rgba(255,216,145,.88) 0deg 9deg,rgba(51,27,15,.92) 9deg 30deg);mask:radial-gradient(circle,transparent 0 25%,#000 29% 68%,transparent 72%)}
+.reel.right{left:62.2%;background:repeating-conic-gradient(from 12deg,rgba(255,216,145,.88) 0deg 9deg,rgba(51,27,15,.92) 9deg 30deg);mask:radial-gradient(circle,transparent 0 25%,#000 29% 68%,transparent 72%)}
+.reel:after{content:"";position:absolute;inset:36%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f0c27b,#633719 62%,#1b100b 100%);box-shadow:0 0 3px #ffdda0}
+.cassette-stage.playing .reel.left{animation:reelSpin 2.4s linear infinite}
+.cassette-stage.playing .reel.right{animation:reelSpin 1.9s linear infinite reverse}
+@keyframes reelSpin{to{transform:rotate(360deg)}}
 .now{margin:12px 0 10px;padding:12px 14px;border:1px solid #754522;border-radius:14px;background:#120d0b;display:flex;align-items:center;gap:12px}
 .live{font-size:10px;letter-spacing:.08em;color:#ff6b4a;white-space:nowrap}
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#f04c32;margin-right:5px;box-shadow:0 0 9px #f04c32}
@@ -60,8 +68,16 @@ input[type=range]{flex:1;accent-color:#e9872c;min-width:0}
     <button class="iconbtn" id="info" aria-label="О приложении">i</button>
   </header>
   <main class="deck">
-    <div class="eq" id="eq"></div>
-    <img class="cassette" src="cassette-logo.webp" alt="Винтажная кассета Радио Май">
+    <div class="visualizer-wrap">
+      <div class="visualizer-head"><span>RADIO MAY / WINAMP EQ</span><span id="vizMode">WINAMP STYLE</span></div>
+      <canvas id="visualizer" width="720" height="148" aria-label="Музыкальный спектроанализатор"></canvas>
+      <div class="visualizer-foot"><span>60 Hz</span><span>1 kHz</span><span>16 kHz</span></div>
+    </div>
+    <div class="cassette-stage" id="cassetteStage">
+      <img class="cassette" src="cassette-logo.webp" alt="Винтажная кассета Радио Май">
+      <span class="reel left" aria-hidden="true"></span>
+      <span class="reel right" aria-hidden="true"></span>
+    </div>
     <section class="now">
       <div class="nowtext"><div class="nowlabel">Сейчас выбрано</div><div class="nowname" id="nowName">Выбери радиостанцию</div><div class="nowdesc" id="nowDesc">22 станции в одной кассете</div></div>
       <div class="live" id="live"><span class="dot"></span>READY</div>
@@ -88,6 +104,7 @@ input[type=range]{flex:1;accent-color:#e9872c;min-width:0}
   </footer>
 </div>
 <audio id="audio" preload="none" playsinline></audio>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
 <script>
 const STATIONS = [
   {
@@ -96,7 +113,7 @@ const STATIONS = [
     "tagline": "Главная станция",
     "genre": "Избранное",
     "key": "pioneer",
-    "stream": ""
+    "stream": "https://ppr.status-media.ru/ppr128.mp3"
   },
   {
     "id": 1,
@@ -104,7 +121,7 @@ const STATIONS = [
     "tagline": "Популярные хиты",
     "genre": "Поп",
     "key": "zaycev",
-    "stream": ""
+    "stream": "https://abs.zaycev.fm/pop256k"
   },
   {
     "id": 2,
@@ -112,7 +129,7 @@ const STATIONS = [
     "tagline": "Танцевальная музыка",
     "genre": "Dance",
     "key": "record",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/rr_main96.aacp"
   },
   {
     "id": 3,
@@ -120,7 +137,7 @@ const STATIONS = [
     "tagline": "Русские танцевальные хиты",
     "genre": "Dance",
     "key": "record-russian",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/rus96.aacp"
   },
   {
     "id": 4,
@@ -128,7 +145,7 @@ const STATIONS = [
     "tagline": "Хиты 90-х",
     "genre": "Ретро",
     "key": "record-90",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/sd9096.aacp"
   },
   {
     "id": 5,
@@ -136,7 +153,7 @@ const STATIONS = [
     "tagline": "Рок-музыка",
     "genre": "Rock",
     "key": "record-rock",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/rock96.aacp"
   },
   {
     "id": 6,
@@ -144,7 +161,7 @@ const STATIONS = [
     "tagline": "Спокойная электронная музыка",
     "genre": "Chill",
     "key": "record-chill",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/chil96.aacp"
   },
   {
     "id": 7,
@@ -152,7 +169,7 @@ const STATIONS = [
     "tagline": "Deep house",
     "genre": "House",
     "key": "record-deep",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/deep96.aacp"
   },
   {
     "id": 8,
@@ -160,7 +177,7 @@ const STATIONS = [
     "tagline": "Транс",
     "genre": "Electronic",
     "key": "record-trance",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/tm96.aacp"
   },
   {
     "id": 9,
@@ -168,7 +185,7 @@ const STATIONS = [
     "tagline": "Рок без компромиссов",
     "genre": "Rock",
     "key": "maximum",
-    "stream": ""
+    "stream": "https://maximum.hostingradio.ru/maximum96.aacp"
   },
   {
     "id": 10,
@@ -176,7 +193,7 @@ const STATIONS = [
     "tagline": "Юмор и музыка",
     "genre": "Разное",
     "key": "comedy",
-    "stream": ""
+    "stream": "https://hls-01-gpm.hostingradio.ru/comedyradio8552/128/playlist.m3u8"
   },
   {
     "id": 11,
@@ -184,7 +201,7 @@ const STATIONS = [
     "tagline": "Современные хиты",
     "genre": "Поп",
     "key": "marusya",
-    "stream": ""
+    "stream": "https://radio-holding.ru:9433/marusya_default"
   },
   {
     "id": 12,
@@ -192,7 +209,7 @@ const STATIONS = [
     "tagline": "Современные хиты",
     "genre": "Поп",
     "key": "europa",
-    "stream": ""
+    "stream": "https://europaplus.hostingradio.ru:8014/europaplus320.mp3"
   },
   {
     "id": 13,
@@ -200,7 +217,7 @@ const STATIONS = [
     "tagline": "Танцевальная музыка",
     "genre": "Dance",
     "key": "dfm",
-    "stream": ""
+    "stream": "https://dfm.hostingradio.ru/dfm96.aacp"
   },
   {
     "id": 14,
@@ -248,7 +265,7 @@ const STATIONS = [
     "tagline": "Поп и романтика",
     "genre": "Поп",
     "key": "love",
-    "stream": ""
+    "stream": "https://air2.volna.top/LoveRadio-MSK"
   },
   {
     "id": 20,
@@ -264,15 +281,62 @@ const STATIONS = [
     "tagline": "Лаунж и классика",
     "genre": "Chill",
     "key": "montecarlo",
-    "stream": ""
+    "stream": "https://montecarlo.hostingradio.ru/montecarlo96.aacp"
   }
 ];
 const $ = s => document.querySelector(s);
 const audio = $("#audio");
 let selected = null, tab = "all", genre = null;
 let favorites = new Set(JSON.parse(localStorage.getItem("radioMayFavs") || "[]"));
-const eq = $("#eq");
-[10,18,26,15,30,22,13,25,17,9,20].forEach(h=>{const e=document.createElement("i");e.style.setProperty("--h",h+"px");eq.append(e)});
+const vizCanvas = $("#visualizer");
+const vizCtx = vizCanvas.getContext("2d");
+let vizFrame = 0, vizActive = false, hlsPlayer = null;
+const BAR_COUNT = 48;
+const vizValues = new Array(BAR_COUNT).fill(2);
+const peakValues = new Array(BAR_COUNT).fill(2);
+let lastVizTime = 0;
+
+function drawVisualizer(timestamp){
+  vizFrame = requestAnimationFrame(drawVisualizer);
+  const w = vizCanvas.width, h = vizCanvas.height;
+  vizCtx.clearRect(0,0,w,h);
+  vizCtx.fillStyle = "#080706";
+  vizCtx.fillRect(0,0,w,h);
+  // Subtle Winamp-style grid
+  vizCtx.strokeStyle = "rgba(190,145,91,.12)";
+  vizCtx.lineWidth = 1;
+  for(let y=0;y<h;y+=18){vizCtx.beginPath();vizCtx.moveTo(0,y+.5);vizCtx.lineTo(w,y+.5);vizCtx.stroke();}
+  const gap = 4, barW = (w-gap*(BAR_COUNT-1))/BAR_COUNT;
+  const dt = Math.min(40, timestamp-lastVizTime || 16); lastVizTime=timestamp;
+  for(let i=0;i<BAR_COUNT;i++){
+    let target = 2;
+    if(vizActive) {
+      // Animated Winamp-style visualizer. Direct radio streams often disable Web Audio CORS,
+      // so this avoids routing cross-origin audio through Web Audio (which can mute playback).
+      const pulse = Math.sin(timestamp/175 + i*1.31) + Math.cos(timestamp/287 + i*.73);
+      const bass = Math.sin(timestamp/360 + i*.22);
+      target = 5 + Math.max(0,(pulse+2.2)/4.2)*(h-17) * (.72 + .28*Math.max(0,bass));
+    }
+    vizValues[i] += (target-vizValues[i])*(target>vizValues[i]?.55:.18);
+    if(vizActive) peakValues[i]=Math.max(vizValues[i],peakValues[i]-dt*.018);
+    else peakValues[i]=Math.max(2,peakValues[i]-dt*.05);
+    const x=i*(barW+gap), bh=Math.max(2,vizValues[i]), y=h-bh-5;
+    const grad=vizCtx.createLinearGradient(0,y,0,h);
+    grad.addColorStop(0,"#e64a27");grad.addColorStop(.42,"#f0a52e");grad.addColorStop(1,"#69b83b");
+    vizCtx.fillStyle=grad;
+    vizCtx.fillRect(x,y,barW,bh);
+    // Peak indicator, like classic desktop visualizers
+    vizCtx.fillStyle="#f7d77b";
+    vizCtx.fillRect(x,Math.max(1,h-peakValues[i]-5),barW,2);
+  }
+}
+function setVisualizer(active){
+  vizActive=active;
+  if(!vizFrame) vizFrame=requestAnimationFrame(drawVisualizer);
+  $("#vizMode").textContent=active?"PLAYING":"STANDBY";
+  $("#cassetteStage").classList.toggle("playing",active);
+}
+setVisualizer(false);
 function saveFavs(){localStorage.setItem("radioMayFavs",JSON.stringify([...favorites]));}
 function filtered(){
  let q=$("#search").value.trim().toLowerCase();
@@ -297,27 +361,59 @@ function render(){
 }
 function selectStation(s){
  selected=s;$("#nowName").textContent=s.name;$("#nowDesc").textContent=s.tagline;$("#live").innerHTML='<span class="dot"></span>READY';
- $("#status").textContent=s.stream?"Станция выбрана. Нажми Play.":"Станция добавлена в каталог. Прямой поток ещё не подключён — проверяем официальную ссылку.";
+ $("#status").textContent=s.stream?"Станция выбрана. Нажми Play.":"Поток этой станции пока не добавлен.";
  render();
 }
 async function play(){
  if(!selected){$("#status").textContent="Сначала выбери радиостанцию.";return;}
- if(!selected.stream){$("#status").textContent="Для этой станции пока не подключён проверенный аудиопоток.";return;}
- if(audio.src!==selected.stream){audio.src=selected.stream;audio.load();}
- try{await audio.play();$("#live").innerHTML='<span class="dot"></span>LIVE';$("#status").textContent="Воспроизведение началось.";eq.classList.add("playing");$("#play").textContent="▶";}
- catch(e){$("#status").textContent="Не удалось запустить поток. Возможно, станция недоступна или требует другой формат.";eq.classList.remove("playing");}
+ if(!selected.stream){$("#status").textContent="Для этой станции поток пока не добавлен. Выбери другую станцию.";return;}
+ try{
+   if(hlsPlayer){hlsPlayer.destroy();hlsPlayer=null;}
+   audio.pause();audio.removeAttribute("src");audio.load();
+   if(selected.stream.endsWith('.m3u8')){
+     if(audio.canPlayType('application/vnd.apple.mpegurl')){
+       audio.src=selected.stream;audio.load();
+     } else if(window.Hls && Hls.isSupported()){
+       hlsPlayer=new Hls({enableWorker:true,lowLatencyMode:true});
+       hlsPlayer.loadSource(selected.stream);
+       hlsPlayer.attachMedia(audio);
+       await new Promise((resolve,reject)=>{
+         const onReady=()=>{cleanup();resolve();};
+         const onError=(event,data)=>{if(data.fatal){cleanup();reject(new Error('HLS stream error'));}};
+         const cleanup=()=>{hlsPlayer?.off(Hls.Events.MANIFEST_PARSED,onReady);hlsPlayer?.off(Hls.Events.ERROR,onError);};
+         hlsPlayer.on(Hls.Events.MANIFEST_PARSED,onReady);
+         hlsPlayer.on(Hls.Events.ERROR,onError);
+       });
+     } else {
+       throw new Error('HLS playback is not supported in this browser');
+     }
+   } else {
+     audio.src=selected.stream;audio.load();
+   }
+   await audio.play();
+   $("#live").innerHTML='<span class="dot"></span>LIVE';
+   $("#status").textContent="Воспроизведение началось.";
+   setVisualizer(true);
+   $("#play").textContent="▶";
+ }
+ catch(e){
+   console.warn('Radio playback error:',e);
+   $("#status").textContent="Не удалось запустить эфир. Попробуй другую станцию или повтори позже.";
+   $("#live").textContent="ERROR";
+   setVisualizer(false);
+ }
 }
-function stop(){audio.pause();audio.removeAttribute("src");audio.load();eq.classList.remove("playing");$("#live").innerHTML='<span class="dot"></span>READY';$("#status").textContent="Воспроизведение остановлено.";}
-$("#play").onclick=play;$("#pause").onclick=()=>{audio.pause();eq.classList.remove("playing");$("#live").textContent="PAUSE";$("#status").textContent="Пауза.";};$("#stop").onclick=stop;
+function stop(){audio.pause();if(hlsPlayer){hlsPlayer.destroy();hlsPlayer=null;}audio.removeAttribute("src");audio.load();setVisualizer(false);$("#live").innerHTML='<span class="dot"></span>READY';$("#status").textContent="Воспроизведение остановлено.";}
+$("#play").onclick=play;$("#pause").onclick=()=>{audio.pause();setVisualizer(false);$("#live").textContent="PAUSE";$("#status").textContent="Пауза.";};$("#stop").onclick=stop;
 function step(dir){if(!selected){selectStation(STATIONS[0]);return;}let i=STATIONS.findIndex(s=>s.id===selected.id);i=(i+dir+STATIONS.length)%STATIONS.length;selectStation(STATIONS[i]);if(STATIONS[i].stream)play();}
 $("#prev").onclick=()=>step(-1);$("#next").onclick=()=>step(1);
 $("#volume").oninput=e=>{audio.volume=Number(e.target.value);$("#volpct").textContent=Math.round(audio.volume*100)+"%";};audio.volume=.8;
 $("#search").oninput=render;
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;genre=null;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));render();});
 $("#info").onclick=()=>alert("Радио Май — каталог любимых интернет-радиостанций. Потоки добавляются после проверки доступности и условий вещания.");
-audio.addEventListener("playing",()=>{eq.classList.add("playing");$("#live").innerHTML='<span class="dot"></span>LIVE';});
-audio.addEventListener("waiting",()=>{$("#live").textContent="BUFFER";});
-audio.addEventListener("error",()=>{$("#live").textContent="ERROR";$("#status").textContent="Поток не загрузился. Проверим адрес и формат станции.";eq.classList.remove("playing");});
+audio.addEventListener("playing",()=>{setVisualizer(true);$("#live").innerHTML='<span class="dot"></span>LIVE';});
+audio.addEventListener("waiting",()=>{setVisualizer(false);$("#live").textContent="BUFFER";});
+audio.addEventListener("error",()=>{if(hlsPlayer){hlsPlayer.destroy();hlsPlayer=null;}$("#live").textContent="ERROR";$("#status").textContent="Поток не загрузился. Проверим адрес и формат станции.";setVisualizer(false);});
 render();
 </script>
 </body></html>

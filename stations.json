@@ -5,7 +5,7 @@
     "tagline": "Главная станция",
     "genre": "Избранное",
     "key": "pioneer",
-    "stream": ""
+    "stream": "https://ppr.status-media.ru/ppr128.mp3"
   },
   {
     "id": 1,
@@ -13,7 +13,7 @@
     "tagline": "Популярные хиты",
     "genre": "Поп",
     "key": "zaycev",
-    "stream": ""
+    "stream": "https://abs.zaycev.fm/pop256k"
   },
   {
     "id": 2,
@@ -21,7 +21,7 @@
     "tagline": "Танцевальная музыка",
     "genre": "Dance",
     "key": "record",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/rr_main96.aacp"
   },
   {
     "id": 3,
@@ -29,7 +29,7 @@
     "tagline": "Русские танцевальные хиты",
     "genre": "Dance",
     "key": "record-russian",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/rus96.aacp"
   },
   {
     "id": 4,
@@ -37,7 +37,7 @@
     "tagline": "Хиты 90-х",
     "genre": "Ретро",
     "key": "record-90",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/sd9096.aacp"
   },
   {
     "id": 5,
@@ -45,7 +45,7 @@
     "tagline": "Рок-музыка",
     "genre": "Rock",
     "key": "record-rock",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/rock96.aacp"
   },
   {
     "id": 6,
@@ -53,7 +53,7 @@
     "tagline": "Спокойная электронная музыка",
     "genre": "Chill",
     "key": "record-chill",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/chil96.aacp"
   },
   {
     "id": 7,
@@ -61,7 +61,7 @@
     "tagline": "Deep house",
     "genre": "House",
     "key": "record-deep",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/deep96.aacp"
   },
   {
     "id": 8,
@@ -69,7 +69,7 @@
     "tagline": "Транс",
     "genre": "Electronic",
     "key": "record-trance",
-    "stream": ""
+    "stream": "https://radiorecord.hostingradio.ru/tm96.aacp"
   },
   {
     "id": 9,
@@ -77,7 +77,7 @@
     "tagline": "Рок без компромиссов",
     "genre": "Rock",
     "key": "maximum",
-    "stream": ""
+    "stream": "https://maximum.hostingradio.ru/maximum96.aacp"
   },
   {
     "id": 10,
@@ -85,7 +85,7 @@
     "tagline": "Юмор и музыка",
     "genre": "Разное",
     "key": "comedy",
-    "stream": ""
+    "stream": "https://hls-01-gpm.hostingradio.ru/comedyradio8552/128/playlist.m3u8"
   },
   {
     "id": 11,
@@ -93,7 +93,7 @@
     "tagline": "Современные хиты",
     "genre": "Поп",
     "key": "marusya",
-    "stream": ""
+    "stream": "https://radio-holding.ru:9433/marusya_default"
   },
   {
     "id": 12,
@@ -101,7 +101,7 @@
     "tagline": "Современные хиты",
     "genre": "Поп",
     "key": "europa",
-    "stream": ""
+    "stream": "https://europaplus.hostingradio.ru:8014/europaplus320.mp3"
   },
   {
     "id": 13,
@@ -109,7 +109,7 @@
     "tagline": "Танцевальная музыка",
     "genre": "Dance",
     "key": "dfm",
-    "stream": ""
+    "stream": "https://dfm.hostingradio.ru/dfm96.aacp"
   },
   {
     "id": 14,
@@ -157,7 +157,7 @@
     "tagline": "Поп и романтика",
     "genre": "Поп",
     "key": "love",
-    "stream": ""
+    "stream": "https://air2.volna.top/LoveRadio-MSK"
   },
   {
     "id": 20,
@@ -173,6 +173,6 @@
     "tagline": "Лаунж и классика",
     "genre": "Chill",
     "key": "montecarlo",
-    "stream": ""
+    "stream": "https://montecarlo.hostingradio.ru/montecarlo96.aacp"
   }
 ]
