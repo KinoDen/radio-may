@@ -124,6 +124,85 @@ body[data-theme="light"] .vol{color:#30383d}
 body[data-theme="light"] .ctrl{border-color:#9aa3a8;background:linear-gradient(#fff,#b7c0c5 35%,#6e787e 100%)}
 body[data-theme="light"] .ctrl.play{background:radial-gradient(circle at 38% 25%,#fff0bd,#e18a16 57%,#8a4800);color:#241507}
 body[data-theme="light"] .filter{color:#252c31}
+
+/* RADIO MAY — reference layout: full-width Hi-Fi deck + compact station browser */
+.workspace{grid-template-columns:minmax(0,2fr) minmax(420px,1fr);gap:10px}
+.player{gap:10px;padding:12px}
+.library{padding:10px;min-height:0}
+.libbody{display:block;min-height:0;flex:1}
+.filters{display:none!important}
+.stations{max-height:none;height:100%;min-height:0;overflow:auto;gap:2px;padding:2px 5px 2px 2px}
+.station{min-height:61px;padding:5px 9px;gap:12px;border-radius:2px;border-width:0 0 1px 0;background:linear-gradient(90deg,#171a1d,#090b0d);border-color:#50565b}
+.station:hover{background:linear-gradient(90deg,#303438,#15191c)}
+.station.active{border:1px solid #ffb52b;border-radius:8px;background:linear-gradient(90deg,#6c3909,#25190b 80%);box-shadow:inset 0 0 0 1px #ffcc6866,0 0 10px #ff9d1655}
+.stationlogo{width:94px;height:52px;border-radius:8px;background:#050607;border:1px solid #6e7479;box-shadow:inset 0 1px #fff4,0 2px 4px #0009}
+.stationlogo img{object-fit:contain;padding:2px}
+.stationinfo{min-width:0}
+.stationname{font-size:17px;line-height:1.15}
+.stationtag{font-size:13px;margin-top:4px}
+.ststate{font-size:10px;letter-spacing:.5px}
+.fav{font-size:25px;padding:3px 7px}
+.libtop{grid-template-columns:1fr 1fr auto;gap:8px}
+.tab{font-size:15px;padding:13px 8px}
+.search{margin:10px 0 9px;padding:13px 14px;font-size:15px}
+.now{grid-template-columns:260px minmax(0,1fr);gap:20px;padding:4px 7px 7px}
+.cover{height:218px}
+.trackname{font-size:clamp(29px,2.8vw,43px)}
+.tracktag{font-size:clamp(17px,1.7vw,23px)}
+.badges{margin-top:17px}
+.spectrum{height:142px;padding:9px 13px 7px}
+#spectrum{height:112px}
+.instrumentrow{grid-template-columns:1fr 1fr 150px 1.25fr;min-height:166px;gap:9px}
+.gauge{height:132px}
+.tube{height:128px;width:47px}
+.eqsliders{height:128px}
+.eqrail{height:99px}
+.controls{min-height:96px;gap:11px;padding:10px 12px}
+.ctrl{width:62px;height:61px;border-radius:12px}
+.ctrl.play{width:78px;height:78px}
+.vol{margin-left:14px;min-width:170px}
+.bottomnav{margin-top:10px;min-height:86px;justify-content:space-between;gap:8px;padding:9px 12px}
+.navbtn{font-size:15px;padding:13px 17px}
+.navbtn.round{width:70px;height:62px;font-size:25px}
+@media(max-width:1200px){
+ .workspace{grid-template-columns:minmax(0,1.65fr) minmax(360px,1fr)}
+ .now{grid-template-columns:190px minmax(0,1fr)}
+ .cover{height:180px}
+ .stationlogo{width:72px;height:46px}
+ .stationname{font-size:14px}.stationtag{font-size:11px}
+ .instrumentrow{grid-template-columns:1fr 1fr 110px 1.15fr}
+ .tube{width:35px;height:112px}
+ .navbtn{padding:10px 12px;font-size:13px}
+}
+@media(max-width:820px){
+ .workspace{grid-template-columns:1fr}
+ .library{min-height:650px}
+ .stationlogo{width:82px;height:48px}
+ .stationname{font-size:16px}.stationtag{font-size:12px}
+ .bottomnav{justify-content:flex-start}
+}
+@media(max-width:560px){
+ .now{grid-template-columns:105px minmax(0,1fr)}
+ .cover{height:125px}
+ .instrumentrow{grid-template-columns:1fr 1fr}
+ .tubes{min-height:120px}
+ .eqbox{grid-column:1/-1}
+ .stationlogo{width:55px;height:42px}
+ .stationname{font-size:13px}.stationtag{font-size:10px}
+ .station{min-height:52px}
+ .tab{font-size:12px;padding:10px 4px}
+ .navbtn{padding:9px 10px}
+ .navbtn.round{width:46px;height:44px}
+}
+/* Light skin retains the same exact geometry */
+body[data-theme="light"] .station{border-color:#9da6ab;background:linear-gradient(90deg,#f4f6f7,#d5dce0)}
+body[data-theme="light"] .station.active{background:linear-gradient(90deg,#ffe1a7,#f1c477);border-color:#d58a21}
+body[data-theme="light"] .stationtag{color:#525d64}
+body[data-theme="light"] .fav{color:#586168}
+body[data-theme="light"] .fav.on{color:#b66a08}
+
+.ctrl.utility{width:52px;height:52px;border-radius:9px}.ctrl.utility svg{width:23px;height:23px}.eq-hidden{visibility:hidden}
+
 </style>
 </head>
 <body data-theme="dark">
@@ -161,10 +240,11 @@ body[data-theme="light"] .filter{color:#252c31}
   <div class="instrument eqbox"><div class="eqtitle">10-BAND EQUALIZER</div><div class="eqsliders" id="eqSliders"></div></div>
  </div>
  <div class="controls">
-  <button class="ctrl" id="prev" title="Предыдущая станция"><svg viewBox="0 0 24 24"><path d="M5 5h2v14H5zm14 0v14L8 12z"/></svg></button>
+  <button class="ctrl utility" id="showStations" title="Показать список станций"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="7" cy="6" r="1.5"/><circle cx="7" cy="12" r="1.5"/><circle cx="7" cy="18" r="1.5"/></svg></button>
+ <button class="ctrl utility" id="showEq" title="Показать эквалайзер"><svg viewBox="0 0 24 24"><path d="M6 4v16M12 4v16M18 4v16" stroke="currentColor" stroke-width="2" fill="none"/><path d="M3 9h6v3H3zM9 14h6v3H9zM15 7h6v3h-6z" fill="currentColor"/></svg></button>
+ <button class="ctrl" id="prev" title="Предыдущая станция"><svg viewBox="0 0 24 24"><path d="M5 5h2v14H5zm14 0v14L8 12z"/></svg></button>
   <button class="ctrl" id="stop" title="Стоп"><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg></button>
   <button class="ctrl play" id="play" title="Воспроизвести"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></button>
-  <button class="ctrl" id="pause" title="Пауза"><svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg></button>
   <button class="ctrl" id="next" title="Следующая станция"><svg viewBox="0 0 24 24"><path d="M17 5h2v14h-2zM5 5v14l11-7z"/></svg></button>
   <div class="vol"><span>🔊</span><input id="volume" type="range" min="0" max="1" step=".01" value=".8"><b id="vol">80%</b></div>
   <button class="ctrl" id="favCurrent" title="Добавить в избранное" style="width:50px;height:48px;border-radius:10px"><svg viewBox="0 0 24 24"><path d="m12 2 2.9 6 6.6.9-4.8 4.7 1.1 6.6-5.8-3.1-5.8 3.1 1.1-6.6L2.5 8.9 9.1 8z"/></svg></button>
@@ -175,7 +255,7 @@ body[data-theme="light"] .filter{color:#252c31}
  <div class="libtop">
   <button class="tab active" data-tab="stations">◉ Станции</button>
   <button class="tab" data-tab="favorites">☆ Избранное</button>
-  <button class="tab" data-tab="history">◷ История</button>
+  <button class="tab" data-tab="search">⌕ Поиск</button>
  </div>
  <input class="search" id="search" placeholder="⌕  Поиск радиостанции..." autocomplete="off">
  <div class="libbody">
@@ -258,16 +338,24 @@ async function loadSource(src){
 async function play(){
  if(!selected){$("#status").textContent="Сначала выбери станцию в списке.";return}
  const urls=[selected.stream,...(selected.fallback||[])].filter(Boolean);$("#status").textContent="Подключаюсь к "+selected.name+"…";$("#live").textContent="● CONNECT";
- for(const url of urls){try{await loadSource(url);active=true;$("#live").textContent="● LIVE";$("#specState").textContent="48 BAND · ON AIR";$("#status").textContent="Эфир подключён.";renderStations();return}catch(e){if(hls){hls.destroy();hls=null}audio.pause();audio.removeAttribute("src");audio.load()}}
+ for(const url of urls){try{await loadSource(url);active=true;$("#live").textContent="● LIVE";$("#specState").textContent="48 BAND · ON AIR";$("#play").innerHTML='<svg viewBox="0 0 24 24"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></svg>';$("#status").textContent="Эфир подключён.";renderStations();return}catch(e){if(hls){hls.destroy();hls=null}audio.pause();audio.removeAttribute("src");audio.load()}}
  active=false;$("#live").textContent="● ERROR";$("#status").textContent="Поток не открылся. Возможно, станция сменила адрес или ограничила воспроизведение.";renderStations();
 }
-function stop(){audio.pause();audio.removeAttribute("src");audio.load();if(hls){hls.destroy();hls=null}active=false;$("#live").textContent="● READY";$("#specState").textContent="48 BAND · STANDBY";$("#status").textContent="Воспроизведение остановлено.";renderStations()}
+function stop(){audio.pause();audio.removeAttribute("src");audio.load();if(hls){hls.destroy();hls=null}active=false;$("#live").textContent="● READY";$("#specState").textContent="48 BAND · STANDBY";$("#play").innerHTML='<svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>';$("#status").textContent="Воспроизведение остановлено.";renderStations()}
 function step(dir){let list=currentItems();if(!list.length)list=STATIONS;if(!selected){selectStation(list[0]);play();return}let i=list.findIndex(s=>s.id===selected.id);let next=list[(i+dir+list.length)%list.length];selectStation(next);play()}
-$("#play").onclick=play;$("#pause").onclick=()=>{audio.pause();active=false;$("#live").textContent="● PAUSE";$("#specState").textContent="48 BAND · PAUSE";$("#status").textContent="Пауза.";renderStations()};$("#stop").onclick=stop;$("#prev").onclick=()=>step(-1);$("#next").onclick=()=>step(1);
+$("#showStations").onclick=()=>$("#stations").scrollIntoView({block:"nearest",behavior:"smooth"});
+$("#showEq").onclick=()=>{$(".eqbox").classList.toggle("eq-hidden")};
+$("#play").onclick=()=>{
+ if(active && !audio.paused){audio.pause();active=false;$("#live").textContent="● PAUSE";$("#specState").textContent="48 BAND · PAUSE";$("#status").textContent="Пауза.";$("#play").innerHTML='<svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg>';renderStations();}
+ else {play();}
+};$("#stop").onclick=stop;$("#prev").onclick=()=>step(-1);$("#next").onclick=()=>step(1);
 $("#volume").oninput=e=>{audio.volume=+e.target.value;$("#vol").textContent=Math.round(audio.volume*100)+"%"};audio.volume=.8;
 $("#favCurrent").onclick=()=>{if(selected)toggleFav(selected)};
 $("#search").oninput=renderStations;
-document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));renderStations()});
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{
+ if(b.dataset.tab==="search"){ $("#search").focus(); $("#search").scrollIntoView({block:"nearest",behavior:"smooth"}); return; }
+ tab=b.dataset.tab;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));renderStations()
+});
 document.querySelectorAll(".bottomnav [data-country]").forEach(b=>b.onclick=()=>{if(b.dataset.country==="Ещё"){country=country==="Италия"?"Все страны":"Италия"}else country=b.dataset.country;tab="stations";document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.tab===tab));renderFilters();renderStations();syncBottom()});
 $("#darkBtn").onclick=()=>setTheme("dark");$("#lightBtn").onclick=()=>setTheme("light");
 function setTheme(t){document.body.dataset.theme=t;$("#darkBtn").classList.toggle("active",t==="dark");$("#lightBtn").classList.toggle("active",t==="light");localStorage.setItem("radioMayTheme",t);document.querySelector('meta[name="theme-color"]').content=t==="dark"?"#101214":"#dce0e2"}
