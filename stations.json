@@ -345,5 +345,45 @@
     "flag": "🇩🇪",
     "domain": "80s80s.de",
     "stream": "https://streams.80s80s.de/80s80s/mp3-192/radiosure/"
+  },
+  {
+    "id": "bbc1",
+    "name": "BBC Radio 1",
+    "tagline": "New music, chart hits & dance",
+    "genre": "Поп / Электроника",
+    "country": "Великобритания",
+    "flag": "🇬🇧",
+    "domain": "bbc.co.uk",
+    "stream": "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_one"
+  },
+  {
+    "id": "bbc2",
+    "name": "BBC Radio 2",
+    "tagline": "Great music and popular classics",
+    "genre": "Поп / Ретро",
+    "country": "Великобритания",
+    "flag": "🇬🇧",
+    "domain": "bbc.co.uk",
+    "stream": "https://stream.live.vc.bbcmedia.co.uk/bbc_radio_two"
+  },
+  {
+    "id": "franceinter",
+    "name": "France Inter",
+    "tagline": "Actualité, culture et musique",
+    "genre": "Новости / Разное",
+    "country": "Франция",
+    "flag": "🇫🇷",
+    "domain": "radiofrance.fr",
+    "stream": "https://icecast.radiofrance.fr/franceinter-midfi.mp3"
+  },
+  {
+    "id": "deutschlandfunk",
+    "name": "Deutschlandfunk",
+    "tagline": "Nachrichten und Hintergrund",
+    "genre": "Новости",
+    "country": "Германия",
+    "flag": "🇩🇪",
+    "domain": "deutschlandfunk.de",
+    "stream": "https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3"
   }
 ]

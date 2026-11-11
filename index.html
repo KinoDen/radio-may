@@ -203,6 +203,133 @@ body[data-theme="light"] .fav.on{color:#b66a08}
 
 .ctrl.utility{width:52px;height:52px;border-radius:9px}.ctrl.utility svg{width:23px;height:23px}.eq-hidden{visibility:hidden}
 
+
+/* RADIO MAY · REFERENCE SKIN v1.5 */
+html,body{min-height:100%;height:100%}
+body{padding:8px}
+.app{width:min(100%,1780px);margin:0 auto}
+.top{height:68px;padding:7px 18px;gap:16px}
+.brand{font-size:clamp(25px,2.65vw,39px)}
+.brandicon{display:none}
+.brand small{letter-spacing:2.1px}
+.ecg{width:58px;height:30px}
+.toplabel{font-size:17px}
+.topmeta{gap:7px}
+.meta{padding:6px 9px}
+.workspace{grid-template-columns:minmax(0,2.08fr) minmax(340px,.98fr);gap:9px;margin-top:9px;align-items:stretch;min-height:calc(100vh - 94px)}
+.player{padding:11px;gap:9px;min-height:0}
+.now{grid-template-columns:180px minmax(0,1fr);gap:16px;padding:1px 5px 6px}
+.cover{height:142px;border-radius:15px}
+.cover img{width:92%;height:92%;object-fit:contain}
+.trackname{font-size:clamp(25px,2.5vw,37px)}
+.tracktag{font-size:clamp(15px,1.5vw,21px)}
+.badges{margin-top:11px;gap:8px}
+.badge{padding:7px 13px;font-size:13px}
+.badge.live{font-size:16px}
+.progressrow{margin-top:11px}
+.meters-spectrum{display:grid;grid-template-columns:minmax(150px,.82fr) minmax(150px,.82fr) minmax(260px,1.55fr);gap:8px;min-height:150px}
+.instrument.vubox{padding:7px 7px 3px;border-radius:12px}
+.vutitle{font-size:10px;letter-spacing:1.2px}
+.gauge{height:116px}
+.spectrum{height:150px;padding:8px 10px 6px;border-radius:12px;min-width:0}
+#spectrum{height:116px}
+.controls{min-height:70px;gap:9px;padding:8px 10px}
+.ctrl{width:58px;height:54px;border-radius:9px}
+.ctrl svg{width:24px;height:24px}
+.ctrl.play{width:68px;height:62px;border-radius:50%}
+.vol{margin-left:8px;min-width:175px}
+.vol input{width:115px}
+.status{min-height:13px}
+.library{padding:9px;min-height:0;overflow:hidden}
+.libtop{grid-template-columns:1fr 1fr 1fr;gap:6px}
+.tab{padding:10px 4px;font-size:13px}
+.search{margin:9px 0;padding:10px 12px}
+.libbody{display:block;min-height:0;flex:1}
+.filters{display:none!important}
+.stations{max-height:calc(100vh - 215px);height:100%;gap:2px;padding-right:4px}
+.station{min-height:47px;padding:4px 7px;gap:9px;border-radius:5px;background:linear-gradient(90deg,#1c2023,#111416);border-color:#4d555a}
+.stationlogo{width:62px;height:35px;border-radius:5px}
+.stationlogo img{object-fit:contain}
+.stationname{font-size:14px}
+.stationtag{font-size:10px}
+.ststate{font-size:9px}
+.fav{font-size:20px}
+.bottomnav{display:none!important}
+.instrument.tubes,.instrument.eqbox{display:none!important}
+body:not([data-theme="light"]) .player,body:not([data-theme="light"]) .library{background:linear-gradient(145deg,#292d30 0%,#111416 48%,#252a2e 100%)}
+body:not([data-theme="light"]) .workspace .metal{border-color:#747d82}
+body:not([data-theme="light"]) .station.active{background:linear-gradient(90deg,#74410e,#30251a 76%);border-color:#ffb83e;box-shadow:inset 0 0 0 1px #ffca6b77,0 0 9px #ff9d1644}
+body:not([data-theme="light"]) .station.active:before{content:"▶";color:#ffbd3d;font-size:14px;margin-left:1px}
+body[data-theme="light"]{background:radial-gradient(ellipse at 50% -20%,#fff 0,#e4e8ea 46%,#b9c0c5 100%)}
+body[data-theme="light"] .top,
+body[data-theme="light"] .player,
+body[data-theme="light"] .library{background:linear-gradient(145deg,#f8fafb 0%,#c3cbd0 27%,#e8ecee 60%,#adb6bc 100%);border-color:#89949a;box-shadow:inset 0 1px #fff, inset 0 -2px #899197,0 5px 14px #68727a55}
+body[data-theme="light"] .top{background:linear-gradient(#f9fbfc,#c1c9ce 55%,#e8ecee)}
+body[data-theme="light"] .brand{color:#1d2428;text-shadow:0 1px #fff}
+body[data-theme="light"] .brand small{color:#4d565c}
+body[data-theme="light"] .toplabel,body[data-theme="light"] .tracktag,body[data-theme="light"] .progressrow{color:#293238}
+body[data-theme="light"] .meta,body[data-theme="light"] .theme,body[data-theme="light"] .windowbtn,body[data-theme="light"] .badge,body[data-theme="light"] .tab{background:linear-gradient(#fbfcfd,#c1c9ce);color:#20282d;border-color:#87939a;box-shadow:inset 0 1px #fff,0 2px 4px #77818855}
+body[data-theme="light"] .theme button.active,body[data-theme="light"] .tab.active{background:linear-gradient(#ffd47b,#d8891d);color:#291a05;border-color:#e3a33a}
+body[data-theme="light"] .cover{background:radial-gradient(circle at 50% 25%,#f9fbfc,#9da8ae 80%);border-color:#89949a}
+body[data-theme="light"] .trackname{color:#171c20;text-shadow:0 1px #fff}
+body[data-theme="light"] .instrument.vubox,body[data-theme="light"] .spectrum{border-color:#8b969c;box-shadow:inset 0 1px #fff,0 3px 7px #77818866}
+body[data-theme="light"] .instrument.vubox{background:linear-gradient(145deg,#f4f6f7,#aeb8bd 65%,#e8ecee)}
+body[data-theme="light"] .vutitle{color:#6c4a12}
+body[data-theme="light"] .controls{background:linear-gradient(#f9fbfc,#aeb8bd 52%,#e7ebed);border-color:#8b969c;box-shadow:inset 0 1px #fff,0 3px 7px #77818866}
+body[data-theme="light"] .ctrl:not(.play){background:linear-gradient(180deg,#fff 0%,#cbd2d6 25%,#7c878e 57%,#e8ecee 100%);color:#20282d;border-color:#69757c;box-shadow:inset 0 1px #fff, inset 0 -2px #68737a,0 3px 6px #66707888}
+body[data-theme="light"] .ctrl.play{background:radial-gradient(circle at 38% 25%,#fff0c5,#e99a20 57%,#8a4b05);color:#281806}
+body[data-theme="light"] .station{background:linear-gradient(90deg,#fbfcfd,#d9dfe2);border-color:#a0aaaf;color:#20272b}
+body[data-theme="light"] .station:hover{background:linear-gradient(90deg,#fff,#e9edef)}
+body[data-theme="light"] .station.active{background:linear-gradient(90deg,#ffdda0,#f1c77f);border-color:#d28a25;color:#241a0c}
+body[data-theme="light"] .stationtag,body[data-theme="light"] .ststate,body[data-theme="light"] .fav{color:#5b656b}
+body[data-theme="light"] .station.active .fav{color:#7d4a0b}
+body[data-theme="light"] .search{background:#fff;color:#202326;border-color:#9ba5ab;box-shadow:inset 0 1px 4px #89949b55}
+body[data-theme="light"] .status{color:#59636a}
+@media(max-width:1050px){
+ .workspace{grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr)}
+ .now{grid-template-columns:145px minmax(0,1fr)}
+ .cover{height:130px}
+ .meters-spectrum{grid-template-columns:1fr 1fr 1.45fr}
+ .gauge{height:104px}
+ .stations{max-height:calc(100vh - 205px)}
+}
+@media(max-width:760px){
+ body{padding:5px}
+ .top{height:auto;min-height:65px;flex-wrap:wrap}
+ .topmeta{width:100%;justify-content:space-between}
+ .workspace{grid-template-columns:1fr;min-height:0}
+ .player{min-height:0}
+ .library{min-height:530px}
+ .stations{max-height:480px}
+ .now{grid-template-columns:130px minmax(0,1fr)}
+ .cover{height:125px}
+ .meters-spectrum{grid-template-columns:1fr 1fr}
+ .spectrum{grid-column:1/-1}
+ .controls{flex-wrap:wrap}
+}
+@media(max-width:480px){
+ .brand{font-size:25px}
+ .ecg,.topdivider,.toplabel{display:none}
+ .now{grid-template-columns:100px minmax(0,1fr);gap:9px}
+ .cover{height:105px}
+ .trackname{font-size:20px}
+ .tracktag{font-size:12px}
+ .badges{margin-top:7px;gap:4px}
+ .badge{padding:5px 7px;font-size:10px}
+ .badge.live{font-size:11px}
+ .progressrow{font-size:11px;margin-top:7px}
+ .meters-spectrum{grid-template-columns:1fr 1fr;gap:5px}
+ .gauge{height:92px}
+ .spectrum{height:120px}
+ #spectrum{height:88px}
+ .ctrl{width:44px;height:44px}
+ .ctrl.play{width:54px;height:54px}
+ .vol{min-width:100%;justify-content:center}
+ .libtop .tab{font-size:11px;padding:9px 2px}
+ .stationlogo{width:48px;height:32px}
+ .stationname{font-size:12px}
+}
+
 </style>
 </head>
 <body data-theme="dark">
@@ -232,16 +359,35 @@ body[data-theme="light"] .fav.on{color:#b66a08}
    <div class="progressrow"><span id="elapsed">00:00</span><div class="progress"><span id="progressFill"></span></div><span>∞</span></div>
   </div>
  </div>
- <div class="spectrum"><div class="shead"><span>SPECTRUM ANALYZER</span><b id="specState">48 BAND · STANDBY</b></div><canvas id="spectrum"></canvas></div>
- <div class="instrumentrow">
-  <div class="instrument vubox"><div class="vutitle">VU METER · LEFT</div><div class="gauge"><svg viewBox="0 0 240 120" aria-label="Левый VU-метр"><path d="M24 100 Q120 -10 216 100" stroke="#f6d77e" stroke-width="3" fill="none"/><path d="M35 91 L29 84 M57 68 L50 61 M83 50 L78 42 M120 40 L120 30 M157 50 L162 42 M183 68 L190 61 M205 91 L212 84" stroke="#f6d77e" stroke-width="2"/><text x="120" y="88" fill="#ffdc8a" text-anchor="middle" font-size="19" font-family="Georgia">VU</text><text x="120" y="111" fill="#ffcf69" text-anchor="middle" font-size="13">L</text><path d="M120 99 L120 27" stroke="#fff0b2" stroke-width="3" class="needle" id="needleL"/></svg></div></div>
-  <div class="instrument vubox"><div class="vutitle">VU METER · RIGHT</div><div class="gauge"><svg viewBox="0 0 240 120" aria-label="Правый VU-метр"><path d="M24 100 Q120 -10 216 100" stroke="#f6d77e" stroke-width="3" fill="none"/><path d="M35 91 L29 84 M57 68 L50 61 M83 50 L78 42 M120 40 L120 30 M157 50 L162 42 M183 68 L190 61 M205 91 L212 84" stroke="#f6d77e" stroke-width="2"/><text x="120" y="88" fill="#ffdc8a" text-anchor="middle" font-size="19" font-family="Georgia">VU</text><text x="120" y="111" fill="#ffcf69" text-anchor="middle" font-size="13">R</text><path d="M120 99 L120 27" stroke="#fff0b2" stroke-width="3" class="needle" id="needleR"/></svg></div></div>
-  <div class="instrument tubes" aria-label="Ламповые индикаторы"><div class="tube"></div><div class="tube"></div></div>
-  <div class="instrument eqbox"><div class="eqtitle">10-BAND EQUALIZER</div><div class="eqsliders" id="eqSliders"></div></div>
+ 
+ <div class="meters-spectrum">
+  <div class="instrument vubox">
+   <div class="vutitle">VU METER · LEFT</div>
+   <div class="gauge"><svg viewBox="0 0 240 120" aria-label="Левый VU-метр">
+    <path d="M24 100 Q120 -10 216 100" stroke="#f6d77e" stroke-width="3" fill="none"/>
+    <path d="M35 91 L29 84 M57 68 L50 61 M83 50 L78 42 M120 40 L120 30 M157 50 L162 42 M183 68 L190 61 M205 91 L212 84" stroke="#f6d77e" stroke-width="2"/>
+    <text x="120" y="88" fill="#ffdc8a" text-anchor="middle" font-size="19" font-family="Georgia">VU</text>
+    <text x="120" y="111" fill="#ffcf69" text-anchor="middle" font-size="13">L</text>
+    <path d="M120 99 L120 27" stroke="#fff0b2" stroke-width="3" class="needle" id="needleL"/>
+   </svg></div>
+  </div>
+  <div class="instrument vubox">
+   <div class="vutitle">VU METER · RIGHT</div>
+   <div class="gauge"><svg viewBox="0 0 240 120" aria-label="Правый VU-метр">
+    <path d="M24 100 Q120 -10 216 100" stroke="#f6d77e" stroke-width="3" fill="none"/>
+    <path d="M35 91 L29 84 M57 68 L50 61 M83 50 L78 42 M120 40 L120 30 M157 50 L162 42 M183 68 L190 61 M205 91 L212 84" stroke="#f6d77e" stroke-width="2"/>
+    <text x="120" y="88" fill="#ffdc8a" text-anchor="middle" font-size="19" font-family="Georgia">VU</text>
+    <text x="120" y="111" fill="#ffcf69" text-anchor="middle" font-size="13">R</text>
+    <path d="M120 99 L120 27" stroke="#fff0b2" stroke-width="3" class="needle" id="needleR"/>
+   </svg></div>
+  </div>
+  <div class="spectrum">
+   <div class="shead"><span>SPECTRUM ANALYZER</span><b id="specState">48 BAND · STANDBY</b></div>
+   <canvas id="spectrum"></canvas>
+  </div>
  </div>
  <div class="controls">
   <button class="ctrl utility" id="showStations" title="Показать список станций"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="7" cy="6" r="1.5"/><circle cx="7" cy="12" r="1.5"/><circle cx="7" cy="18" r="1.5"/></svg></button>
- <button class="ctrl utility" id="showEq" title="Показать эквалайзер"><svg viewBox="0 0 24 24"><path d="M6 4v16M12 4v16M18 4v16" stroke="currentColor" stroke-width="2" fill="none"/><path d="M3 9h6v3H3zM9 14h6v3H9zM15 7h6v3h-6z" fill="currentColor"/></svg></button>
  <button class="ctrl" id="prev" title="Предыдущая станция"><svg viewBox="0 0 24 24"><path d="M5 5h2v14H5zm14 0v14L8 12z"/></svg></button>
   <button class="ctrl" id="stop" title="Стоп"><svg viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg></button>
   <button class="ctrl play" id="play" title="Воспроизвести"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></button>
@@ -280,9 +426,9 @@ body[data-theme="light"] .fav.on{color:#b66a08}
 </div>
 <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.17/dist/hls.min.js"></script>
 <script>
-const STATIONS = [{"id":"pioneer","name":"Pioneer FM","tagline":"Электронная музыка","genre":"Электроника","country":"Россия","flag":"🇷🇺","domain":"pionerfm.ru","stream":"https://ppr.status-media.ru/ppr128.mp3","fallback":["https://ppr90.status-media.ru/ppr_90.mp3","https://ppr90.status-media.ru/ru-wave.mp3"]},{"id":"record","name":"Radio Record","tagline":"Танцевальная музыка 24/7","genre":"Танцевальная","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/rr_main96.aacp"},{"id":"maximum","name":"Радио Максимум","tagline":"Рок без компромиссов","genre":"Рок","country":"Россия","flag":"🇷🇺","domain":"maximum.ru","stream":"https://maximum.hostingradio.ru/maximum96.aacp"},{"id":"europa","name":"Европа Плюс","tagline":"Хиты. Новая музыка","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"europaplus.ru","stream":"https://europaplus.hostingradio.ru:8014/europaplus320.mp3"},{"id":"dfm","name":"DFM","tagline":"Танцевальная музыка","genre":"Танцевальная","country":"Россия","flag":"🇷🇺","domain":"dfm.ru","stream":"https://dfm.hostingradio.ru/dfm96.aacp"},{"id":"marusya","name":"Маруся FM","tagline":"Русские и мировые хиты","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"marus.fm","stream":"https://radio-holding.ru:9433/marusya_default"},{"id":"love","name":"Love Radio","tagline":"Музыка о любви","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"loveradio.ru","stream":"https://air2.volna.top/LoveRadio-MSK"},{"id":"comedy","name":"Comedy Radio","tagline":"Юмор. Шоу. Хиты","genre":"Разговорное","country":"Россия","flag":"🇷🇺","domain":"comedy-radio.ru","stream":"https://hls-01-gpm.hostingradio.ru/comedyradio8552/128/playlist.m3u8"},{"id":"zaycev","name":"Zaycev FM","tagline":"Популярные хиты","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"zaycev.fm","stream":"https://abs.zaycev.fm/pop256k"},{"id":"record-russian","name":"Record Russian Mix","tagline":"Русские танцевальные хиты","genre":"Танцевальная","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/rus96.aacp"},{"id":"record-90","name":"Record Супердискотека 90-х","tagline":"Хиты 90-х","genre":"Ретро","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/sd9096.aacp"},{"id":"record-rock","name":"Record Rock","tagline":"Рок-музыка","genre":"Рок","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/rock96.aacp"},{"id":"record-chill","name":"Record Chill-Out","tagline":"Спокойная электроника","genre":"Chillout","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/chil96.aacp"},{"id":"record-deep","name":"Record Deep","tagline":"Deep house","genre":"Электроника","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/deep96.aacp"},{"id":"record-trance","name":"Record Trancemission","tagline":"Транс","genre":"Электроника","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/tm96.aacp"},{"id":"montecarlo","name":"Радио Монте-Карло","tagline":"Лаунж и классика","genre":"Chillout","country":"Россия","flag":"🇷🇺","domain":"montecarlo.ru","stream":"https://montecarlo.hostingradio.ru/montecarlo96.aacp"},{"id":"nashe","name":"Наше Радио","tagline":"Русский рок","genre":"Рок","country":"Россия","flag":"🇷🇺","domain":"nashe.ru","stream":"https://nashe1.hostingradio.ru/nashe-128.mp3","fallback":["https://nashe.streamr.ru/nashe-128.mp3"]},{"id":"retro","name":"Ретро FM","tagline":"Золотые хиты 70–90-х","genre":"Ретро","country":"Россия","flag":"🇷🇺","domain":"retrofm.ru","stream":"https://retroserver.streamr.ru:8043/retro128"},{"id":"rusradio","name":"Русское Радио","tagline":"Главные русские песни","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"rusradio.ru","stream":"https://rusradio.hostingradio.ru/rusradio96.aacp"},{"id":"vanya","name":"Радио Ваня","tagline":"Поп и танцевальные хиты","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"radiovanya.ru","stream":"https://icecast-radiovanya.cdnvideo.ru/radiovanya"},{"id":"mixadance","name":"Mixadance FM","tagline":"Электроника и dance","genre":"Электроника","country":"Россия","flag":"🇷🇺","domain":"mixadance.fm","stream":"https://stream.mixadance.fm/mixadance"},{"id":"business","name":"Business FM","tagline":"Новости и бизнес","genre":"Новости","country":"Россия","flag":"🇷🇺","domain":"bfm.ru","stream":"https://bfmstream.bfm.ru:8004/fm64"},{"id":"kexp","name":"KEXP 90.3","tagline":"Indie. Alternative. Discovery","genre":"Инди / Альтернатива","country":"США","flag":"🇺🇸","domain":"kexp.org","stream":"https://kexp.streamguys1.com/kexp160.aac"},{"id":"wfmu","name":"WFMU","tagline":"Freeform radio from New Jersey","genre":"Разное","country":"США","flag":"🇺🇸","domain":"wfmu.org","stream":"https://stream0.wfmu.org/freeform-128k.mp3"},{"id":"somafm","name":"SomaFM Groove Salad","tagline":"Ambient. Downtempo. Chill","genre":"Chillout","country":"США","flag":"🇺🇸","domain":"somafm.com","stream":"https://ice1.somafm.com/groovesalad-128-mp3"},{"id":"somadrone","name":"SomaFM Drone Zone","tagline":"Атмосферная музыка","genre":"Chillout","country":"США","flag":"🇺🇸","domain":"somafm.com","stream":"https://ice1.somafm.com/dronezone-128-mp3"},{"id":"capital","name":"Capital FM","tagline":"The UK's No.1 Hit Music Station","genre":"Поп","country":"Великобритания","flag":"🇬🇧","domain":"capitalfm.com","stream":"https://media-ssl.musicradio.com/CapitalUK"},{"id":"heart80","name":"Heart 80s","tagline":"The best of the 80s","genre":"Ретро","country":"Великобритания","flag":"🇬🇧","domain":"heart.co.uk","stream":"https://media-ssl.musicradio.com/Heart80sMP3"},{"id":"bbcworld","name":"BBC World Service","tagline":"News. Stories. Global voices","genre":"Новости","country":"Великобритания","flag":"🇬🇧","domain":"bbc.co.uk","stream":"https://stream.live.vc.bbcmedia.co.uk/bbc_world_service"},{"id":"fip","name":"FIP","tagline":"La musique éclectique","genre":"Разное","country":"Франция","flag":"🇫🇷","domain":"fip.fr","stream":"https://stream.radiofrance.fr/fip/fip_hifi.m3u8"},{"id":"swissjazz","name":"Radio Swiss Jazz","tagline":"Jazz. Soul. Blues","genre":"Джаз","country":"Швейцария","flag":"🇨🇭","domain":"radioswissjazz.ch","stream":"https://stream.srg-ssr.ch/srgssr/rsj/mp3/128"},{"id":"m2hits","name":"M2 Hits","tagline":"Les hits d'aujourd'hui","genre":"Поп","country":"Франция","flag":"🇫🇷","domain":"m2radio.fr","stream":"https://live.m2stream.fr/m2hit-128.mp3"},{"id":"m2rock","name":"M2 Rock","tagline":"Rock non-stop","genre":"Рок","country":"Франция","flag":"🇫🇷","domain":"m2radio.fr","stream":"https://live.m2stream.fr/m2rock-128.mp3"},{"id":"80s80s","name":"80s80s","tagline":"80s hits radio","genre":"Ретро","country":"Германия","flag":"🇩🇪","domain":"80s80s.de","stream":"https://streams.80s80s.de/80s80s/mp3-192/radiosure/"}];
+const STATIONS = [{"id":"pioneer","name":"Pioneer FM","tagline":"Электронная музыка","genre":"Электроника","country":"Россия","flag":"🇷🇺","domain":"pionerfm.ru","stream":"https://ppr.status-media.ru/ppr128.mp3","fallback":["https://ppr90.status-media.ru/ppr_90.mp3","https://ppr90.status-media.ru/ru-wave.mp3"]},{"id":"record","name":"Radio Record","tagline":"Танцевальная музыка 24/7","genre":"Танцевальная","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/rr_main96.aacp"},{"id":"maximum","name":"Радио Максимум","tagline":"Рок без компромиссов","genre":"Рок","country":"Россия","flag":"🇷🇺","domain":"maximum.ru","stream":"https://maximum.hostingradio.ru/maximum96.aacp"},{"id":"europa","name":"Европа Плюс","tagline":"Хиты. Новая музыка","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"europaplus.ru","stream":"https://europaplus.hostingradio.ru:8014/europaplus320.mp3"},{"id":"dfm","name":"DFM","tagline":"Танцевальная музыка","genre":"Танцевальная","country":"Россия","flag":"🇷🇺","domain":"dfm.ru","stream":"https://dfm.hostingradio.ru/dfm96.aacp"},{"id":"marusya","name":"Маруся FM","tagline":"Русские и мировые хиты","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"marus.fm","stream":"https://radio-holding.ru:9433/marusya_default"},{"id":"love","name":"Love Radio","tagline":"Музыка о любви","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"loveradio.ru","stream":"https://air2.volna.top/LoveRadio-MSK"},{"id":"comedy","name":"Comedy Radio","tagline":"Юмор. Шоу. Хиты","genre":"Разговорное","country":"Россия","flag":"🇷🇺","domain":"comedy-radio.ru","stream":"https://hls-01-gpm.hostingradio.ru/comedyradio8552/128/playlist.m3u8"},{"id":"zaycev","name":"Zaycev FM","tagline":"Популярные хиты","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"zaycev.fm","stream":"https://abs.zaycev.fm/pop256k"},{"id":"record-russian","name":"Record Russian Mix","tagline":"Русские танцевальные хиты","genre":"Танцевальная","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/rus96.aacp"},{"id":"record-90","name":"Record Супердискотека 90-х","tagline":"Хиты 90-х","genre":"Ретро","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/sd9096.aacp"},{"id":"record-rock","name":"Record Rock","tagline":"Рок-музыка","genre":"Рок","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/rock96.aacp"},{"id":"record-chill","name":"Record Chill-Out","tagline":"Спокойная электроника","genre":"Chillout","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/chil96.aacp"},{"id":"record-deep","name":"Record Deep","tagline":"Deep house","genre":"Электроника","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/deep96.aacp"},{"id":"record-trance","name":"Record Trancemission","tagline":"Транс","genre":"Электроника","country":"Россия","flag":"🇷🇺","domain":"radiorecord.ru","stream":"https://radiorecord.hostingradio.ru/tm96.aacp"},{"id":"montecarlo","name":"Радио Монте-Карло","tagline":"Лаунж и классика","genre":"Chillout","country":"Россия","flag":"🇷🇺","domain":"montecarlo.ru","stream":"https://montecarlo.hostingradio.ru/montecarlo96.aacp"},{"id":"nashe","name":"Наше Радио","tagline":"Русский рок","genre":"Рок","country":"Россия","flag":"🇷🇺","domain":"nashe.ru","stream":"https://nashe1.hostingradio.ru/nashe-128.mp3","fallback":["https://nashe.streamr.ru/nashe-128.mp3"]},{"id":"retro","name":"Ретро FM","tagline":"Золотые хиты 70–90-х","genre":"Ретро","country":"Россия","flag":"🇷🇺","domain":"retrofm.ru","stream":"https://retroserver.streamr.ru:8043/retro128"},{"id":"rusradio","name":"Русское Радио","tagline":"Главные русские песни","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"rusradio.ru","stream":"https://rusradio.hostingradio.ru/rusradio96.aacp"},{"id":"vanya","name":"Радио Ваня","tagline":"Поп и танцевальные хиты","genre":"Поп","country":"Россия","flag":"🇷🇺","domain":"radiovanya.ru","stream":"https://icecast-radiovanya.cdnvideo.ru/radiovanya"},{"id":"mixadance","name":"Mixadance FM","tagline":"Электроника и dance","genre":"Электроника","country":"Россия","flag":"🇷🇺","domain":"mixadance.fm","stream":"https://stream.mixadance.fm/mixadance"},{"id":"business","name":"Business FM","tagline":"Новости и бизнес","genre":"Новости","country":"Россия","flag":"🇷🇺","domain":"bfm.ru","stream":"https://bfmstream.bfm.ru:8004/fm64"},{"id":"kexp","name":"KEXP 90.3","tagline":"Indie. Alternative. Discovery","genre":"Инди / Альтернатива","country":"США","flag":"🇺🇸","domain":"kexp.org","stream":"https://kexp.streamguys1.com/kexp160.aac"},{"id":"wfmu","name":"WFMU","tagline":"Freeform radio from New Jersey","genre":"Разное","country":"США","flag":"🇺🇸","domain":"wfmu.org","stream":"https://stream0.wfmu.org/freeform-128k.mp3"},{"id":"somafm","name":"SomaFM Groove Salad","tagline":"Ambient. Downtempo. Chill","genre":"Chillout","country":"США","flag":"🇺🇸","domain":"somafm.com","stream":"https://ice1.somafm.com/groovesalad-128-mp3"},{"id":"somadrone","name":"SomaFM Drone Zone","tagline":"Атмосферная музыка","genre":"Chillout","country":"США","flag":"🇺🇸","domain":"somafm.com","stream":"https://ice1.somafm.com/dronezone-128-mp3"},{"id":"capital","name":"Capital FM","tagline":"The UK's No.1 Hit Music Station","genre":"Поп","country":"Великобритания","flag":"🇬🇧","domain":"capitalfm.com","stream":"https://media-ssl.musicradio.com/CapitalUK"},{"id":"heart80","name":"Heart 80s","tagline":"The best of the 80s","genre":"Ретро","country":"Великобритания","flag":"🇬🇧","domain":"heart.co.uk","stream":"https://media-ssl.musicradio.com/Heart80sMP3"},{"id":"bbcworld","name":"BBC World Service","tagline":"News. Stories. Global voices","genre":"Новости","country":"Великобритания","flag":"🇬🇧","domain":"bbc.co.uk","stream":"https://stream.live.vc.bbcmedia.co.uk/bbc_world_service"},{"id":"fip","name":"FIP","tagline":"La musique éclectique","genre":"Разное","country":"Франция","flag":"🇫🇷","domain":"fip.fr","stream":"https://stream.radiofrance.fr/fip/fip_hifi.m3u8"},{"id":"swissjazz","name":"Radio Swiss Jazz","tagline":"Jazz. Soul. Blues","genre":"Джаз","country":"Швейцария","flag":"🇨🇭","domain":"radioswissjazz.ch","stream":"https://stream.srg-ssr.ch/srgssr/rsj/mp3/128"},{"id":"m2hits","name":"M2 Hits","tagline":"Les hits d'aujourd'hui","genre":"Поп","country":"Франция","flag":"🇫🇷","domain":"m2radio.fr","stream":"https://live.m2stream.fr/m2hit-128.mp3"},{"id":"m2rock","name":"M2 Rock","tagline":"Rock non-stop","genre":"Рок","country":"Франция","flag":"🇫🇷","domain":"m2radio.fr","stream":"https://live.m2stream.fr/m2rock-128.mp3"},{"id":"80s80s","name":"80s80s","tagline":"80s hits radio","genre":"Ретро","country":"Германия","flag":"🇩🇪","domain":"80s80s.de","stream":"https://streams.80s80s.de/80s80s/mp3-192/radiosure/"},{"id":"bbc1","name":"BBC Radio 1","tagline":"New music, chart hits & dance","genre":"Поп / Электроника","country":"Великобритания","flag":"🇬🇧","domain":"bbc.co.uk","stream":"https://stream.live.vc.bbcmedia.co.uk/bbc_radio_one"},{"id":"bbc2","name":"BBC Radio 2","tagline":"Great music and popular classics","genre":"Поп / Ретро","country":"Великобритания","flag":"🇬🇧","domain":"bbc.co.uk","stream":"https://stream.live.vc.bbcmedia.co.uk/bbc_radio_two"},{"id":"franceinter","name":"France Inter","tagline":"Actualité, culture et musique","genre":"Новости / Разное","country":"Франция","flag":"🇫🇷","domain":"radiofrance.fr","stream":"https://icecast.radiofrance.fr/franceinter-midfi.mp3"},{"id":"deutschlandfunk","name":"Deutschlandfunk","tagline":"Nachrichten und Hintergrund","genre":"Новости","country":"Германия","flag":"🇩🇪","domain":"deutschlandfunk.de","stream":"https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3"}];
 const $=s=>document.querySelector(s), audio=$("#audio");
-let selected=null,active=false,hls=null,tab="stations",country="Россия";
+let selected=null,active=false,hls=null,tab="stations",country="Все страны";
 let favorites=new Set(JSON.parse(localStorage.getItem("radioMayFavs")||"[]"));
 let history=JSON.parse(localStorage.getItem("radioMayHistory")||"[]");
 const countries=[["Все страны","🌐"],["Россия","🇷🇺"],["Великобритания","🇬🇧"],["США","🇺🇸"],["Германия","🇩🇪"],["Франция","🇫🇷"],["Швейцария","🇨🇭"]];
@@ -290,7 +436,7 @@ const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&
 function logoUrl(s){return "https://www.google.com/s2/favicons?domain="+encodeURIComponent(s.domain||"")+"&sz=128"}
 function logoNode(s){let d=document.createElement("div");d.className="stationlogo";let im=document.createElement("img");im.loading="lazy";im.src=logoUrl(s);im.alt="";im.onerror=()=>{d.innerHTML='<span class="initial">'+esc(s.name.split(/\s+/).slice(0,2).map(v=>v[0]).join("").toUpperCase())+'</span>'};d.append(im);return d}
 function currentItems(){
- let list=STATIONS;
+ const rank=["record", "maximum", "pioneer", "europa", "dfm", "marusya", "love", "comedy", "zaycev", "record-russian", "record-90", "record-rock", "record-chill", "record-deep", "record-trance", "montecarlo", "nashe", "retro", "rusradio", "vanya", "mixadance", "business", "bbc1", "bbc2", "capital", "heart80", "bbcworld", "kexp", "wfmu", "somafm", "somadrone", "deutschlandfunk", "fip", "franceinter", "m2hits", "m2rock", "swissjazz", "80s80s"]; let list=[...STATIONS].sort((a,b)=>{const ai=rank.indexOf(a.id),bi=rank.indexOf(b.id);return (ai<0?999:ai)-(bi<0?999:bi)});
  if(tab==="favorites")list=list.filter(s=>favorites.has(s.id));
  if(tab==="history")list=history.map(id=>STATIONS.find(s=>s.id===id)).filter(Boolean);
  if(tab==="stations"&&country!=="Все страны"&&country!=="Ещё")list=list.filter(s=>s.country===country);
