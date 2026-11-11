@@ -123,6 +123,118 @@ input[type=range]{accent-color:var(--gold);width:120px}
  .station{grid-template-columns:52px minmax(0,1fr) 25px;gap:8px;padding:7px 5px}.station-logo{width:49px;height:38px}
  .country{padding:8px 10px;font-size:12px}
 }
+
+/* RADIO MAY — brushed Hi-Fi console skin */
+body{padding:14px;background:
+ radial-gradient(ellipse at 50% -15%,#3a4146 0,#171b1f 48%,#090b0d 100%);
+ font-family:"Segoe UI",Arial,sans-serif}
+body.light{background:radial-gradient(ellipse at 50% -15%,#fff 0,#d4d8db 52%,#9da5aa 100%)}
+.shell{max-width:1320px}
+.topbar{height:62px;border-radius:14px 14px 10px 10px;padding:7px 15px;gap:14px;
+ background:linear-gradient(180deg,#34383b,#171a1c 42%,#25292c 72%,#111315);
+ border:1px solid #737a7e;box-shadow:0 5px 18px #0009,inset 0 1px #ffffff38,inset 0 -2px 5px #000}
+body.light .topbar{background:linear-gradient(180deg,#f7f8f8,#c5cace 42%,#e8ebed 72%,#b6bdc1);border-color:#7d858a}
+.brand{font-size:31px;letter-spacing:-1px}
+.brand small{display:none}
+.pulse{font-size:27px}
+.tagline{font-size:14px;color:var(--muted)}
+.top-info{border:0;border-left:1px solid var(--edge);border-radius:0;background:transparent;box-shadow:none;padding:4px 12px}
+.top-info.clock{min-width:104px}
+.theme-switch{background:#080a0b;border:1px solid #60676c}
+body.light .theme-switch{background:#aab1b5}
+.layout{grid-template-columns:minmax(0,2.05fr) minmax(360px,.98fr);gap:10px}
+.player,.library{border-radius:15px;padding:10px;background:
+ repeating-linear-gradient(0deg,#ffffff04 0px,#ffffff04 1px,transparent 1px,transparent 3px),
+ linear-gradient(145deg,#303538 0%,#171a1c 35%,#25292c 70%,#101214 100%);
+ border:1px solid #7b8388;box-shadow:0 7px 20px #000a,inset 0 1px 2px #ffffff38,inset 0 -2px 5px #000}
+body.light .player,body.light .library{background:
+ repeating-linear-gradient(0deg,#00000006 0px,#00000006 1px,transparent 1px,transparent 3px),
+ linear-gradient(145deg,#f7f8f8 0%,#c4c9cc 35%,#e5e8e9 70%,#b9c0c4 100%);
+ border-color:#788187}
+.now{grid-template-columns:164px minmax(0,1fr);gap:16px;padding:1px 4px 10px}
+.logo-frame{height:124px;border:2px solid #b6a17b;border-radius:14px;background:linear-gradient(145deg,#090a0b,#25272a 55%,#050506);box-shadow:0 0 0 4px #0008,inset 0 0 15px #fff2,0 0 12px #ff9d1640}
+body.light .logo-frame{border-color:#8b9296}
+.station-title{font-size:clamp(25px,2.5vw,34px);margin-bottom:3px}
+.station-desc{font-size:18px;margin-bottom:8px}
+.meta-row{gap:7px}
+.pill{font-size:12px;padding:6px 12px;background:linear-gradient(#24282b,#101214);border-color:#777f84}
+body.light .pill{background:linear-gradient(#f4f6f7,#c5cbce)}
+.live{margin-left:auto;padding:5px 12px}
+.transport-line{display:none}
+.visuals{grid-template-columns:1fr 1fr 1.85fr;gap:8px;padding:3px 2px 10px}
+.meter,.spectrum{height:137px;border-radius:11px;border:1px solid #777f83;background:linear-gradient(145deg,#080909,#25282a 48%,#090a0b);box-shadow:inset 0 0 0 4px #0009,inset 0 0 20px #000}
+.meter-label{display:none}
+.dial{width:94%;height:88%;left:3%;top:9%}
+.dial svg{filter:drop-shadow(0 0 2px #ffca63)}
+.spectrum{padding:8px 9px 10px}
+.spectrum-label{display:none}
+.bars{height:100%;gap:3px;border:0;background:repeating-linear-gradient(to top,transparent 0 14px,#ffffff0d 15px 16px);padding:0 1px}
+.bar{background:linear-gradient(to top,#47c91e 0 42%,#e6d624 45% 70%,#f22f18 74%);box-shadow:0 0 5px #55d92b80}
+.controls{display:grid;grid-template-columns:auto 1fr auto;align-items:center;justify-content:stretch;gap:12px;margin-top:2px;padding:10px 8px;border-radius:12px}
+.utility-controls,.transport-controls{display:flex;align-items:center;gap:7px}
+.transport-controls{justify-content:center}
+.control{height:49px;min-width:54px;border-radius:8px;font-size:19px}
+.control.play{height:53px;min-width:70px;border-radius:8px}
+.utility-controls .control{min-width:48px}
+.vol{margin:0;min-width:180px;border:1px solid var(--edge);border-radius:24px;padding:7px 12px;background:#171a1c;justify-content:center}
+body.light .vol{background:#dce0e2}
+input[type=range]{width:95px}
+.eq-control{display:none}
+.status{min-height:19px;padding:5px 4px 0;font-size:11px}
+.library{min-height:0;padding:10px}
+.tabs{grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:7px}
+.tab{padding:8px 4px;font-size:12px}
+.search{padding:9px 11px;margin-bottom:7px;border-radius:20px}
+.filters{margin-bottom:6px}
+.filters select{padding:7px}
+.station-list{max-height:520px}
+.station{grid-template-columns:62px minmax(0,1fr) 25px;gap:8px;min-height:34px;padding:3px 6px;border-bottom:1px solid #737b802e}
+.station-logo{width:58px;height:28px;object-fit:contain;padding:1px;border-radius:3px}
+.station-name{font-size:13px;font-weight:700}
+.station-genre,.station-country{display:none}
+.station.selected{background:linear-gradient(90deg,#a55a0eaa,#ffae2426);outline:1px solid #e99a26}
+.fav{font-size:17px}
+.countries{display:none}
+.footer-note{margin:6px}
+body.light .station:hover{background:#0000000a}
+body.light .station.selected{background:linear-gradient(90deg,#f5b34c,#ffffff30)}
+body.light .meter,body.light .spectrum{background:linear-gradient(145deg,#17191a,#303436 48%,#111314)}
+body.light .control{color:#171a1c}
+@media(max-width:900px){
+ body{padding:7px}
+ .layout{grid-template-columns:1fr}
+ .library{min-height:420px}
+ .station-list{max-height:420px}
+ .topbar{flex-wrap:wrap;height:auto;min-height:58px}
+ .top-info.weather{display:none}
+}
+@media(max-width:560px){
+ .topbar{gap:7px;padding:7px}
+ .brand{font-size:24px}
+ .pulse{font-size:22px}
+ .top-info{padding:3px 7px;font-size:11px}
+ .top-info.clock{min-width:auto}
+ .top-info.clock strong{font-size:14px}
+ .theme-switch button{padding:5px 8px}
+ .now{grid-template-columns:86px minmax(0,1fr);gap:10px}
+ .logo-frame{height:86px}
+ .station-title{font-size:20px}
+ .station-desc{font-size:13px}
+ .pill{font-size:10px;padding:4px 7px}
+ .live{font-size:10px;padding:4px 7px}
+ .visuals{grid-template-columns:1fr 1fr}
+ .meter{height:105px}
+ .spectrum{grid-column:1/-1;height:95px}
+ .controls{grid-template-columns:1fr;gap:7px}
+ .utility-controls{justify-content:center}
+ .transport-controls{justify-content:center}
+ .vol{width:100%;min-width:0}
+ .control{height:42px;min-width:45px}
+ .control.play{height:46px;min-width:58px}
+ .station{grid-template-columns:54px minmax(0,1fr) 24px}
+ .station-logo{width:50px;height:27px}
+}
+
 </style>
 </head>
 <body>
@@ -176,14 +288,18 @@ input[type=range]{accent-color:var(--gold);width:120px}
  </div>
 
  <div class="controls">
-  <button class="control small" id="playlistBtn" title="Плейлист">☷</button>
-  <button class="control" id="prevBtn" title="Предыдущая станция">|◀</button>
-  <button class="control" id="stopBtn" title="Стоп">■</button>
-  <button class="control play" id="playBtn" title="Воспроизвести">▶</button>
-  <button class="control" id="nextBtn" title="Следующая станция">▶|</button>
+  <div class="utility-controls">
+   <button class="control small" id="playlistBtn" title="Плейлист">☷</button>
+   <button class="control small" id="mainFav" title="В избранное">☆</button>
+  </div>
+  <div class="transport-controls">
+   <button class="control" id="prevBtn" title="Предыдущая станция">|◀</button>
+   <button class="control" id="stopBtn" title="Стоп">■</button>
+   <button class="control play" id="playBtn" title="Воспроизвести">▶</button>
+   <button class="control" id="nextBtn" title="Следующая станция">▶|</button>
+  </div>
   <div class="vol"><span>🔊</span><input id="volume" type="range" min="0" max="100" value="75"><strong id="volumeValue">75%</strong></div>
-  <button class="control small" id="mainFav" title="В избранное">☆</button>
-  <button class="control small" id="eqBtn" title="Эквалайзер">☷ EQ</button>
+  <button class="control small eq-control" id="eqBtn" title="Эквалайзер">EQ</button>
  </div>
  <div class="eq-panel" id="eqPanel"><div class="eq-sliders" id="eqSliders"></div></div>
  <div class="status" id="status">Выбери станцию справа и нажми Play.</div>
