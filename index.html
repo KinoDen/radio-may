@@ -4,130 +4,226 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#21130f">
-<title>Радио Май — ретро интернет-радио</title>
+<title>Радио Май — Liquid Glass Radio</title>
 <style>
-:root{--bg:#1b100d;--panel:#2a1a14;--panel2:#352117;--cream:#f4dfb5;--muted:#c3a783;--orange:#f08a24;--red:#b9361f;--line:#785037;--gold:#e8b45f}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#63351c 0,#29170f 45%,#160d0a 100%);color:var(--cream);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
-.app{max-width:540px;margin:auto;padding:16px 14px 30px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:4px 2px 14px}.top-tools{display:flex;align-items:center;gap:7px}.clock-chip{min-width:72px;padding:5px 8px;border:1px solid #795033;border-radius:10px;background:#170e0a;box-shadow:inset 0 1px 4px #0009;text-align:center}.clock-time{font:700 17px/1.1 ui-monospace,monospace;color:#ffe0a5;letter-spacing:.04em}.clock-date{font-size:8px;color:#ad8a64;letter-spacing:.07em}.weather-chip{max-width:138px;min-height:38px;padding:5px 9px;border:1px solid #795033;border-radius:10px;background:linear-gradient(180deg,#392318,#1a100c);color:#f4d6a5;font-size:10px;display:flex;align-items:center;gap:6px;cursor:pointer}.weather-icon{font-size:17px}.weather-copy{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.brand{font-weight:900;letter-spacing:.08em;font-size:14px;text-transform:uppercase;color:#f7d8a3}
-.subbrand{font-size:11px;color:var(--muted);letter-spacing:.12em}
-.iconbtn{border:1px solid #765037;background:#2c1b13;color:var(--cream);width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer}
-.deck{border:1px solid #8c572d;border-radius:22px;padding:12px;background:linear-gradient(145deg,#412417,#1d110d 65%);box-shadow:0 14px 35px #0008,inset 0 1px #e9b86b55}
- .visualizer-wrap{margin:2px auto 10px;padding:8px 10px 7px;border:1px solid #694329;border-radius:10px;background:linear-gradient(180deg,#100d0b,#090807);box-shadow:inset 0 0 16px #000}
-.visualizer-head{display:flex;justify-content:space-between;align-items:center;margin:0 2px 5px;color:#9c805f;font:9px/1.2 ui-monospace,monospace;letter-spacing:.16em}
-.visualizer-head span:last-child{color:#d17a35}
-#visualizer{display:block;width:100%;height:74px;image-rendering:pixelated}
-.visualizer-foot{display:flex;justify-content:space-between;margin:4px 2px 0;color:#72563e;font:8px ui-monospace,monospace;letter-spacing:.08em}
-.cassette-stage{position:relative;width:min(100%,440px);margin:0 auto;line-height:0;filter:drop-shadow(0 8px 12px #0009)}
-.cassette{width:100%;display:block;border-radius:12px}
-.cassette-brand{position:absolute;left:68%;top:61.5%;width:25%;min-height:8.5%;display:none;align-items:center;gap:6px;padding:5px 7px;border:1px solid #e7c58c;border-radius:5px;background:linear-gradient(135deg,rgba(31,19,13,.96),rgba(72,37,20,.94));box-shadow:0 2px 5px #0009,inset 0 1px #fff4;transform:rotate(-7deg);transform-origin:center;z-index:3;line-height:1.05;overflow:hidden}
-.cassette-brand.visible{display:flex}
-.cassette-brand-mark{width:25px;height:25px;flex:0 0 25px;display:grid;place-items:center;overflow:hidden;border-radius:4px;background:var(--brand-bg,#a94d20);color:#fff8e9;font-size:9px;font-weight:950;letter-spacing:-.04em;border:1px solid #fff5}
-.cassette-brand-mark img{width:100%;height:100%;object-fit:contain;display:block}
-.cassette-brand-mark .brand-fallback{display:block}
-.cassette-brand-copy{min-width:0;display:flex;flex-direction:column;gap:2px}
-.cassette-brand-name{font-size:clamp(7px,1.8vw,10px);font-weight:900;letter-spacing:.04em;color:#fff0d3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.cassette-brand-caption{font-size:6px;color:#d9b98c;letter-spacing:.1em;white-space:nowrap}
-.reel{position:absolute;width:18.75%;aspect-ratio:1;pointer-events:none;transform-origin:50% 50%;background-size:100% 100%;background-repeat:no-repeat;filter:drop-shadow(0 1px 2px #0009);border-radius:50%}
-.reel.left{left:24.6%;top:45.6%;background-image:url('reel-left.png')}
-.reel.right{left:57.25%;top:42.0%;background-image:url('reel-right.png')}
-.cassette-stage.playing .reel.left{animation:reelSpin 2.25s linear infinite}
-.cassette-stage.playing .reel.right{animation:reelSpin 1.62s linear infinite reverse}.cassette-stage.playing:after{content:"";position:absolute;left:43%;top:48.5%;width:14%;height:7%;pointer-events:none;background:linear-gradient(105deg,transparent 0%,#d99a5630 35%,#ffe2a044 50%,transparent 75%);mix-blend-mode:screen;animation:tapeGlide 1.8s linear infinite;transform:rotate(-5deg)}@keyframes tapeGlide{from{translate:-18% 0;opacity:.25}to{translate:18% 0;opacity:.7}}
-@keyframes reelSpin{to{transform:rotate(360deg)}}
-.meters-panel{margin:12px 0 10px;padding:9px 10px 8px;border:1px solid #704526;border-radius:14px;background:linear-gradient(180deg,#160d09,#090706);box-shadow:inset 0 1px 5px #000b,0 2px 8px #0005}
-.meters-title{display:flex;justify-content:space-between;color:#b08a5e;font:9px ui-monospace,monospace;letter-spacing:.16em;margin:0 2px 2px}
-.meters-title span:last-child{color:#e28b3c}
-#vuMeter{display:block;width:100%;height:82px}
-.visualizer-wrap{margin:1px auto 0;padding:6px 7px 5px;border:1px solid #55361f;border-radius:8px;background:linear-gradient(180deg,#0c0907,#050403);box-shadow:inset 0 0 12px #000}
-.visualizer-head{display:flex;justify-content:space-between;align-items:center;margin:0 2px 3px;color:#8f704f;font:8px/1.2 ui-monospace,monospace;letter-spacing:.14em}
-.visualizer-head span:last-child{color:#c17b37}
-#visualizer{display:block;width:100%;height:54px;image-rendering:pixelated}
-.visualizer-foot{display:flex;justify-content:space-between;margin:3px 2px 0;color:#72563e;font:7px ui-monospace,monospace;letter-spacing:.08em}
-.now{margin:8px 0 10px;padding:11px 14px;border:1px solid #754522;border-radius:14px;background:#120d0b;display:flex;align-items:center;gap:12px}
-.live{font-size:10px;letter-spacing:.08em;color:#ff6b4a;white-space:nowrap}
-.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#f04c32;margin-right:5px;box-shadow:0 0 9px #f04c32}
-.nowtext{min-width:0;flex:1}.nowlabel{font-size:10px;color:#b99a72;text-transform:uppercase;letter-spacing:.12em}
-.nowname{font-size:17px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.nowdesc{font-size:11px;color:#bda17e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.transport{display:flex;justify-content:center;gap:9px;margin:13px 0 17px;padding:9px 8px 11px;border:1px solid #714426;border-radius:17px;background:linear-gradient(180deg,#160d09,#2d190f);box-shadow:inset 0 2px 5px #000b,0 1px #c18a4c55}
-.key{position:relative;isolation:isolate;display:grid;place-items:center;width:56px;height:52px;border-radius:11px;border:1px solid #f2d09a;background:linear-gradient(180deg,#fff0ce 0%,#efd09a 23%,#d49a58 78%,#b7773d 100%);color:#4a2915;box-shadow:0 5px 0 #75421f,0 7px 10px #0008,inset 0 2px 2px #fff9,inset 0 -3px 5px #88502c;cursor:pointer;touch-action:manipulation;transition:transform .09s ease,box-shadow .09s ease,filter .15s ease}
-.key:before{content:"";position:absolute;inset:3px 4px auto;height:34%;border-radius:7px 7px 5px 5px;background:linear-gradient(180deg,#fff9,#fff0 95%);pointer-events:none;z-index:-1}
-.key:after{content:"";position:absolute;inset:2px;border-radius:8px;border:1px solid #fff4;pointer-events:none}
-.key svg{width:23px;height:23px;display:block;filter:drop-shadow(0 1px 0 #fff7);stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.key.main{width:68px;background:linear-gradient(180deg,#ff9a45 0%,#ef6825 32%,#c93d20 100%);color:#fff4dd;border-color:#ffc17b;box-shadow:0 5px 0 #742718,0 7px 11px #0009,inset 0 2px 2px #fff8,inset 0 -3px 5px #87250f}
-.key.main svg{width:26px;height:26px;fill:currentColor;stroke:none}
-.key:hover{filter:brightness(1.06)}
-.key:active,.key.pressed{transform:translateY(4px);box-shadow:0 1px 0 #70411e,0 2px 4px #0008,inset 0 3px 6px #68401f88}
-.key.main:active,.key.main.pressed{box-shadow:0 1px 0 #742718,0 2px 4px #0008,inset 0 3px 6px #74210f88}
-.key:focus-visible{outline:2px solid #ffe1a9;outline-offset:3px}
-.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0}
-.tab{padding:10px 6px;border-radius:11px;border:1px solid #62402b;background:#2b1a13;color:#d7bd95;font-size:12px;cursor:pointer}
-.tab.active{background:#a94d20;color:#fff0d1;border-color:#f3a13f}
-.search{width:100%;padding:12px 14px;border-radius:12px;border:1px solid #66442e;background:#160e0b;color:#f8e8ca;outline:none;margin-bottom:10px;font-size:14px}
-.search::placeholder{color:#987b5e}
+
+:root{
+  --ink:#eef4ff;--muted:#9eabc0;--glass:rgba(22,31,49,.58);
+  --glass-2:rgba(9,16,29,.66);--line:rgba(196,216,255,.19);
+  --cyan:#61d8ff;--blue:#4b9dff;--amber:#ffb45e;--pink:#d18cff;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(ellipse at 14% 5%,rgba(57,125,190,.30),transparent 38%),
+    radial-gradient(ellipse at 88% 18%,rgba(173,94,83,.22),transparent 34%),
+    radial-gradient(ellipse at 50% 100%,rgba(56,70,117,.24),transparent 48%),
+    #080d17;
+}
+button,input{font:inherit}
+.app{width:min(100% - 28px,920px);margin:0 auto;padding:20px 0 34px}
+.top{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  padding:12px 15px;border:1px solid var(--line);border-radius:22px;
+  background:linear-gradient(115deg,rgba(255,255,255,.105),rgba(255,255,255,.025) 48%,rgba(255,255,255,.075));
+  box-shadow:0 14px 40px #0005,inset 0 1px rgba(255,255,255,.2);
+  backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);
+}
+.brandline{display:flex;align-items:center;gap:12px;min-width:0}
+.brand{font-size:clamp(19px,3vw,25px);font-weight:750;letter-spacing:-.045em;white-space:nowrap}
+.brand em{font-style:normal;color:#ffbd73}
+.subbrand{font-size:10px;color:var(--muted);letter-spacing:.13em;text-transform:uppercase;margin-top:2px}
+.ecg{
+  width:70px;height:28px;flex:0 0 70px;overflow:visible;opacity:.86;
+  filter:drop-shadow(0 0 4px rgba(97,216,255,.24));
+}
+.ecg path{fill:none;stroke:#8bdfff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:100;stroke-dashoffset:0;animation:ecgFlow 3.2s linear infinite}
+.player-shell.playing .ecg path{stroke:#ffbf78;filter:drop-shadow(0 0 5px #ff9d52);animation-duration:1.05s}
+@keyframes ecgFlow{to{stroke-dashoffset:-100}}
+.top-tools{display:flex;align-items:center;gap:8px}
+.clock-chip,.weather-chip,.iconbtn{
+  min-height:38px;border:1px solid rgba(213,228,255,.2);border-radius:14px;
+  background:rgba(5,12,24,.35);color:#e9f2ff;box-shadow:inset 0 1px rgba(255,255,255,.12);
+}
+.clock-chip{padding:5px 10px;min-width:74px;text-align:center}
+.clock-time{font:650 17px/1.1 ui-monospace,SFMono-Regular,monospace;letter-spacing:.02em}
+.clock-date{font-size:8px;color:#aab8ce;letter-spacing:.07em;margin-top:3px}
+.weather-chip{display:flex;align-items:center;gap:6px;padding:5px 10px;max-width:150px;cursor:pointer;font-size:11px}
+.weather-icon{font-size:16px}.weather-copy{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{width:38px;height:38px;border-radius:50%;font-size:16px;cursor:pointer}
+.deck{
+  margin-top:14px;padding:15px;border:1px solid rgba(195,218,255,.2);border-radius:26px;
+  background:linear-gradient(135deg,rgba(255,255,255,.105),rgba(255,255,255,.035) 45%,rgba(255,255,255,.065));
+  box-shadow:0 22px 60px #0007,inset 0 1px rgba(255,255,255,.24);
+  backdrop-filter:blur(24px) saturate(145%);-webkit-backdrop-filter:blur(24px) saturate(145%);
+}
+.player-display{display:grid;grid-template-columns:minmax(0,1fr) 170px minmax(0,1.25fr);gap:12px;align-items:stretch}
+.instrument,.station-art{
+  min-width:0;min-height:142px;border:1px solid rgba(200,220,255,.18);border-radius:19px;
+  background:linear-gradient(145deg,rgba(4,12,25,.72),rgba(21,34,55,.48));
+  box-shadow:inset 0 1px rgba(255,255,255,.13),0 8px 22px #0003;
+  overflow:hidden;position:relative;
+}
+.instrument{padding:12px}
+.instrument:after,.station-art:after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(130deg,rgba(255,255,255,.10),transparent 28%,transparent 72%,rgba(255,255,255,.045))}
+.instrument-head{display:flex;justify-content:space-between;align-items:center;gap:8px;
+  color:#aebdd2;font:9px ui-monospace,monospace;letter-spacing:.13em;margin-bottom:8px}
+.instrument-head span:last-child{color:#8bcce8}
+#vuMeter{display:block;width:100%;height:92px}
+.station-art{
+  display:grid;place-items:center;min-height:142px;padding:12px;
+  background:radial-gradient(circle at 50% 42%,rgba(90,143,196,.24),transparent 65%),rgba(6,12,23,.64);
+  transition:border-color .35s,box-shadow .35s,background .35s;
+}
+.station-art .art-fallback{display:flex;flex-direction:column;align-items:center;gap:5px;
+  color:#c8d7ec;font-weight:800;letter-spacing:.12em;text-align:center}
+.station-art .art-fallback strong{font-size:29px;letter-spacing:-.08em;color:#f0f5ff}
+.station-art .art-fallback small{font-size:8px;color:#8ea4c1;letter-spacing:.2em}
+.station-art img{width:100%;height:100%;max-height:110px;object-fit:contain;padding:7px;position:relative;z-index:1}
+.station-art.has-image{background:rgba(5,10,19,.78)}
+.player-shell.playing .station-art{
+  border-color:rgba(105,210,255,.58);
+  box-shadow:0 0 0 1px rgba(105,210,255,.1),0 0 24px rgba(78,168,255,.17),inset 0 0 24px rgba(79,150,255,.10);
+}
+.player-shell.playing .station-art:before{content:"";position:absolute;inset:-40%;
+  background:conic-gradient(from 20deg,transparent,rgba(96,202,255,.18),transparent 30%,rgba(207,130,255,.12),transparent 70%);
+  animation:artHalo 7s linear infinite}
+@keyframes artHalo{to{transform:rotate(360deg)}}
+#visualizer{display:block;width:100%;height:92px}
+.visualizer-foot{display:flex;justify-content:space-between;margin-top:3px;color:#8293ac;font:8px ui-monospace,monospace}
+.now{
+  margin:12px 0 10px;padding:11px 14px;border:1px solid rgba(206,222,255,.16);border-radius:16px;
+  background:rgba(5,12,23,.37);display:flex;align-items:center;gap:12px;
+  box-shadow:inset 0 1px rgba(255,255,255,.07)
+}
+.nowtext{min-width:0;flex:1}.nowlabel{font-size:9px;color:#93a7c2;letter-spacing:.16em;text-transform:uppercase}
+.nowname{font-size:17px;font-weight:720;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.02em}
+.nowdesc{font-size:11px;color:#9eafc7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.live{font-size:10px;letter-spacing:.1em;color:#ff7777;white-space:nowrap}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#ff5e6a;margin-right:6px;box-shadow:0 0 10px #ff5e6a}
+.transport{
+  display:flex;align-items:center;justify-content:center;gap:9px;margin:10px 0 5px;padding:8px 10px;
+  border:1px solid rgba(202,220,255,.14);border-radius:18px;
+  background:rgba(6,13,25,.32);box-shadow:inset 0 1px rgba(255,255,255,.08)
+}
+.key{
+  display:grid;place-items:center;width:44px;height:42px;border-radius:13px;
+  border:1px solid rgba(221,235,255,.2);
+  background:linear-gradient(145deg,rgba(255,255,255,.15),rgba(255,255,255,.035));
+  color:#e6f0ff;box-shadow:0 4px 12px #0003,inset 0 1px rgba(255,255,255,.18);
+  cursor:pointer;transition:transform .12s,background .2s,border-color .2s;touch-action:manipulation
+}
+.key svg{width:19px;height:19px;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.key.main{width:49px;height:46px;border-color:rgba(255,184,112,.55);
+  background:linear-gradient(145deg,rgba(255,177,100,.34),rgba(255,128,74,.12));color:#ffd3a0;
+  box-shadow:0 4px 18px rgba(255,145,75,.13),inset 0 1px rgba(255,255,255,.22)}
+.key:hover{background:rgba(255,255,255,.16);border-color:rgba(210,230,255,.4)}
+.key:active,.key.pressed{transform:scale(.94);background:rgba(255,255,255,.22)}
+.key.main:active{background:rgba(255,160,85,.28)}
+.key:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.status{font-size:10px;color:#8fa2bc;text-align:center;margin:8px 0 0;min-height:15px}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0 9px}
+.tab{padding:9px 6px;border-radius:12px;border:1px solid rgba(200,220,255,.16);
+  background:rgba(255,255,255,.045);color:#aebed4;font-size:12px;cursor:pointer}
+.tab.active{background:rgba(94,164,226,.18);color:#e9f5ff;border-color:rgba(111,192,255,.42);box-shadow:inset 0 1px rgba(255,255,255,.12)}
+.search{width:100%;padding:11px 14px;border-radius:13px;border:1px solid rgba(200,220,255,.16);
+  background:rgba(4,10,20,.42);color:#eff6ff;outline:none;margin-bottom:10px;font-size:13px}
+.search::placeholder{color:#8294ac}
 .stationlist{display:flex;flex-direction:column;gap:7px}
-.station{display:flex;align-items:center;gap:10px;padding:10px;border-radius:13px;background:linear-gradient(100deg,#342016,#24150f);border:1px solid #5c3b27;cursor:pointer;min-height:64px}
-.station.active{border-color:#e98935;box-shadow:inset 0 0 0 1px #e9893533,0 0 13px #f27c231c}
-.stationlogo{width:44px;height:40px;flex:0 0 44px;border-radius:8px;display:grid;place-items:center;background:var(--brand-bg,#5a2c17);color:var(--brand-fg,#fff0d4);border:1px solid var(--brand-border,#bd7741);font-weight:950;font-size:10px;letter-spacing:-.04em;text-align:center;box-shadow:inset 0 1px #ffffff30,0 2px 4px #0004;overflow:hidden}
-.stationlogo span{display:block;max-width:100%;padding:0 2px;line-height:1.05;overflow:hidden;text-overflow:ellipsis}.stationlogo img{width:100%;height:100%;padding:3px;object-fit:contain;display:block;border-radius:6px}.stationlogo.has-image{background:#f6efdf;border-color:#e8d4b4}.stationlogo.has-image.dark-logo{background:#21130f;border-color:#755037}
-.stationinfo{min-width:0;flex:1}.stationname{font-weight:750;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stationtag{font-size:11px;color:#bda17e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stationstate{font-size:10px;color:#d99a4e;white-space:nowrap}
-.fav{border:0;background:none;color:#b99570;font-size:21px;cursor:pointer;padding:4px}
-.fav.on{color:#ff6d4d}
-.bottom{margin-top:14px;padding:12px;border:1px solid #5d3b27;border-radius:14px;background:#21130e}
-.volrow{display:flex;align-items:center;gap:10px;color:#d6b88e;font-size:13px}
-input[type=range]{flex:1;accent-color:#e9872c;min-width:0}
-.note{margin-top:12px;color:#94785c;font-size:10px;line-height:1.45;text-align:center}
-.empty{padding:24px;text-align:center;color:#bda17e;font-size:13px}
-.status{font-size:11px;color:#bda17e;margin-top:8px;min-height:16px}
-@media(min-width:600px){.app{padding-top:24px}.deck{padding:18px}}
-@media(max-width:360px){.transport{gap:6px;padding:8px 5px}.key{width:49px;height:49px}.key.main{width:61px}.weather-chip{max-width:94px}.clock-chip{min-width:62px;padding:4px 6px}.clock-time{font-size:15px}}
-@media(prefers-reduced-motion:reduce){.cassette-stage.playing .reel{animation-duration:12s}.key{transition:none}}
+.station{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:14px;
+  background:linear-gradient(110deg,rgba(255,255,255,.075),rgba(255,255,255,.025));
+  border:1px solid rgba(200,220,255,.11);cursor:pointer;min-height:60px;transition:background .18s,border-color .18s}
+.station:hover{background:rgba(255,255,255,.09)}
+.station.active{border-color:rgba(104,198,255,.48);background:rgba(80,150,215,.12);box-shadow:inset 0 0 0 1px rgba(104,198,255,.08)}
+.stationlogo{width:42px;height:40px;flex:0 0 42px;border-radius:10px;display:grid;place-items:center;
+  background:var(--brand-bg,#24354b);color:var(--brand-fg,#eff6ff);border:1px solid rgba(255,255,255,.22);
+  font-weight:850;font-size:10px;letter-spacing:-.04em;text-align:center;overflow:hidden}
+.stationlogo span{display:block;max-width:100%;padding:0 2px;line-height:1.05;overflow:hidden;text-overflow:ellipsis}
+.stationlogo img{width:100%;height:100%;padding:4px;object-fit:contain;display:block;border-radius:8px}
+.stationlogo.has-image{background:#f6f7fa;border-color:rgba(255,255,255,.3)}
+.stationlogo.has-image span{display:none}
+.stationinfo{min-width:0;flex:1}.stationname{font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stationtag{font-size:10px;color:#9eafc7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stationstate{font-size:9px;color:#94abc4;white-space:nowrap;letter-spacing:.08em}
+.fav{border:0;background:none;color:#9eb1ca;font-size:20px;cursor:pointer;padding:4px}
+.fav.on{color:#ffb9d2}
+.bottom{margin-top:13px;padding:11px 13px;border:1px solid rgba(200,220,255,.13);border-radius:15px;background:rgba(5,12,23,.32)}
+.volrow{display:flex;align-items:center;gap:10px;color:#c5d4e8;font-size:12px}
+input[type=range]{flex:1;accent-color:#75caff;min-width:0}
+.note{margin-top:10px;color:#8294ad;font-size:9px;line-height:1.45;text-align:center}
+.empty{padding:24px;text-align:center;color:#9eafc7;font-size:13px}
+@media(max-width:700px){
+ .app{width:min(100% - 20px,560px);padding-top:10px}
+ .top{padding:10px;border-radius:18px;flex-wrap:wrap}
+ .top-tools{margin-left:auto}
+ .player-display{grid-template-columns:1fr 1fr;gap:9px}
+ .station-art{grid-column:1 / -1;grid-row:1;min-height:116px;max-height:132px}
+ .station-art img{max-height:96px}
+ .instrument{min-height:116px;padding:9px}
+ #vuMeter,#visualizer{height:72px}
+ .deck{padding:11px;border-radius:21px}
+}
+@media(max-width:390px){
+ .brand{font-size:18px}.ecg{width:48px;flex-basis:48px}
+ .clock-chip{min-width:61px;padding:4px 7px}.clock-time{font-size:15px}
+ .weather-chip{max-width:112px;padding:4px 7px}
+ .transport{gap:6px;padding:7px 5px}.key{width:39px;height:39px}.key.main{width:44px;height:42px}
+ .instrument-head{font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition:none!important}}
+
 </style>
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div><div class="brand">◉ Радио Май</div><div class="subbrand">ТВОЯ МУЗЫКА. ТВОЙ ЭФИР.</div></div>
+    <div class="brandline">
+      <div>
+        <div class="brand">Радио <em>Май</em></div>
+        <div class="subbrand">ТВОЯ МУЗЫКА. ТВОЙ ЭФИР.</div>
+      </div>
+      <svg class="ecg" viewBox="0 0 120 34" role="img" aria-label="Пульсирующая кардиограмма">
+        <path d="M1 18 H23 L31 18 L38 7 L47 29 L57 12 L64 18 H79 L87 18 L94 3 L103 29 L110 18 H119"/>
+      </svg>
+    </div>
     <div class="top-tools">
       <div class="clock-chip"><div class="clock-time" id="clockTime">--:--</div><div class="clock-date" id="clockDate">LOCAL TIME</div></div>
       <button class="weather-chip" id="weatherButton" type="button" title="Выбрать город для погоды"><span class="weather-icon" id="weatherIcon">☁</span><span class="weather-copy" id="weatherText">Указать город</span></button>
       <button class="iconbtn" id="info" aria-label="О приложении">i</button>
     </div>
   </header>
-  <main class="deck">
-    <div class="cassette-stage" id="cassetteStage">
-      <img class="cassette" src="cassette-logo.webp" alt="Винтажная кассета Радио Май">
-      <span class="reel left" aria-hidden="true"></span>
-      <span class="reel right" aria-hidden="true"></span>
-      <div class="cassette-brand" id="cassetteBrand" aria-hidden="true">
-        <span class="cassette-brand-mark" id="cassetteBrandMark"></span>
-        <span class="cassette-brand-copy"><span class="cassette-brand-name" id="cassetteBrandName"></span><span class="cassette-brand-caption">ON AIR / RADIO MAY</span></span>
+  <main class="deck player-shell" id="playerShell">
+    <section class="player-display" aria-label="Индикаторы и логотип станции">
+      <div class="instrument">
+        <div class="instrument-head"><span>VU / LEVEL</span><span id="vizMode">STANDBY</span></div>
+        <canvas id="vuMeter" width="720" height="142" aria-label="Индикаторы уровня левого и правого каналов"></canvas>
       </div>
-    </div>
-    <section class="meters-panel" aria-label="Аналоговые VU-метры и спектроэквалайзер">
-      <div class="meters-title"><span>VU / LEVEL</span><span id="vizMode">STANDBY</span></div>
-      <canvas id="vuMeter" width="720" height="142" aria-label="Два аналоговых VU-метра"></canvas>
-      <div class="visualizer-wrap">
-        <div class="visualizer-head"><span>RADIO MAY / SPECTRUM</span><span>48 BAND</span></div>
-        <canvas id="visualizer" width="720" height="104" aria-label="Музыкальный спектроанализатор"></canvas>
+      <div class="station-art" id="stationArt" aria-label="Логотип текущей станции">
+        <div class="art-fallback"><strong>RM</strong><small>RADIO MAY</small></div>
+      </div>
+      <div class="instrument">
+        <div class="instrument-head"><span>SPECTRUM</span><span>48 BAND</span></div>
+        <canvas id="visualizer" width="720" height="142" aria-label="Музыкальный спектроанализатор"></canvas>
         <div class="visualizer-foot"><span>60 Hz</span><span>1 kHz</span><span>16 kHz</span></div>
       </div>
     </section>
     <section class="now">
-      <div class="nowtext"><div class="nowlabel">Сейчас в эфире</div><div class="nowname" id="nowName">Выбери радиостанцию</div><div class="nowdesc" id="nowDesc">22 станции в одной кассете</div></div>
+      <div class="nowtext"><div class="nowlabel">Сейчас в эфире</div><div class="nowname" id="nowName">Выбери радиостанцию</div><div class="nowdesc" id="nowDesc">Любимые станции в одном месте</div></div>
       <div class="live" id="live"><span class="dot"></span>READY</div>
     </section>
     <div class="transport" aria-label="Управление воспроизведением">
       <button class="key" id="prev" title="Предыдущая станция" aria-label="Предыдущая станция"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 6l-10 6 10 6z" fill="currentColor" stroke="none"/></svg></button>
       <button class="key" id="stop" title="Стоп" aria-label="Остановить"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5" fill="currentColor" stroke="none"/></svg></button>
-      <button class="key main" id="play" title="Воспроизвести" aria-label="Воспроизвести"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+      <button class="key main" id="play" title="Воспроизвести" aria-label="Воспроизвести"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" fill="currentColor" stroke="none"/></svg></button>
       <button class="key" id="pause" title="Пауза" aria-label="Пауза"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4.5" height="14" rx="1" fill="currentColor" stroke="none"/><rect x="13.5" y="5" width="4.5" height="14" rx="1" fill="currentColor" stroke="none"/></svg></button>
       <button class="key" id="next" title="Следующая станция" aria-label="Следующая станция"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 6l10 6-10 6z" fill="currentColor" stroke="none"/></svg></button>
     </div>
-    <div class="status" id="status">Выбери станцию из списка. Прямые эфиры подключаются после проверки потоков.</div>
+    <div class="status" id="status">Выбери станцию из списка. Нажми Play, чтобы начать эфир.</div>
   </main>
   <nav class="tabs">
     <button class="tab active" data-tab="all">◉ Станции</button>
@@ -151,7 +247,8 @@ const STATIONS = [
     "tagline": "Главная станция",
     "genre": "Избранное",
     "key": "pioneer",
-    "stream": "https://ppr.status-media.ru/ppr128.mp3"
+    "stream": "https://ppr.status-media.ru/ppr128.mp3",
+    "fallbackStreams": ["https://ppr90.status-media.ru/ppr_90.mp3", "https://ppr90.status-media.ru/ru-wave.mp3", "https://ppr90.status-media.ru/kasseta.mp3"]
   },
   {
     "id": 1,
@@ -366,47 +463,41 @@ function drawVisualizer(timestamp){
 }
 function drawVUMeters(t,low,mid,high){
   const c=vuCtx,w=vuCanvas.width,h=vuCanvas.height;
-  c.clearRect(0,0,w,h);c.fillStyle="#100b08";c.fillRect(0,0,w,h);
+  c.clearRect(0,0,w,h);
   const levels=vizActive
-    ? [0.18+0.58*(.5+.5*Math.sin(t/210))*.65+Math.min(.22,low/500),0.16+0.6*(.5+.5*Math.sin(t/237+1.1))*.62+Math.min(.2,mid/650)]
-    : [0.035,0.035];
-  for(let n=0;n<2;n++){
-    const cx=n?540:180,cy=111,r=88;
-    c.fillStyle="#24170f";c.beginPath();c.roundRect(cx-160,8,320,126,9);c.fill();
-    c.strokeStyle="#8c653d";c.lineWidth=2;c.beginPath();c.arc(cx,cy,r,Math.PI,Math.PI*2);c.stroke();
-    c.strokeStyle="#c5a06b";c.lineWidth=1;
-    for(let i=0;i<=10;i++){
-      const a=Math.PI+i*Math.PI/10,inner=r-((i%2===0)?12:7);
-      c.beginPath();c.moveTo(cx+Math.cos(a)*inner,cy+Math.sin(a)*inner);c.lineTo(cx+Math.cos(a)*(r-1),cy+Math.sin(a)*(r-1));c.stroke();
+    ? [Math.min(.98,.18+.68*(.5+.5*Math.sin(t/185))*.72+Math.min(.18,low/420)),
+       Math.min(.98,.16+.68*(.5+.5*Math.sin(t/213+1.2))*.72+Math.min(.18,mid/520))]
+    : [.025,.025];
+  const labels=["L","R"],segments=30,left=45,right=16,barGap=5;
+  const totalW=w-left-right,segW=(totalW-(segments-1)*barGap)/segments;
+  for(let row=0;row<2;row++){
+    const y=22+row*61;
+    c.fillStyle="#b8c8df";c.font="bold 22px ui-monospace,monospace";c.textAlign="left";
+    c.fillText(labels[row],5,y+22);
+    for(let i=0;i<segments;i++){
+      const x=left+i*(segW+barGap),on=i<Math.round(levels[row]*segments);
+      const color=i<19?"#63d59a":i<25?"#e8cb69":"#ef806e";
+      c.fillStyle=on?color:"rgba(155,178,207,.13)";
+      c.shadowColor=on?color:"transparent";c.shadowBlur=on?5:0;
+      c.beginPath();c.roundRect(x,y,segW,17,3);c.fill();
     }
-    c.fillStyle="#d9b47b";c.font="10px ui-monospace,monospace";c.textAlign="center";
-    c.fillText(n?"RIGHT":"LEFT",cx,24);
-    c.fillText("-20",cx-r+8,54);c.fillText("-10",cx-40,36);c.fillText("0",cx+39,36);c.fillStyle="#d94a2d";c.fillText("+3",cx+r-9,54);
-    const val=Math.max(0,Math.min(1,levels[n])),a=Math.PI+val*Math.PI;
-    c.strokeStyle="#e8d0a2";c.lineWidth=3;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+Math.cos(a)*(r-18),cy+Math.sin(a)*(r-18));c.stroke();
-    c.fillStyle="#d9b47b";c.beginPath();c.arc(cx,cy,5,0,Math.PI*2);c.fill();
-    c.fillStyle="#9e7c55";c.fillRect(cx-28,118,56,5);
+    c.shadowBlur=0;
+    c.fillStyle="#71839d";c.font="9px ui-monospace,monospace";c.textAlign="right";
+    c.fillText(Math.round(levels[row]*100)+"%",w-3,y+34);
   }
 }
 function stationBrand(s){
   const key=s?.key||"";
+  const fav = domain => "https://www.google.com/s2/favicons?domain=" + domain + "&sz=128";
   const logoUrls = {
-    pioneer:"https://pionerfm.ru/favicon.ico",
-    zaycev:"https://www.zaycev.fm/favicon.ico",
-    record:"https://www.radiorecord.ru/images/record-logo-prod.svg",
-    maximum:"https://rmg.ru/_nuxt/img/www.1f4fe1b.svg",
-    comedy:"https://comedy-radio.ru/favicon.ico",
-    marusya:"https://marus.fm/img/logo2.png",
-    europa:"https://europaplus.ru/favicon.ico",
-    dfm:"https://dfm.ru/favicon.ico",
-    montecarlo:"https://montecarlo.ru/favicon.ico",
-    love:"https://loveradio.ru/favicon.ico",
-    energy:"https://energyfm.ru/favicon.ico",
-    newradio:"https://newradio.ru/favicon.ico",
-    autoradio:"https://avtoradio.ru/favicon.ico",
-    retro:"https://retrofm.ru/favicon.ico",
-    nashe:"https://nashe.ru/favicon.ico",
-    dorozhnoe:"https://dorognoe.ru/favicon.ico"
+    pioneer:fav("pionerfm.ru"), zaycev:fav("zaycev.fm"),
+    record:fav("radiorecord.ru"), maximum:fav("maximum.ru"),
+    comedy:fav("comedy-radio.ru"), marusya:fav("marus.fm"),
+    europa:fav("europaplus.ru"), dfm:fav("dfm.ru"),
+    montecarlo:fav("montecarlo.ru"), love:fav("loveradio.ru"),
+    energy:fav("energyfm.ru"), newradio:fav("newradio.ru"),
+    autoradio:fav("avtoradio.ru"), retro:fav("retrofm.ru"),
+    nashe:fav("nashe.ru"), dorozhnoe:fav("dorognoe.ru")
   };
   if(key.startsWith("record")){
     const variant={"record":"REC","record-russian":"RUS","record-90":"90s","record-rock":"ROCK","record-chill":"CHILL","record-deep":"DEEP","record-trance":"TRANCE"}[key]||"REC";
@@ -443,21 +534,27 @@ function setStationLogo(container, brand, fallbackClass="brand-fallback"){
   container.append(img);
 }
 function paintCassetteBrand(){
-  const sticker=$("#cassetteBrand"), brand=stationBrand(selected);
-  if(!selected){sticker.classList.remove("visible");return;}
-  const mark=$("#cassetteBrandMark");
-  mark.innerHTML="";
-  const fallback=document.createElement("span");fallback.className="brand-fallback";fallback.textContent=brand.mark;mark.append(fallback);
-  mark.style.setProperty("--brand-bg",brand.bg);
-  setStationLogo(mark,brand);
-  $("#cassetteBrandName").textContent=brand.name;
-  sticker.classList.toggle("visible",vizActive);
+  const art=$("#stationArt");
+  if(!art)return;
+  art.innerHTML="";
+  art.classList.remove("has-image");
+  const brand=stationBrand(selected);
+  const fallback=document.createElement("div");
+  fallback.className="art-fallback";
+  const strong=document.createElement("strong");
+  strong.textContent=selected?brand.mark:"RM";
+  const small=document.createElement("small");
+  small.textContent=selected?brand.name:"RADIO MAY";
+  fallback.append(strong,small);
+  art.append(fallback);
+  art.style.setProperty("--brand-bg",brand.bg);
+  if(selected)setStationLogo(art,brand);
 }
 function setVisualizer(active){
   vizActive=active;
-  if(!vizFrame) vizFrame=requestAnimationFrame(drawVisualizer);
-  $("#vizMode").textContent=active?"PLAYING":"STANDBY";
-  $("#cassetteStage").classList.toggle("playing",active);
+  if(!vizFrame)vizFrame=requestAnimationFrame(drawVisualizer);
+  $("#vizMode").textContent=active?"ON AIR":"STANDBY";
+  $("#playerShell").classList.toggle("playing",active);
   paintCassetteBrand();
 }
 setVisualizer(false);
@@ -530,44 +627,47 @@ function selectStation(s){
  $("#status").textContent=s.stream?"Станция выбрана. Нажми Play.":"Поток этой станции пока не добавлен.";
  render();
 }
+async function tryStream(src){
+  if(hlsPlayer){hlsPlayer.destroy();hlsPlayer=null;}
+  audio.pause();audio.removeAttribute("src");audio.load();
+  if(src.endsWith(".m3u8")){
+    if(audio.canPlayType("application/vnd.apple.mpegurl")){
+      audio.src=src;audio.load();
+    }else if(window.Hls&&Hls.isSupported()){
+      hlsPlayer=new Hls({enableWorker:true,lowLatencyMode:true});
+      hlsPlayer.loadSource(src);hlsPlayer.attachMedia(audio);
+      await new Promise((resolve,reject)=>{
+        const onReady=()=>{cleanup();resolve();};
+        const onError=(event,data)=>{if(data.fatal){cleanup();reject(new Error("HLS stream error"));}};
+        const cleanup=()=>{hlsPlayer?.off(Hls.Events.MANIFEST_PARSED,onReady);hlsPlayer?.off(Hls.Events.ERROR,onError);};
+        hlsPlayer.on(Hls.Events.MANIFEST_PARSED,onReady);hlsPlayer.on(Hls.Events.ERROR,onError);
+      });
+    }else throw new Error("HLS playback is not supported");
+  }else{audio.src=src;audio.load();}
+  await audio.play();
+}
 async function play(){
  if(!selected){$("#status").textContent="Сначала выбери радиостанцию.";return;}
- if(!selected.stream){$("#status").textContent="Для этой станции поток пока не добавлен. Выбери другую станцию.";return;}
- try{
-   if(hlsPlayer){hlsPlayer.destroy();hlsPlayer=null;}
-   audio.pause();audio.removeAttribute("src");audio.load();
-   if(selected.stream.endsWith('.m3u8')){
-     if(audio.canPlayType('application/vnd.apple.mpegurl')){
-       audio.src=selected.stream;audio.load();
-     } else if(window.Hls && Hls.isSupported()){
-       hlsPlayer=new Hls({enableWorker:true,lowLatencyMode:true});
-       hlsPlayer.loadSource(selected.stream);
-       hlsPlayer.attachMedia(audio);
-       await new Promise((resolve,reject)=>{
-         const onReady=()=>{cleanup();resolve();};
-         const onError=(event,data)=>{if(data.fatal){cleanup();reject(new Error('HLS stream error'));}};
-         const cleanup=()=>{hlsPlayer?.off(Hls.Events.MANIFEST_PARSED,onReady);hlsPlayer?.off(Hls.Events.ERROR,onError);};
-         hlsPlayer.on(Hls.Events.MANIFEST_PARSED,onReady);
-         hlsPlayer.on(Hls.Events.ERROR,onError);
-       });
-     } else {
-       throw new Error('HLS playback is not supported in this browser');
-     }
-   } else {
-     audio.src=selected.stream;audio.load();
+ const candidates=[selected.stream,...(selected.fallbackStreams||[])].filter(Boolean);
+ if(!candidates.length){$("#status").textContent="Для этой станции поток пока не добавлен.";return;}
+ $("#status").textContent="Подключаю эфир…";
+ let lastError=null;
+ for(let i=0;i<candidates.length;i++){
+   try{
+     await tryStream(candidates[i]);
+     $("#live").innerHTML='<span class="dot"></span>LIVE';
+     $("#status").textContent=i===0?"Воспроизведение началось.":`Подключено через резервный поток ${i+1}.`;
+     setVisualizer(true);
+     return;
+   }catch(e){
+     lastError=e;
+     if(hlsPlayer){hlsPlayer.destroy();hlsPlayer=null;}
+     audio.pause();audio.removeAttribute("src");audio.load();
    }
-   await audio.play();
-   $("#live").innerHTML='<span class="dot"></span>LIVE';
-   $("#status").textContent="Воспроизведение началось.";
-   setVisualizer(true);
-   $("#play").textContent="▶";
  }
- catch(e){
-   console.warn('Radio playback error:',e);
-   $("#status").textContent="Не удалось запустить эфир. Попробуй другую станцию или повтори позже.";
-   $("#live").textContent="ERROR";
-   setVisualizer(false);
- }
+ console.warn("Radio playback error:",lastError);
+ $("#status").textContent="Не удалось подключить эфир. Возможно, сервер станции временно недоступен.";
+ $("#live").textContent="ERROR";setVisualizer(false);
 }
 function stop(){audio.pause();if(hlsPlayer){hlsPlayer.destroy();hlsPlayer=null;}audio.removeAttribute("src");audio.load();setVisualizer(false);$("#live").innerHTML='<span class="dot"></span>READY';$("#status").textContent="Воспроизведение остановлено.";}
 $("#play").onclick=play;$("#pause").onclick=()=>{audio.pause();setVisualizer(false);$("#live").textContent="PAUSE";$("#status").textContent="Пауза.";};$("#stop").onclick=stop;
