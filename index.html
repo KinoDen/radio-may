@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#21130f">
-<title>Радио Май — любимые станции</title>
+<title>Радио Май — ретро интернет-радио</title>
 <style>
 :root{--bg:#1b100d;--panel:#2a1a14;--panel2:#352117;--cream:#f4dfb5;--muted:#c3a783;--orange:#f08a24;--red:#b9361f;--line:#785037;--gold:#e8b45f}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#63351c 0,#29170f 45%,#160d0a 100%);color:var(--cream);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
 .app{max-width:540px;margin:auto;padding:16px 14px 30px}
-.top{display:flex;justify-content:space-between;align-items:center;margin:4px 2px 14px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:4px 2px 14px}.top-tools{display:flex;align-items:center;gap:7px}.clock-chip{min-width:72px;padding:5px 8px;border:1px solid #795033;border-radius:10px;background:#170e0a;box-shadow:inset 0 1px 4px #0009;text-align:center}.clock-time{font:700 17px/1.1 ui-monospace,monospace;color:#ffe0a5;letter-spacing:.04em}.clock-date{font-size:8px;color:#ad8a64;letter-spacing:.07em}.weather-chip{max-width:138px;min-height:38px;padding:5px 9px;border:1px solid #795033;border-radius:10px;background:linear-gradient(180deg,#392318,#1a100c);color:#f4d6a5;font-size:10px;display:flex;align-items:center;gap:6px;cursor:pointer}.weather-icon{font-size:17px}.weather-copy{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .brand{font-weight:900;letter-spacing:.08em;font-size:14px;text-transform:uppercase;color:#f7d8a3}
 .subbrand{font-size:11px;color:var(--muted);letter-spacing:.12em}
 .iconbtn{border:1px solid #765037;background:#2c1b13;color:var(--cream);width:40px;height:40px;border-radius:50%;font-size:18px;cursor:pointer}
@@ -23,26 +23,44 @@
 .cassette{width:100%;display:block;border-radius:12px}
 .cassette-brand{position:absolute;left:68%;top:61.5%;width:25%;min-height:8.5%;display:none;align-items:center;gap:6px;padding:5px 7px;border:1px solid #e7c58c;border-radius:5px;background:linear-gradient(135deg,rgba(31,19,13,.96),rgba(72,37,20,.94));box-shadow:0 2px 5px #0009,inset 0 1px #fff4;transform:rotate(-7deg);transform-origin:center;z-index:3;line-height:1.05;overflow:hidden}
 .cassette-brand.visible{display:flex}
-.cassette-brand-mark{width:25px;height:25px;flex:0 0 25px;display:grid;place-items:center;border-radius:4px;background:var(--brand-bg,#a94d20);color:#fff8e9;font-size:9px;font-weight:950;letter-spacing:-.04em;border:1px solid #fff5}
+.cassette-brand-mark{width:25px;height:25px;flex:0 0 25px;display:grid;place-items:center;overflow:hidden;border-radius:4px;background:var(--brand-bg,#a94d20);color:#fff8e9;font-size:9px;font-weight:950;letter-spacing:-.04em;border:1px solid #fff5}
+.cassette-brand-mark img{width:100%;height:100%;object-fit:contain;display:block}
+.cassette-brand-mark .brand-fallback{display:block}
 .cassette-brand-copy{min-width:0;display:flex;flex-direction:column;gap:2px}
 .cassette-brand-name{font-size:clamp(7px,1.8vw,10px);font-weight:900;letter-spacing:.04em;color:#fff0d3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cassette-brand-caption{font-size:6px;color:#d9b98c;letter-spacing:.1em;white-space:nowrap}
-.reel{position:absolute;width:7.4%;aspect-ratio:1;pointer-events:none;transform-origin:50% 50%;background-size:100% 100%;background-repeat:no-repeat;filter:drop-shadow(0 0 1px rgba(0,0,0,.35))}
-.reel.left{left:31.3%;top:51.3%;background-image:url('reel-left.png')}
-.reel.right{left:64.3%;top:48.3%;background-image:url('reel-right.png')}
-.cassette-stage.playing .reel.left{animation:reelSpin 2.8s linear infinite}
-.cassette-stage.playing .reel.right{animation:reelSpin 2.15s linear infinite reverse}
+.reel{position:absolute;width:18.75%;aspect-ratio:1;pointer-events:none;transform-origin:50% 50%;background-size:100% 100%;background-repeat:no-repeat;filter:drop-shadow(0 1px 2px #0009);border-radius:50%}
+.reel.left{left:24.6%;top:45.6%;background-image:url('reel-left.png')}
+.reel.right{left:57.25%;top:42.0%;background-image:url('reel-right.png')}
+.cassette-stage.playing .reel.left{animation:reelSpin 2.25s linear infinite}
+.cassette-stage.playing .reel.right{animation:reelSpin 1.62s linear infinite reverse}.cassette-stage.playing:after{content:"";position:absolute;left:43%;top:48.5%;width:14%;height:7%;pointer-events:none;background:linear-gradient(105deg,transparent 0%,#d99a5630 35%,#ffe2a044 50%,transparent 75%);mix-blend-mode:screen;animation:tapeGlide 1.8s linear infinite;transform:rotate(-5deg)}@keyframes tapeGlide{from{translate:-18% 0;opacity:.25}to{translate:18% 0;opacity:.7}}
 @keyframes reelSpin{to{transform:rotate(360deg)}}
-.now{margin:12px 0 10px;padding:12px 14px;border:1px solid #754522;border-radius:14px;background:#120d0b;display:flex;align-items:center;gap:12px}
+.meters-panel{margin:12px 0 10px;padding:9px 10px 8px;border:1px solid #704526;border-radius:14px;background:linear-gradient(180deg,#160d09,#090706);box-shadow:inset 0 1px 5px #000b,0 2px 8px #0005}
+.meters-title{display:flex;justify-content:space-between;color:#b08a5e;font:9px ui-monospace,monospace;letter-spacing:.16em;margin:0 2px 2px}
+.meters-title span:last-child{color:#e28b3c}
+#vuMeter{display:block;width:100%;height:82px}
+.visualizer-wrap{margin:1px auto 0;padding:6px 7px 5px;border:1px solid #55361f;border-radius:8px;background:linear-gradient(180deg,#0c0907,#050403);box-shadow:inset 0 0 12px #000}
+.visualizer-head{display:flex;justify-content:space-between;align-items:center;margin:0 2px 3px;color:#8f704f;font:8px/1.2 ui-monospace,monospace;letter-spacing:.14em}
+.visualizer-head span:last-child{color:#c17b37}
+#visualizer{display:block;width:100%;height:54px;image-rendering:pixelated}
+.visualizer-foot{display:flex;justify-content:space-between;margin:3px 2px 0;color:#72563e;font:7px ui-monospace,monospace;letter-spacing:.08em}
+.now{margin:8px 0 10px;padding:11px 14px;border:1px solid #754522;border-radius:14px;background:#120d0b;display:flex;align-items:center;gap:12px}
 .live{font-size:10px;letter-spacing:.08em;color:#ff6b4a;white-space:nowrap}
 .dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#f04c32;margin-right:5px;box-shadow:0 0 9px #f04c32}
 .nowtext{min-width:0;flex:1}.nowlabel{font-size:10px;color:#b99a72;text-transform:uppercase;letter-spacing:.12em}
 .nowname{font-size:17px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .nowdesc{font-size:11px;color:#bda17e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.transport{display:flex;justify-content:center;gap:8px;margin:12px 0 16px}
-.key{width:57px;height:50px;border-radius:12px;border:1px solid #9a683a;background:linear-gradient(180deg,#f4d9a5,#c18a4e);color:#382014;font-size:21px;box-shadow:0 4px 0 #70411e, inset 0 1px #fff9;cursor:pointer}
-.key.main{width:72px;background:linear-gradient(180deg,#ef7c28,#b9361f);color:#fff1d8;border-color:#ffb35d;font-size:24px}
-.key:active{transform:translateY(3px);box-shadow:0 1px 0 #70411e}
+.transport{display:flex;justify-content:center;gap:9px;margin:13px 0 17px;padding:9px 8px 11px;border:1px solid #714426;border-radius:17px;background:linear-gradient(180deg,#160d09,#2d190f);box-shadow:inset 0 2px 5px #000b,0 1px #c18a4c55}
+.key{position:relative;isolation:isolate;display:grid;place-items:center;width:56px;height:52px;border-radius:11px;border:1px solid #f2d09a;background:linear-gradient(180deg,#fff0ce 0%,#efd09a 23%,#d49a58 78%,#b7773d 100%);color:#4a2915;box-shadow:0 5px 0 #75421f,0 7px 10px #0008,inset 0 2px 2px #fff9,inset 0 -3px 5px #88502c;cursor:pointer;touch-action:manipulation;transition:transform .09s ease,box-shadow .09s ease,filter .15s ease}
+.key:before{content:"";position:absolute;inset:3px 4px auto;height:34%;border-radius:7px 7px 5px 5px;background:linear-gradient(180deg,#fff9,#fff0 95%);pointer-events:none;z-index:-1}
+.key:after{content:"";position:absolute;inset:2px;border-radius:8px;border:1px solid #fff4;pointer-events:none}
+.key svg{width:23px;height:23px;display:block;filter:drop-shadow(0 1px 0 #fff7);stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.key.main{width:68px;background:linear-gradient(180deg,#ff9a45 0%,#ef6825 32%,#c93d20 100%);color:#fff4dd;border-color:#ffc17b;box-shadow:0 5px 0 #742718,0 7px 11px #0009,inset 0 2px 2px #fff8,inset 0 -3px 5px #87250f}
+.key.main svg{width:26px;height:26px;fill:currentColor;stroke:none}
+.key:hover{filter:brightness(1.06)}
+.key:active,.key.pressed{transform:translateY(4px);box-shadow:0 1px 0 #70411e,0 2px 4px #0008,inset 0 3px 6px #68401f88}
+.key.main:active,.key.main.pressed{box-shadow:0 1px 0 #742718,0 2px 4px #0008,inset 0 3px 6px #74210f88}
+.key:focus-visible{outline:2px solid #ffe1a9;outline-offset:3px}
 .tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:14px 0}
 .tab{padding:10px 6px;border-radius:11px;border:1px solid #62402b;background:#2b1a13;color:#d7bd95;font-size:12px;cursor:pointer}
 .tab.active{background:#a94d20;color:#fff0d1;border-color:#f3a13f}
@@ -52,7 +70,7 @@
 .station{display:flex;align-items:center;gap:10px;padding:10px;border-radius:13px;background:linear-gradient(100deg,#342016,#24150f);border:1px solid #5c3b27;cursor:pointer;min-height:64px}
 .station.active{border-color:#e98935;box-shadow:inset 0 0 0 1px #e9893533,0 0 13px #f27c231c}
 .stationlogo{width:44px;height:40px;flex:0 0 44px;border-radius:8px;display:grid;place-items:center;background:var(--brand-bg,#5a2c17);color:var(--brand-fg,#fff0d4);border:1px solid var(--brand-border,#bd7741);font-weight:950;font-size:10px;letter-spacing:-.04em;text-align:center;box-shadow:inset 0 1px #ffffff30,0 2px 4px #0004;overflow:hidden}
-.stationlogo span{display:block;max-width:100%;padding:0 2px;line-height:1.05;overflow:hidden;text-overflow:ellipsis}
+.stationlogo span{display:block;max-width:100%;padding:0 2px;line-height:1.05;overflow:hidden;text-overflow:ellipsis}.stationlogo img{width:100%;height:100%;padding:3px;object-fit:contain;display:block;border-radius:6px}.stationlogo.has-image{background:#f6efdf;border-color:#e8d4b4}.stationlogo.has-image.dark-logo{background:#21130f;border-color:#755037}
 .stationinfo{min-width:0;flex:1}.stationname{font-weight:750;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stationtag{font-size:11px;color:#bda17e;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .stationstate{font-size:10px;color:#d99a4e;white-space:nowrap}
@@ -65,20 +83,21 @@ input[type=range]{flex:1;accent-color:#e9872c;min-width:0}
 .empty{padding:24px;text-align:center;color:#bda17e;font-size:13px}
 .status{font-size:11px;color:#bda17e;margin-top:8px;min-height:16px}
 @media(min-width:600px){.app{padding-top:24px}.deck{padding:18px}}
+@media(max-width:360px){.transport{gap:6px;padding:8px 5px}.key{width:49px;height:49px}.key.main{width:61px}.weather-chip{max-width:94px}.clock-chip{min-width:62px;padding:4px 6px}.clock-time{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.cassette-stage.playing .reel{animation-duration:12s}.key{transition:none}}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="top">
     <div><div class="brand">◉ Радио Май</div><div class="subbrand">ТВОЯ МУЗЫКА. ТВОЙ ЭФИР.</div></div>
-    <button class="iconbtn" id="info" aria-label="О приложении">i</button>
+    <div class="top-tools">
+      <div class="clock-chip"><div class="clock-time" id="clockTime">--:--</div><div class="clock-date" id="clockDate">LOCAL TIME</div></div>
+      <button class="weather-chip" id="weatherButton" type="button" title="Выбрать город для погоды"><span class="weather-icon" id="weatherIcon">☁</span><span class="weather-copy" id="weatherText">Указать город</span></button>
+      <button class="iconbtn" id="info" aria-label="О приложении">i</button>
+    </div>
   </header>
   <main class="deck">
-    <div class="visualizer-wrap">
-      <div class="visualizer-head"><span>RADIO MAY / WINAMP EQ</span><span id="vizMode">WINAMP STYLE</span></div>
-      <canvas id="visualizer" width="720" height="148" aria-label="Музыкальный спектроанализатор"></canvas>
-      <div class="visualizer-foot"><span>60 Hz</span><span>1 kHz</span><span>16 kHz</span></div>
-    </div>
     <div class="cassette-stage" id="cassetteStage">
       <img class="cassette" src="cassette-logo.webp" alt="Винтажная кассета Радио Май">
       <span class="reel left" aria-hidden="true"></span>
@@ -88,16 +107,25 @@ input[type=range]{flex:1;accent-color:#e9872c;min-width:0}
         <span class="cassette-brand-copy"><span class="cassette-brand-name" id="cassetteBrandName"></span><span class="cassette-brand-caption">ON AIR / RADIO MAY</span></span>
       </div>
     </div>
+    <section class="meters-panel" aria-label="Аналоговые VU-метры и спектроэквалайзер">
+      <div class="meters-title"><span>VU / LEVEL</span><span id="vizMode">STANDBY</span></div>
+      <canvas id="vuMeter" width="720" height="142" aria-label="Два аналоговых VU-метра"></canvas>
+      <div class="visualizer-wrap">
+        <div class="visualizer-head"><span>RADIO MAY / SPECTRUM</span><span>48 BAND</span></div>
+        <canvas id="visualizer" width="720" height="104" aria-label="Музыкальный спектроанализатор"></canvas>
+        <div class="visualizer-foot"><span>60 Hz</span><span>1 kHz</span><span>16 kHz</span></div>
+      </div>
+    </section>
     <section class="now">
-      <div class="nowtext"><div class="nowlabel">Сейчас выбрано</div><div class="nowname" id="nowName">Выбери радиостанцию</div><div class="nowdesc" id="nowDesc">22 станции в одной кассете</div></div>
+      <div class="nowtext"><div class="nowlabel">Сейчас в эфире</div><div class="nowname" id="nowName">Выбери радиостанцию</div><div class="nowdesc" id="nowDesc">22 станции в одной кассете</div></div>
       <div class="live" id="live"><span class="dot"></span>READY</div>
     </section>
-    <div class="transport">
-      <button class="key" id="prev" title="Предыдущая станция">|◀</button>
-      <button class="key" id="stop" title="Стоп">■</button>
-      <button class="key main" id="play" title="Воспроизвести">▶</button>
-      <button class="key" id="pause" title="Пауза">Ⅱ</button>
-      <button class="key" id="next" title="Следующая станция">▶|</button>
+    <div class="transport" aria-label="Управление воспроизведением">
+      <button class="key" id="prev" title="Предыдущая станция" aria-label="Предыдущая станция"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M19 6l-10 6 10 6z" fill="currentColor" stroke="none"/></svg></button>
+      <button class="key" id="stop" title="Стоп" aria-label="Остановить"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6.5" y="6.5" width="11" height="11" rx="1.5" fill="currentColor" stroke="none"/></svg></button>
+      <button class="key main" id="play" title="Воспроизвести" aria-label="Воспроизвести"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg></button>
+      <button class="key" id="pause" title="Пауза" aria-label="Пауза"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="5" width="4.5" height="14" rx="1" fill="currentColor" stroke="none"/><rect x="13.5" y="5" width="4.5" height="14" rx="1" fill="currentColor" stroke="none"/></svg></button>
+      <button class="key" id="next" title="Следующая станция" aria-label="Следующая станция"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M5 6l10 6-10 6z" fill="currentColor" stroke="none"/></svg></button>
     </div>
     <div class="status" id="status">Выбери станцию из списка. Прямые эфиры подключаются после проверки потоков.</div>
   </main>
@@ -300,6 +328,8 @@ let selected = null, tab = "all", genre = null;
 let favorites = new Set(JSON.parse(localStorage.getItem("radioMayFavs") || "[]"));
 const vizCanvas = $("#visualizer");
 const vizCtx = vizCanvas.getContext("2d");
+const vuCanvas = $("#vuMeter");
+const vuCtx = vuCanvas.getContext("2d");
 let vizFrame = 0, vizActive = false, hlsPlayer = null;
 const BAR_COUNT = 48;
 const vizValues = new Array(BAR_COUNT).fill(2);
@@ -307,44 +337,80 @@ const peakValues = new Array(BAR_COUNT).fill(2);
 let lastVizTime = 0;
 
 function drawVisualizer(timestamp){
-  vizFrame = requestAnimationFrame(drawVisualizer);
-  const w = vizCanvas.width, h = vizCanvas.height;
-  vizCtx.clearRect(0,0,w,h);
-  vizCtx.fillStyle = "#080706";
-  vizCtx.fillRect(0,0,w,h);
-  // Subtle Winamp-style grid
-  vizCtx.strokeStyle = "rgba(190,145,91,.12)";
-  vizCtx.lineWidth = 1;
-  for(let y=0;y<h;y+=18){vizCtx.beginPath();vizCtx.moveTo(0,y+.5);vizCtx.lineTo(w,y+.5);vizCtx.stroke();}
-  const gap = 4, barW = (w-gap*(BAR_COUNT-1))/BAR_COUNT;
-  const dt = Math.min(40, timestamp-lastVizTime || 16); lastVizTime=timestamp;
+  vizFrame=requestAnimationFrame(drawVisualizer);
+  const w=vizCanvas.width,h=vizCanvas.height;
+  vizCtx.clearRect(0,0,w,h);vizCtx.fillStyle="#080706";vizCtx.fillRect(0,0,w,h);
+  vizCtx.strokeStyle="rgba(190,145,91,.12)";vizCtx.lineWidth=1;
+  for(let y=0;y<h;y+=17){vizCtx.beginPath();vizCtx.moveTo(0,y+.5);vizCtx.lineTo(w,y+.5);vizCtx.stroke();}
+  const gap=4,barW=(w-gap*(BAR_COUNT-1))/BAR_COUNT,dt=Math.min(40,timestamp-lastVizTime||16);lastVizTime=timestamp;
+  let low=0,mid=0,high=0;
   for(let i=0;i<BAR_COUNT;i++){
-    let target = 2;
-    if(vizActive) {
-      // Animated Winamp-style visualizer. Direct radio streams often disable Web Audio CORS,
-      // so this avoids routing cross-origin audio through Web Audio (which can mute playback).
-      const pulse = Math.sin(timestamp/175 + i*1.31) + Math.cos(timestamp/287 + i*.73);
-      const bass = Math.sin(timestamp/360 + i*.22);
-      target = 5 + Math.max(0,(pulse+2.2)/4.2)*(h-17) * (.72 + .28*Math.max(0,bass));
+    let target=2;
+    if(vizActive){
+      const beat=Math.max(0,Math.sin(timestamp/430));
+      const wave=Math.sin(timestamp/155+i*1.18)+Math.cos(timestamp/251+i*.71);
+      const bass=Math.sin(timestamp/285+i*.17);
+      target=4+Math.max(0,(wave+2.1)/4.1)*(h-12)*(.65+.35*Math.max(0,bass))*(.82+.18*beat);
     }
-    vizValues[i] += (target-vizValues[i])*(target>vizValues[i]?.55:.18);
-    if(vizActive) peakValues[i]=Math.max(vizValues[i],peakValues[i]-dt*.018);
+    vizValues[i]+=(target-vizValues[i])*(target>vizValues[i]?.52:.2);
+    if(vizActive)peakValues[i]=Math.max(vizValues[i],peakValues[i]-dt*.022);
     else peakValues[i]=Math.max(2,peakValues[i]-dt*.05);
-    const x=i*(barW+gap), bh=Math.max(2,vizValues[i]), y=h-bh-5;
+    const x=i*(barW+gap),bh=Math.max(2,vizValues[i]),y=h-bh-3;
     const grad=vizCtx.createLinearGradient(0,y,0,h);
-    grad.addColorStop(0,"#e64a27");grad.addColorStop(.42,"#f0a52e");grad.addColorStop(1,"#69b83b");
-    vizCtx.fillStyle=grad;
-    vizCtx.fillRect(x,y,barW,bh);
-    // Peak indicator, like classic desktop visualizers
-    vizCtx.fillStyle="#f7d77b";
-    vizCtx.fillRect(x,Math.max(1,h-peakValues[i]-5),barW,2);
+    grad.addColorStop(0,"#d94625");grad.addColorStop(.43,"#f0a52e");grad.addColorStop(1,"#66ad43");
+    vizCtx.fillStyle=grad;vizCtx.fillRect(x,y,barW,bh);
+    vizCtx.fillStyle="#f7d77b";vizCtx.fillRect(x,Math.max(1,h-peakValues[i]-3),barW,2);
+    if(i<12)low+=vizValues[i];else if(i<31)mid+=vizValues[i];else high+=vizValues[i];
+  }
+  drawVUMeters(timestamp,low/12,mid/19,high/17);
+}
+function drawVUMeters(t,low,mid,high){
+  const c=vuCtx,w=vuCanvas.width,h=vuCanvas.height;
+  c.clearRect(0,0,w,h);c.fillStyle="#100b08";c.fillRect(0,0,w,h);
+  const levels=vizActive
+    ? [0.18+0.58*(.5+.5*Math.sin(t/210))*.65+Math.min(.22,low/500),0.16+0.6*(.5+.5*Math.sin(t/237+1.1))*.62+Math.min(.2,mid/650)]
+    : [0.035,0.035];
+  for(let n=0;n<2;n++){
+    const cx=n?540:180,cy=111,r=88;
+    c.fillStyle="#24170f";c.beginPath();c.roundRect(cx-160,8,320,126,9);c.fill();
+    c.strokeStyle="#8c653d";c.lineWidth=2;c.beginPath();c.arc(cx,cy,r,Math.PI,Math.PI*2);c.stroke();
+    c.strokeStyle="#c5a06b";c.lineWidth=1;
+    for(let i=0;i<=10;i++){
+      const a=Math.PI+i*Math.PI/10,inner=r-((i%2===0)?12:7);
+      c.beginPath();c.moveTo(cx+Math.cos(a)*inner,cy+Math.sin(a)*inner);c.lineTo(cx+Math.cos(a)*(r-1),cy+Math.sin(a)*(r-1));c.stroke();
+    }
+    c.fillStyle="#d9b47b";c.font="10px ui-monospace,monospace";c.textAlign="center";
+    c.fillText(n?"RIGHT":"LEFT",cx,24);
+    c.fillText("-20",cx-r+8,54);c.fillText("-10",cx-40,36);c.fillText("0",cx+39,36);c.fillStyle="#d94a2d";c.fillText("+3",cx+r-9,54);
+    const val=Math.max(0,Math.min(1,levels[n])),a=Math.PI+val*Math.PI;
+    c.strokeStyle="#e8d0a2";c.lineWidth=3;c.beginPath();c.moveTo(cx,cy);c.lineTo(cx+Math.cos(a)*(r-18),cy+Math.sin(a)*(r-18));c.stroke();
+    c.fillStyle="#d9b47b";c.beginPath();c.arc(cx,cy,5,0,Math.PI*2);c.fill();
+    c.fillStyle="#9e7c55";c.fillRect(cx-28,118,56,5);
   }
 }
 function stationBrand(s){
   const key=s?.key||"";
+  const logoUrls = {
+    pioneer:"https://pionerfm.ru/favicon.ico",
+    zaycev:"https://www.zaycev.fm/favicon.ico",
+    record:"https://www.radiorecord.ru/images/record-logo-prod.svg",
+    maximum:"https://rmg.ru/_nuxt/img/www.1f4fe1b.svg",
+    comedy:"https://comedy-radio.ru/favicon.ico",
+    marusya:"https://marus.fm/img/logo2.png",
+    europa:"https://europaplus.ru/favicon.ico",
+    dfm:"https://dfm.ru/favicon.ico",
+    montecarlo:"https://montecarlo.ru/favicon.ico",
+    love:"https://loveradio.ru/favicon.ico",
+    energy:"https://energyfm.ru/favicon.ico",
+    newradio:"https://newradio.ru/favicon.ico",
+    autoradio:"https://avtoradio.ru/favicon.ico",
+    retro:"https://retrofm.ru/favicon.ico",
+    nashe:"https://nashe.ru/favicon.ico",
+    dorozhnoe:"https://dorognoe.ru/favicon.ico"
+  };
   if(key.startsWith("record")){
     const variant={"record":"REC","record-russian":"RUS","record-90":"90s","record-rock":"ROCK","record-chill":"CHILL","record-deep":"DEEP","record-trance":"TRANCE"}[key]||"REC";
-    return {mark:variant,name:key==="record"?"RADIO RECORD":"RECORD",bg:"#c93224",fg:"#fff4d9",border:"#f1a45a"};
+    return {mark:variant,name:key==="record"?"RADIO RECORD":"RECORD",bg:"#c93224",fg:"#fff4d9",border:"#f1a45a",logo:logoUrls.record};
   }
   const brands={
     pioneer:{mark:"PPR",name:"PIONEER FM",bg:"#d98b25",fg:"#24130c",border:"#f4c56c"},
@@ -363,14 +429,28 @@ function stationBrand(s){
     dorozhnoe:{mark:"ДОР",name:"ДОРОЖНОЕ РАДИО",bg:"#477b55",fg:"#fff",border:"#a6d0a8"},
     montecarlo:{mark:"MC",name:"MONTE CARLO",bg:"#9b9078",fg:"#1d1711",border:"#e1d4b8"}
   };
-  return brands[key]||{mark:(s?.name||"FM").split(/\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase(),name:s?.name||"RADIO",bg:"#79502f",fg:"#fff0d4",border:"#c69a68"};
+  const b=brands[key]||{mark:(s?.name||"FM").split(/\\s+/).slice(0,2).map(x=>x[0]).join("").toUpperCase(),name:s?.name||"RADIO",bg:"#79502f",fg:"#fff0d4",border:"#c69a68"};
+  return {...b,logo:logoUrls[key]||null};
+}
+function setStationLogo(container, brand, fallbackClass="brand-fallback"){
+  if(!brand.logo) return;
+  const img=document.createElement("img");
+  img.src=brand.logo;img.alt="";img.loading="lazy";img.referrerPolicy="no-referrer";
+  img.onerror=()=>{img.remove();container.classList.remove("has-image","dark-logo");};
+  img.onload=()=>{container.classList.add("has-image");};
+  container.classList.add("has-image");
+  if(brand.logo.includes("marus.fm"))container.classList.add("dark-logo");
+  container.append(img);
 }
 function paintCassetteBrand(){
   const sticker=$("#cassetteBrand"), brand=stationBrand(selected);
   if(!selected){sticker.classList.remove("visible");return;}
-  $("#cassetteBrandMark").textContent=brand.mark;
+  const mark=$("#cassetteBrandMark");
+  mark.innerHTML="";
+  const fallback=document.createElement("span");fallback.className="brand-fallback";fallback.textContent=brand.mark;mark.append(fallback);
+  mark.style.setProperty("--brand-bg",brand.bg);
+  setStationLogo(mark,brand);
   $("#cassetteBrandName").textContent=brand.name;
-  $("#cassetteBrandMark").style.setProperty("--brand-bg",brand.bg);
   sticker.classList.toggle("visible",vizActive);
 }
 function setVisualizer(active){
@@ -381,6 +461,44 @@ function setVisualizer(active){
   paintCassetteBrand();
 }
 setVisualizer(false);
+function updateClock(){
+  const now=new Date();
+  $("#clockTime").textContent=new Intl.DateTimeFormat("ru-RU",{hour:"2-digit",minute:"2-digit"}).format(now);
+  $("#clockDate").textContent=new Intl.DateTimeFormat("ru-RU",{weekday:"short",day:"numeric",month:"short"}).format(now).toUpperCase();
+}
+updateClock();setInterval(updateClock,1000);
+const savedCity=localStorage.getItem("radioMayWeatherCity")||"Воронеж";
+function weatherGlyph(code){
+  if(code===0)return "☀️";if([1,2].includes(code))return "🌤️";if(code===3)return "☁️";
+  if([45,48].includes(code))return "🌫️";if([51,53,55,56,57].includes(code))return "🌦️";
+  if([61,63,65,66,67,80,81,82].includes(code))return "🌧️";
+  if([71,73,75,77,85,86].includes(code))return "❄️";
+  if([95,96,99].includes(code))return "⛈️";return "🌡️";
+}
+async function loadWeather(city){
+  $("#weatherText").textContent="Загружаю…";
+  try{
+    const geo=await fetch("https://geocoding-api.open-meteo.com/v1/search?name="+encodeURIComponent(city)+"&count=1&language=ru&format=json");
+    if(!geo.ok)throw new Error("Geo lookup failed");
+    const g=await geo.json(),place=g.results?.[0];if(!place)throw new Error("Город не найден");
+    const url="https://api.open-meteo.com/v1/forecast?latitude="+place.latitude+"&longitude="+place.longitude+"&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m&timezone=auto";
+    const res=await fetch(url);if(!res.ok)throw new Error("Weather unavailable");
+    const data=await res.json(),cur=data.current;
+    $("#weatherIcon").textContent=weatherGlyph(cur.weather_code);
+    $("#weatherText").textContent=Math.round(cur.temperature_2m)+"° · "+place.name;
+    $("#weatherButton").title="Ощущается "+Math.round(cur.apparent_temperature)+"°, ветер "+Math.round(cur.wind_speed_10m)+" км/ч. Нажми, чтобы сменить город.";
+    localStorage.setItem("radioMayWeatherCity",place.name);
+  }catch(err){
+    $("#weatherIcon").textContent="☁";
+    $("#weatherText").textContent="Погода недоступна";
+    $("#weatherButton").title="Не удалось получить погоду. Нажми, чтобы выбрать другой город.";
+  }
+}
+$("#weatherButton").onclick=()=>{
+  const city=prompt("Для какого города показывать погоду?",localStorage.getItem("radioMayWeatherCity")||"");
+  if(city&&city.trim()){localStorage.setItem("radioMayWeatherCity",city.trim());loadWeather(city.trim());}
+};
+if(savedCity)loadWeather(savedCity);
 function saveFavs(){localStorage.setItem("radioMayFavs",JSON.stringify([...favorites]));}
 function filtered(){
  let q=$("#search").value.trim().toLowerCase();
@@ -401,6 +519,7 @@ function render(){
   const logo=row.querySelector(".stationlogo");
   logo.querySelector("span").textContent=brand.mark;
   logo.style.setProperty("--brand-bg",brand.bg);logo.style.setProperty("--brand-fg",brand.fg);logo.style.setProperty("--brand-border",brand.border);
+  setStationLogo(logo,brand);
   row.querySelector(".stationname").textContent=s.name;row.querySelector(".stationtag").textContent=s.tagline;
   row.onclick=()=>selectStation(s);row.querySelector(".fav").onclick=e=>{e.stopPropagation();favorites.has(s.id)?favorites.delete(s.id):favorites.add(s.id);saveFavs();render()};
   list.append(row);
