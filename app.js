@@ -439,6 +439,8 @@
     return {
       t: Math.round(Number(now.temp_C)),
       code: map[wt] === undefined ? 2 : map[wt],
+      wind: now.windspeedKmph !== undefined ? Math.round(Number(now.windspeedKmph)) : null,
+      windDir: now.winddir16Point || '',
       off: null,
       source: 'wttr.in',
       updated: Date.now()
@@ -452,6 +454,8 @@
     return {
       t: Math.round(j.current.temperature_2m),
       code: j.current.weather_code,
+      wind: typeof j.current.wind_speed_10m === 'number' ? Math.round(j.current.wind_speed_10m) : null,
+      windDir: '',
       off: typeof j.utc_offset_seconds === 'number' ? j.utc_offset_seconds : null,
       source: 'Open-Meteo',
       updated: Date.now()
@@ -484,6 +488,8 @@
     return {
       t: Math.round(details.air_temperature),
       code: code,
+      wind: typeof details.wind_speed === 'number' ? Math.round(details.wind_speed * 3.6) : null,
+      windDir: '',
       off: null,
       source: 'MET Norway',
       updated: Date.now()
@@ -511,7 +517,7 @@
       },
       function () {
         var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + c.la + '&longitude=' + c.lo +
-          '&current=temperature_2m,weather_code&timezone=auto';
+          '&current=temperature_2m,weather_code,wind_speed_10m,wind_direction_10m&wind_speed_unit=kmh&timezone=auto';
         return fetchJSON(url, 12000).then(weatherFromOpenMeteo);
       }
     ];
@@ -623,10 +629,14 @@
 
     var c = city(), w = S.weather;
     var tempValue = w && w.t !== null && w.t !== undefined && isFinite(Number(w.t)) ? Number(w.t) : null;
-    // Город и температура идут одной бегущей строкой: длинное название не скрывает градусы.
-    setWeatherMarquee($('cityVal'), c.n.toUpperCase() + '   ' + (tempValue === null ? '— °C' : fmtTemp(tempValue)));
     var conditionText = !w || tempValue === null ? (!w ? 'ЗАГРУЗКА…' : 'НЕТ ДАННЫХ') : (WMO[w.code] || 'ПОГОДА');
-    setText($('cond'), conditionText);
+    var windText = w && w.wind !== null && w.wind !== undefined && isFinite(Number(w.wind))
+      ? 'ВЕТЕР ' + Math.round(Number(w.wind)) + ' КМ/Ч' : '';
+    var weatherParts = [c.n.toUpperCase(), tempValue === null ? '— °C' : fmtTemp(tempValue), conditionText, windText]
+      .filter(function (part) { return !!part; });
+    // Полная погодная сводка движется одной непрерывной строкой.
+    setWeatherMarquee($('cityVal'), weatherParts.join('   •   '));
+    setText($('cond'), 'ПОГОДА');
 
     setText($('volNum'), String(S.vol));
     $('vfill').style.width = S.vol + '%';
