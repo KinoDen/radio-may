@@ -632,11 +632,11 @@
     var conditionText = !w || tempValue === null ? (!w ? 'ЗАГРУЗКА…' : 'НЕТ ДАННЫХ') : (WMO[w.code] || 'ПОГОДА');
     var windText = w && w.wind !== null && w.wind !== undefined && isFinite(Number(w.wind))
       ? 'ВЕТЕР ' + Math.round(Number(w.wind)) + ' КМ/Ч' : '';
-    var weatherParts = [c.n.toUpperCase(), tempValue === null ? '— °C' : fmtTemp(tempValue), conditionText, windText]
-      .filter(function (part) { return !!part; });
-    // Полная погодная сводка движется одной непрерывной строкой.
-    setWeatherMarquee($('cityVal'), weatherParts.join('   •   '));
-    setText($('cond'), 'ПОГОДА');
+    // Верхняя строка: город и температура. Нижняя строка: состояние и ветер.
+    // Обе строки прокручиваются независимо, поэтому состояние погоды больше не стоит на месте.
+    setWeatherMarquee($('cityVal'), c.n.toUpperCase() + '   •   ' + (tempValue === null ? '— °C' : fmtTemp(tempValue)));
+    var conditionParts = [conditionText, windText].filter(function (part) { return !!part; });
+    setWeatherMarquee($('cond'), conditionParts.join('   •   '));
 
     setText($('volNum'), String(S.vol));
     $('vfill').style.width = S.vol + '%';

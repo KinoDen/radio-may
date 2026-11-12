@@ -96,6 +96,7 @@
 
 .weather-marquee{display:block;width:100%;min-width:0;overflow:hidden;white-space:nowrap}
 .weather-marquee-track{display:inline-flex;width:max-content;white-space:nowrap;will-change:transform;animation:weatherMarq 22s linear infinite}
+.cond.weather-marquee .weather-marquee-track{font:inherit;letter-spacing:inherit}
 .weather-marquee-item{display:inline-block;flex:none;padding-right:42px}
 @keyframes weatherMarq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media (prefers-reduced-motion:reduce){.weather-marquee-track{animation:none}}
