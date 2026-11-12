@@ -2,7 +2,7 @@ html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;-webkit-
 body{display:flex;justify-content:center;align-items:center}
 body.dark{background:#1f2124}
 body.light{background:#a2a8af}
-#stage{width:390px;height:780px;flex:none;transform-origin:center center}
+#stage{width:390px;height:844px;flex:none;transform-origin:center center}
 [hidden]{display:none!important}
 
 .lcdbtn{border:0;text-align:left;cursor:pointer;font:inherit;color:var(--lcd-on)}
@@ -16,31 +16,3 @@ body.light{background:#a2a8af}
 .ovrows{position:relative;z-index:1;max-height:240px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .plrow .right{font-size:15px;opacity:.9;white-space:nowrap}
 .plrow.static{cursor:default}
-
-
-/* Final compact tuning for MAX's in-app viewport */
-@media (max-width: 600px) {
-  .plate { gap: 5px; padding-left: 7px; padding-right: 7px; }
-  .plate > div { flex: 1 1 auto; min-width: 0; }
-  .plate .name { font-size: 19px; line-height: 21px; letter-spacing: .45px; }
-  .plate .sub { font-size: 7px; line-height: 9px; letter-spacing: .2px; gap: 4px !important; }
-  .plate .sub > span:first-child { min-width: 0; }
-  .sw { width: 43px; min-width: 43px; height: 36px; margin-left: 0; }
-  .sw .track { width: 35px; height: 16px; }
-  .sw .knob { width: 15px; height: 12px; }
-  .app.light .sw .knob { left: 18px; }
-  .sw .lab { font-size: 7px; line-height: 8px; }
-  .weather-row { gap: 5px !important; }
-  .weather-row > div:first-child { width: 56% !important; min-width: 0; }
-  #cityBtn { padding: 3px 5px !important; }
-  #cityVal { font-size: 14px !important; line-height: 15px !important; letter-spacing: 0 !important; }
-  #cond { font-size: 8px !important; line-height: 9px !important; letter-spacing: 0 !important; }
-  .weather-row > .lcd { min-width: 0; padding-left: 5px !important; padding-right: 5px !important; }
-}
-@media (max-width: 380px) {
-  .plate .name { font-size: 17px; letter-spacing: 0; }
-  .plate .sub { font-size: 6px; }
-  .sw { width: 39px; min-width: 39px; }
-  .weather-row > div:first-child { width: 58% !important; }
-  #cityVal { font-size: 12px !important; }
-}
