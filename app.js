@@ -32,7 +32,10 @@
   }
 
   /* ---------- данные ---------- */
+  // Несколько зеркал Radio Browser: если одно недоступно из WebView MAX,
+  // автоматически пробуем следующее.
   var HOSTS = [
+    'https://nl1.api.radio-browser.info',
     'https://de1.api.radio-browser.info',
     'https://de2.api.radio-browser.info',
     'https://fi1.api.radio-browser.info',
@@ -86,7 +89,7 @@
     countries: null,
     cities: store.get('cities', null) || DEFAULT_CITIES.slice(),
     ci: store.get('ci', 0),
-    weather: null, geo: [], geoBusy: false,
+    weather: null, weatherRetry: 0, geo: [], geoBusy: false,
     eqLive: false, ovMode: null
   };
   if (S.ci >= S.cities.length || S.ci < 0) S.ci = 0;
@@ -95,12 +98,30 @@
   /* ---------- сеть ---------- */
   function fetchJSON(url, ms) {
     var ctl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-    var t = setTimeout(function () { if (ctl) ctl.abort(); }, ms || 8000);
-    return fetch(url, ctl ? { signal: ctl.signal } : {}).then(function (r) {
-      clearTimeout(t);
-      if (!r.ok) throw new Error('http ' + r.status);
+    var timeout = ms || 6000;
+    var timer;
+    var request = fetch(url, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: { 'Accept': 'application/json' },
+      signal: ctl ? ctl.signal : undefined
+    }).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
       return r.json();
-    }, function (e) { clearTimeout(t); throw e; });
+    });
+    var timed = new Promise(function (_, reject) {
+      timer = setTimeout(function () {
+        if (ctl) ctl.abort();
+        reject(new Error('request timeout'));
+      }, timeout);
+    });
+    return Promise.race([request, timed]).then(function (data) {
+      clearTimeout(timer);
+      return data;
+    }, function (err) {
+      clearTimeout(timer);
+      throw err;
+    });
   }
 
   function radioApi(path) {
@@ -125,8 +146,8 @@
       if (seq !== loadSeq) return;
       var seen = {}, out = [];
       arr.forEach(function (s) {
-        var u = s.url_resolved || '';
-        if (!/^https:\/\//i.test(u) || s.hls) return;
+        var u = s.url_resolved || s.url || '';
+        if (!/^https:\/\//i.test(u) || Number(s.hls) === 1) return;
         var nm = (s.name || '').replace(/\s+/g, ' ').trim();
         if (!nm) return;
         var k = nm.toLowerCase();
@@ -135,12 +156,14 @@
         out.push({ id: s.stationuuid, n: nm, u: u, b: s.bitrate || 0, c: (s.codec || '').toUpperCase() });
       });
       S.list = out.slice(0, 60);
-      S.loading = false;
+      if (!S.cur && S.list.length) { S.cur = S.list[0]; store.set('sid', S.cur.id); }
+      S.loading = false; S.err = false; S.msg = null;
       render();
       if (S.ovMode) renderOverlay();
     }, function () {
       if (seq !== loadSeq) return;
       S.loading = false; S.err = true; S.list = [];
+      S.msg = 'КАТАЛОГ НЕДОСТУПЕН · ПОВТОРИТЕ ПОЗЖЕ';
       render();
       if (S.ovMode) renderOverlay();
     });
@@ -240,7 +263,15 @@
     var p = a.play();
     if (p && p.catch) p.catch(function (e) {
       if (gen !== S.gen || a !== audio) return;
-      if (e && e.name === 'NotAllowedError') fail('НАЖМИТЕ PLAY');
+      if (e && e.name === 'NotAllowedError') {
+        fail('НАЖМИТЕ PLAY ДЛЯ ЗАПУСКА');
+      } else if (cors) {
+        // Некоторые радиосерверы не поддерживают CORS для Web Audio.
+        // Повторяем обычное воспроизведение без анализатора.
+        attempt(st, false, gen);
+      } else {
+        fail('НЕ УДАЛОСЬ ЗАПУСТИТЬ ПОТОК');
+      }
     });
     render();
   }
@@ -330,8 +361,9 @@
     S.weather = null; render();
     var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + c.la + '&longitude=' + c.lo +
       '&current=temperature_2m,weather_code&timezone=auto';
-    fetchJSON(url).then(function (j) {
+    fetchJSON(url, 10000).then(function (j) {
       if (city() !== c) return;
+      S.weatherRetry = 0;
       S.weather = {
         t: Math.round(j.current.temperature_2m),
         code: j.current.weather_code,
@@ -342,6 +374,10 @@
       if (city() !== c) return;
       S.weather = { t: null, code: null, off: null };
       render();
+      if (S.weatherRetry < 2) {
+        S.weatherRetry++;
+        setTimeout(function () { if (city() === c && S.weather && S.weather.t === null) loadWeather(); }, 12000);
+      }
     });
   }
   function stepCity(d) {
@@ -409,8 +445,8 @@
     setText($('listTab'), 'СПИСОК СТАНЦИЙ · ' + S.list.length);
 
     var c = city(), w = S.weather;
-    setText($('cityVal'), c.n.toUpperCase() + (w && w.t !== null ? ' ' + fmtTemp(w.t) : ''));
-    setText($('cond'), !w ? 'ЗАГРУЗКА…' : (w.t === null ? 'НЕТ ДАННЫХ' : (WMO[w.code] || '—')));
+    setText($('cityVal'), clip(c.n.toUpperCase(), 12));
+    setText($('cond'), !w ? 'ЗАГРУЗКА ПОГОДЫ…' : (w.t === null ? 'НЕТ ДАННЫХ' : fmtTemp(w.t) + ' · ' + (WMO[w.code] || '—')));
 
     setText($('volNum'), String(S.vol));
     $('vfill').style.width = S.vol + '%';
@@ -573,7 +609,7 @@
   function fit() {
     var vv = window.visualViewport;
     var w = vv ? vv.width : window.innerWidth, h = vv ? vv.height : window.innerHeight;
-    var s = Math.min(w / 390, h / 844, 1.6);
+    var s = Math.min(w / 390, h / 780, 1.6);
     $('stage').style.transform = 'scale(' + s.toFixed(4) + ')';
   }
   window.addEventListener('resize', fit);
@@ -697,7 +733,7 @@
     if (S.status === 'play' && S.playing) { S.elapsed = (S.elapsed + 1) % 6000; render(); }
     else tickClock();
   }, 1000);
-  setInterval(function () { if (S.weather && S.weather.t !== null) loadWeather(); }, 600000);
+  setInterval(function () { loadWeather(); }, 600000);
 
   /* ---------- старт ---------- */
   render();
@@ -708,5 +744,6 @@
     S.cur = found || S.list[0] || null;
     if (S.cur) store.set('sid', S.cur.id);
     render();
+    if (S.err) setTimeout(function () { if (!S.list.length) loadList(); }, 5000);
   });
 })();

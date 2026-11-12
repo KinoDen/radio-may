@@ -33,16 +33,16 @@
   </div>
 
   <!-- LCD DISPLAY -->
-  <div class="bezel" style="height:132px">
-    <div class="lcd" style="height:118px;padding:4px 8px;display:flex;flex-direction:column;gap:4px">
-      <div style="display:flex;align-items:center;gap:6px;height:22px">
+  <div class="bezel display-bezel" style="height:120px">
+    <div class="lcd" style="height:106px;padding:4px 8px;display:flex;flex-direction:column;gap:3px">
+      <div style="display:flex;align-items:center;gap:5px;height:20px">
         <span class="lamp" id="lampPlay">PLAY</span>
         <span class="lamp" id="lampPause">PAUSE</span>
         <span class="lamp" id="lampStop">STOP</span>
         <span style="flex:1"></span>
         <span class="lamp" id="lampStereo">STEREO</span>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;height:56px">
+      <div style="display:flex;align-items:center;gap:8px;height:50px">
         <div class="digits"><span class="ghost">88:88</span><span class="live" id="elapsed">00:00</span></div>
         <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:11px;font-weight:600;line-height:14px;text-align:right;letter-spacing:.5px">
           <span id="infoBitrate">— KBPS</span>
@@ -57,7 +57,7 @@
   </div>
 
   <!-- CASSETTE -->
-  <div class="bezel" style="height:238px;padding:6px">
+  <div class="bezel cassette-bezel" style="height:230px;padding:5px">
     <svg id="cassette" viewBox="0 0 360 230" width="100%" style="display:block" role="img" aria-label="Аудиокассета Радио Май">
       <defs>
         <radialGradient id="rmPack" cx="50%" cy="50%" r="50%">
@@ -165,14 +165,14 @@
   </div>
 
   <!-- SPECTRUM -->
-  <div class="bezel" style="height:86px">
-    <div class="lcd" style="height:72px;padding:3px 6px">
+  <div class="bezel spectrum-bezel" style="height:76px">
+    <div class="lcd" style="height:62px;padding:3px 6px">
       <div class="eqbars" id="eqbars"></div>
     </div>
   </div>
 
   <!-- TRANSPORT -->
-  <div style="display:flex;gap:6px;height:58px;flex:none">
+  <div class="transport" style="display:flex;gap:6px;height:52px;flex:none">
     <button class="btn" style="flex:1" id="btnPrev" aria-label="Предыдущая станция">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2.4v14H6zM20 5v14L9.5 12z"/></svg>
     </button>
@@ -191,7 +191,7 @@
   </div>
 
   <!-- VOLUME -->
-  <div style="display:flex;align-items:center;gap:10px;height:40px;padding:0 2px;flex:none">
+  <div class="volume-row" style="display:flex;align-items:center;gap:8px;height:34px;padding:0 2px;flex:none">
     <span class="eng">VOL</span>
     <div class="vwrap">
       <div class="vtrack"><div class="vfill" id="vfill" style="width:72%"></div></div>
@@ -201,8 +201,8 @@
   </div>
 
   <!-- COUNTRY + SEARCH -->
-  <div style="display:flex;gap:8px;height:46px;flex:none">
-    <div style="width:214px;display:flex;gap:3px">
+  <div class="country-row" style="display:flex;gap:8px;height:42px;flex:none">
+    <div class="country-controls" style="width:214px;display:flex;gap:3px">
       <button class="btn sm" id="btnCtryPrev" aria-label="Предыдущая страна"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L7 12l8 7z"/></svg></button>
       <button class="lcd lcdbtn" id="ctryBtn" aria-label="Выбрать страну" style="flex:1;min-width:0;padding:4px 6px;display:flex;flex-direction:column;justify-content:center">
         <span class="dl" id="ctryCode">СТРАНА</span>
@@ -217,8 +217,8 @@
   </div>
 
   <!-- WEATHER + CLOCK -->
-  <div style="display:flex;gap:8px;height:58px;flex:none">
-    <div style="width:214px;display:flex;gap:3px">
+  <div class="weather-row" style="display:flex;gap:8px;height:52px;flex:none">
+    <div class="city-controls" style="width:214px;display:flex;gap:3px">
       <button class="btn sm" style="height:100%" id="btnCityPrev" aria-label="Предыдущий город"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L7 12l8 7z"/></svg></button>
       <button class="lcd lcdbtn" id="cityBtn" aria-label="Выбрать город" style="flex:1;min-width:0;padding:4px 6px;display:flex;flex-direction:column;justify-content:center;gap:1px">
         <span class="dl">ПОГОДА</span>
@@ -236,7 +236,7 @@
   </div>
 
   <!-- PLAYLIST TAB -->
-  <button class="btn wide" id="btnList" aria-expanded="false">
+  <button class="btn wide" id="btnList" aria-expanded="false" style="height:36px">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6l8 12H4z"/></svg>
     <span id="listTab">СПИСОК СТАНЦИЙ</span>
   </button>
