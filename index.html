@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#24272b">
+<title>Радио Май</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Russo+One&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="app.css">
+<script src="https://st.max.ru/js/max-web-app.js"></script>
+</head>
+<body class="dark">
+<div id="stage">
+<div class="app dark s-stop" id="app">
+
+  <!-- NAMEPLATE -->
+  <div class="plate">
+    <span class="screw"></span>
+    <div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0">
+      <div class="name">РАДИО МАЙ</div>
+      <div class="sub" style="display:flex;align-items:center;gap:10px">
+        <span>INTERNATIONAL RADIO</span>
+        <span style="display:inline-flex;align-items:center;gap:5px"><i class="led"></i>ON AIR</span>
+      </div>
+    </div>
+    <button class="sw" id="btnTheme" aria-label="Переключить тему: ночь или день">
+      <span class="track"><span class="knob"></span></span>
+      <span class="lab" id="themeLabel">НОЧЬ</span>
+    </button>
+    <span class="screw"></span>
+  </div>
+
+  <!-- LCD DISPLAY -->
+  <div class="bezel" style="height:132px">
+    <div class="lcd" style="height:118px;padding:4px 8px;display:flex;flex-direction:column;gap:4px">
+      <div style="display:flex;align-items:center;gap:6px;height:22px">
+        <span class="lamp" id="lampPlay">PLAY</span>
+        <span class="lamp" id="lampPause">PAUSE</span>
+        <span class="lamp" id="lampStop">STOP</span>
+        <span style="flex:1"></span>
+        <span class="lamp" id="lampStereo">STEREO</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;height:56px">
+        <div class="digits"><span class="ghost">88:88</span><span class="live" id="elapsed">00:00</span></div>
+        <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:11px;font-weight:600;line-height:14px;text-align:right;letter-spacing:.5px">
+          <span id="infoBitrate">— KBPS</span>
+          <span id="infoCodec">—</span>
+          <span id="infoCountry" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">—</span>
+        </div>
+      </div>
+      <div style="overflow:hidden;height:24px;border-top:1px solid var(--lamp-border)">
+        <div class="marq glow"><span class="mq" id="mq1"></span><span class="mq" id="mq2"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CASSETTE -->
+  <div class="bezel" style="height:238px;padding:6px">
+    <svg id="cassette" viewBox="0 0 360 230" width="100%" style="display:block" role="img" aria-label="Аудиокассета Радио Май">
+      <defs>
+        <radialGradient id="rmPack" cx="50%" cy="50%" r="50%">
+          <stop offset="0.3" stop-color="#4a3324"/>
+          <stop offset="0.85" stop-color="#6e4c34"/>
+          <stop offset="1" stop-color="#3a281c"/>
+        </radialGradient>
+        <radialGradient id="rmMetal" cx="35%" cy="30%" r="75%">
+          <stop offset="0" stop-color="#ffffff"/>
+          <stop offset="1" stop-color="#7d848c"/>
+        </radialGradient>
+        <linearGradient id="rmShine" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffffff" stop-opacity=".22"/>
+          <stop offset=".5" stop-color="#ffffff" stop-opacity=".05"/>
+          <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="rmStripe" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#f26a21"/>
+          <stop offset=".33" stop-color="#f7c01d"/>
+          <stop offset=".66" stop-color="#3bb44a"/>
+          <stop offset="1" stop-color="#2d8fd4"/>
+        </linearGradient>
+        <clipPath id="rmWin"><rect x="40" y="68" width="280" height="104" rx="9"/></clipPath>
+      </defs>
+
+      <rect x="2" y="2" width="356" height="226" rx="14" style="fill:var(--cs-body);stroke:var(--cs-edge)" stroke-width="3"/>
+      <rect x="6" y="6" width="348" height="218" rx="11" fill="none" stroke="#ffffff" stroke-opacity=".12" stroke-width="1.5"/>
+
+      <path d="M58 180 H302 L286 222 H74 Z" style="fill:var(--cs-bay);stroke:var(--cs-edge)" stroke-width="1.5"/>
+      <circle cx="96" cy="201" r="6.5" style="fill:var(--cs-hole)"/>
+      <circle cx="264" cy="201" r="6.5" style="fill:var(--cs-hole)"/>
+      <rect x="143" y="188" width="14" height="8" rx="2" style="fill:var(--cs-hole)"/>
+      <rect x="173" y="188" width="14" height="8" rx="2" style="fill:var(--cs-hole)"/>
+      <rect x="203" y="188" width="14" height="8" rx="2" style="fill:var(--cs-hole)"/>
+      <g transform="translate(180 210)"><circle r="4.8" fill="url(#rmMetal)" stroke="#000" stroke-opacity=".5"/><path d="M-3 -1 L3 1" stroke="#000" stroke-opacity=".7" stroke-width="1.3"/></g>
+
+      <g transform="translate(19 19)"><circle r="6.5" fill="url(#rmMetal)" stroke="#000" stroke-opacity=".5"/><path d="M-4.2 -1.6 L4.2 1.6" stroke="#000" stroke-opacity=".7" stroke-width="1.6"/></g>
+      <g transform="translate(341 19)"><circle r="6.5" fill="url(#rmMetal)" stroke="#000" stroke-opacity=".5"/><path d="M-4.2 1.6 L4.2 -1.6" stroke="#000" stroke-opacity=".7" stroke-width="1.6"/></g>
+      <g transform="translate(19 211)"><circle r="6.5" fill="url(#rmMetal)" stroke="#000" stroke-opacity=".5"/><path d="M-4.2 1.6 L4.2 -1.6" stroke="#000" stroke-opacity=".7" stroke-width="1.6"/></g>
+      <g transform="translate(341 211)"><circle r="6.5" fill="url(#rmMetal)" stroke="#000" stroke-opacity=".5"/><path d="M-4.2 -1.6 L4.2 1.6" stroke="#000" stroke-opacity=".7" stroke-width="1.6"/></g>
+
+      <rect x="24" y="14" width="312" height="158" rx="7" style="fill:var(--label)"/>
+      <rect x="24" y="14" width="312" height="8" rx="4" fill="url(#rmStripe)"/>
+      <circle cx="46" cy="38" r="10" fill="none" style="stroke:var(--label-ink)" stroke-width="1.5"/>
+      <text x="46" y="43" text-anchor="middle" font-size="13" font-weight="700" font-family="Russo One, Impact, sans-serif" style="fill:var(--label-ink)">A</text>
+      <text x="172" y="42" text-anchor="middle" font-size="22" letter-spacing="3" font-family="Russo One, Impact, sans-serif" style="fill:var(--label-ink)">РАДИО МАЙ</text>
+      <text x="318" y="36" text-anchor="end" font-size="10" font-weight="700" letter-spacing="1" font-family="IBM Plex Mono, monospace" style="fill:var(--label-ink)">RADIO MAY</text>
+      <rect x="40" y="47" width="280" height="17" rx="2" style="fill:var(--label-field)"/>
+      <text id="stationLabel" x="46" y="61" font-size="17" font-family="VT323, monospace" style="fill:var(--label-ink)"></text>
+
+      <rect x="40" y="68" width="280" height="104" rx="9" style="fill:var(--cs-int)"/>
+      <g clip-path="url(#rmWin)">
+        <g transform="translate(128 118)">
+          <circle data-pack="L" cx="0" cy="0" r="30" fill="url(#rmPack)" stroke="#000" stroke-opacity=".35"/>
+          <g data-sheen="L">
+            <path d="M0 0 L40 -9 A41 41 0 0 1 40 9 Z" fill="#ffffff" fill-opacity=".13"/>
+            <path d="M0 0 L40 -9 A41 41 0 0 1 40 9 Z" transform="rotate(180)" fill="#ffffff" fill-opacity=".13"/>
+          </g>
+          <g data-reel="L">
+            <circle r="14.5" style="fill:var(--hub-ring);stroke:var(--hub-edge)" stroke-width="1"/>
+            <circle r="9.2" style="fill:var(--cs-hole)"/>
+            <g style="fill:var(--hub-ring)">
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8"/>
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8" transform="rotate(60)"/>
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8" transform="rotate(120)"/>
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8" transform="rotate(180)"/>
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8" transform="rotate(240)"/>
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8" transform="rotate(300)"/>
+            </g>
+            <circle cx="0" cy="-12" r="1.5" fill="#e8602c"/>
+          </g>
+        </g>
+        <g transform="translate(232 118)">
+          <circle data-pack="R" cx="0" cy="0" r="30" fill="url(#rmPack)" stroke="#000" stroke-opacity=".35"/>
+          <g data-sheen="R">
+            <path d="M0 0 L40 -9 A41 41 0 0 1 40 9 Z" fill="#ffffff" fill-opacity=".13"/>
+            <path d="M0 0 L40 -9 A41 41 0 0 1 40 9 Z" transform="rotate(180)" fill="#ffffff" fill-opacity=".13"/>
+          </g>
+          <g data-reel="R">
+            <circle r="14.5" style="fill:var(--hub-ring);stroke:var(--hub-edge)" stroke-width="1"/>
+            <circle r="9.2" style="fill:var(--cs-hole)"/>
+            <g style="fill:var(--hub-ring)">
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8"/>
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8" transform="rotate(60)"/>
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8" transform="rotate(120)"/>
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8" transform="rotate(180)"/>
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8" transform="rotate(240)"/>
+              <rect x="-1.9" y="-10" width="3.8" height="5" rx=".8" transform="rotate(300)"/>
+            </g>
+            <circle cx="0" cy="-12" r="1.5" fill="#e8602c"/>
+          </g>
+        </g>
+
+        <path data-tape="1" d="M99 115 L92 160 L268 160 L261 115" fill="none" stroke="#54392a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <path data-tapesheen="1" d="M99 115 L92 160 L268 160 L261 115" fill="none" stroke="#ffffff" stroke-opacity=".28" stroke-width="1.2" stroke-dasharray="3 11"/>
+        <circle cx="92" cy="160" r="6.5" fill="url(#rmMetal)" stroke="#000" stroke-opacity=".4"/>
+        <circle cx="92" cy="160" r="2.2" fill="#2a2d31"/>
+        <circle cx="268" cy="160" r="6.5" fill="url(#rmMetal)" stroke="#000" stroke-opacity=".4"/>
+        <circle cx="268" cy="160" r="2.2" fill="#2a2d31"/>
+
+        <path d="M40 68 H200 L130 172 H40 Z" fill="url(#rmShine)"/>
+      </g>
+      <rect x="40" y="68" width="280" height="104" rx="9" fill="none" style="stroke:var(--cs-edge)" stroke-width="2.5"/>
+    </svg>
+  </div>
+
+  <!-- SPECTRUM -->
+  <div class="bezel" style="height:86px">
+    <div class="lcd" style="height:72px;padding:3px 6px">
+      <div class="eqbars" id="eqbars"></div>
+    </div>
+  </div>
+
+  <!-- TRANSPORT -->
+  <div style="display:flex;gap:6px;height:58px;flex:none">
+    <button class="btn" style="flex:1" id="btnPrev" aria-label="Предыдущая станция">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h2.4v14H6zM20 5v14L9.5 12z"/></svg>
+    </button>
+    <button class="btn" style="flex:1" id="btnPlay" aria-label="Играть" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z"/></svg>
+    </button>
+    <button class="btn" style="flex:1" id="btnPause" aria-label="Пауза" aria-pressed="false">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 5h4v14h-4zM13.5 5h4v14h-4z"/></svg>
+    </button>
+    <button class="btn" style="flex:1" id="btnStop" aria-label="Стоп" aria-pressed="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h12v12H6z"/></svg>
+    </button>
+    <button class="btn" style="flex:1" id="btnNext" aria-label="Следующая станция">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15.6 5H18v14h-2.4zM4 5l10.5 7L4 19z"/></svg>
+    </button>
+  </div>
+
+  <!-- VOLUME -->
+  <div style="display:flex;align-items:center;gap:10px;height:40px;padding:0 2px;flex:none">
+    <span class="eng">VOL</span>
+    <div class="vwrap">
+      <div class="vtrack"><div class="vfill" id="vfill" style="width:72%"></div></div>
+      <input class="vol" id="vol" type="range" min="0" max="100" value="72" aria-label="Громкость">
+    </div>
+    <div class="lcd" id="volNum" style="width:54px;height:28px;display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:24px;text-shadow:var(--tglow)">72</div>
+  </div>
+
+  <!-- COUNTRY + SEARCH -->
+  <div style="display:flex;gap:8px;height:46px;flex:none">
+    <div style="width:214px;display:flex;gap:3px">
+      <button class="btn sm" id="btnCtryPrev" aria-label="Предыдущая страна"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L7 12l8 7z"/></svg></button>
+      <button class="lcd lcdbtn" id="ctryBtn" aria-label="Выбрать страну" style="flex:1;min-width:0;padding:4px 6px;display:flex;flex-direction:column;justify-content:center">
+        <span class="dl" id="ctryCode">СТРАНА</span>
+        <span class="val" id="ctryName">—</span>
+      </button>
+      <button class="btn sm" id="btnCtryNext" aria-label="Следующая страна"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l8 7-8 7z"/></svg></button>
+    </div>
+    <div class="lcd" style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;padding:0 8px">
+      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;position:relative;z-index:1;color:var(--lcd-on)"><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+      <input class="srch" id="q" type="text" placeholder="ПОИСК" aria-label="Поиск станции" autocomplete="off" enterkeyhint="search">
+    </div>
+  </div>
+
+  <!-- WEATHER + CLOCK -->
+  <div style="display:flex;gap:8px;height:58px;flex:none">
+    <div style="width:214px;display:flex;gap:3px">
+      <button class="btn sm" style="height:100%" id="btnCityPrev" aria-label="Предыдущий город"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L7 12l8 7z"/></svg></button>
+      <button class="lcd lcdbtn" id="cityBtn" aria-label="Выбрать город" style="flex:1;min-width:0;padding:4px 6px;display:flex;flex-direction:column;justify-content:center;gap:1px">
+        <span class="dl">ПОГОДА</span>
+        <span class="val" id="cityVal">—</span>
+        <span class="cond" id="cond">—</span>
+      </button>
+      <button class="btn sm" style="height:100%" id="btnCityNext" aria-label="Следующий город"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l8 7-8 7z"/></svg></button>
+    </div>
+    <div class="lcd" style="flex:1;min-width:0;padding:4px 8px;display:flex;flex-direction:column;justify-content:center">
+      <div class="dl" id="clkLabel" style="overflow:hidden;text-overflow:ellipsis">ВРЕМЯ</div>
+      <div style="display:flex;align-items:baseline;font-family:'VT323',monospace;font-size:40px;line-height:34px;text-shadow:var(--tglow)">
+        <span id="hh">--</span><span class="blink">:</span><span id="mm">--</span><span id="ss" style="font-size:22px;margin-left:6px">--</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLAYLIST TAB -->
+  <button class="btn wide" id="btnList" aria-expanded="false">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 6l8 12H4z"/></svg>
+    <span id="listTab">СПИСОК СТАНЦИЙ</span>
+  </button>
+
+  <!-- OVERLAY -->
+  <div class="backdrop" id="ovBack" hidden></div>
+  <div class="plist" id="ov" hidden>
+    <div class="lcd">
+      <div class="dl ovhead" id="ovTitle"></div>
+      <input class="ovq" id="ovQ" type="text" autocomplete="off" aria-label="Фильтр">
+      <div class="ovrows" id="ovRows"></div>
+    </div>
+  </div>
+
+</div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

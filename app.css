@@ -1,0 +1,18 @@
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%}
+body{display:flex;justify-content:center;align-items:center}
+body.dark{background:#1f2124}
+body.light{background:#a2a8af}
+#stage{width:390px;height:844px;flex:none;transform-origin:center center}
+[hidden]{display:none!important}
+
+.lcdbtn{border:0;text-align:left;cursor:pointer;font:inherit;color:var(--lcd-on)}
+.val{overflow:hidden;text-overflow:ellipsis}
+
+.backdrop{position:absolute;inset:0;z-index:4;background:rgba(0,0,0,.28)}
+.ovhead{position:relative;z-index:1;padding:6px 10px 4px}
+.ovq{position:relative;z-index:1;display:block;width:calc(100% - 20px);margin:0 10px 6px;height:36px;border:0;border-bottom:1px solid var(--lamp-border);
+  background:transparent;color:var(--lcd-on);font-family:'VT323',monospace;font-size:22px;outline:none;caret-color:var(--lcd-on);padding:0}
+.ovq::placeholder{color:var(--lcd-dim);opacity:1}
+.ovrows{position:relative;z-index:1;max-height:240px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.plrow .right{font-size:15px;opacity:.9;white-space:nowrap}
+.plrow.static{cursor:default}
