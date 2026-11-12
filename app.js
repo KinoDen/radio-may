@@ -659,7 +659,11 @@
   /* ---------- оверлей (станции / страны / города) ---------- */
   function favIndex(st) { for (var k = 0; k < S.favs.length; k++) if (S.favs[k].id === st.id) return k; return -1; }
   function toggleFav(st) {
-    if (!st) return;
+    if (!st) {
+      S.msg = 'СНАЧАЛА ВЫБЕРИТЕ СТАНЦИЮ'; render();
+      setTimeout(function () { if (S.msg === 'СНАЧАЛА ВЫБЕРИТЕ СТАНЦИЮ') { S.msg = null; render(); } }, 2500);
+      return;
+    }
     var k = favIndex(st);
     if (k >= 0) S.favs.splice(k, 1);
     else S.favs.push({ id: st.id, n: st.n, u: st.u, b: st.b, c: st.c });
