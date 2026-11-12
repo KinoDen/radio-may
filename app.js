@@ -558,6 +558,24 @@
 
   /* ---------- отрисовка ---------- */
   function setText(el, t) { if (el.textContent !== t) el.textContent = t; }
+  function setWeatherMarquee(el, value) {
+    var signature = value + '|' + (el.clientWidth || 0);
+    if (el.getAttribute('data-marquee') === value) return;
+    el.setAttribute('data-marquee', value);
+    el.textContent = '';
+    el.classList.add('weather-marquee');
+    var track = document.createElement('span');
+    track.className = 'weather-marquee-track';
+    var first = document.createElement('span');
+    var second = document.createElement('span');
+    first.className = 'weather-marquee-item';
+    second.className = 'weather-marquee-item';
+    first.textContent = value;
+    second.textContent = value;
+    track.appendChild(first);
+    track.appendChild(second);
+    el.appendChild(track);
+  }
   function setCls(el, c) { if (el.className !== c) el.className = c; }
   function clip(t, n) { return t.length > n ? t.slice(0, n - 1) + '…' : t; }
 
@@ -605,10 +623,10 @@
 
     var c = city(), w = S.weather;
     var tempValue = w && w.t !== null && w.t !== undefined && isFinite(Number(w.t)) ? Number(w.t) : null;
-    // Температура выводится отдельно и крупно, чтобы длинное название города её не обрезало.
-    setText($('cityVal'), tempValue === null ? '— °C' : fmtTemp(tempValue));
+    // Город и температура идут одной бегущей строкой: длинное название не скрывает градусы.
+    setWeatherMarquee($('cityVal'), c.n.toUpperCase() + '   ' + (tempValue === null ? '— °C' : fmtTemp(tempValue)));
     var conditionText = !w || tempValue === null ? (!w ? 'ЗАГРУЗКА…' : 'НЕТ ДАННЫХ') : (WMO[w.code] || 'ПОГОДА');
-    setText($('cond'), c.n.toUpperCase() + ' · ' + conditionText);
+    setText($('cond'), conditionText);
 
     setText($('volNum'), String(S.vol));
     $('vfill').style.width = S.vol + '%';

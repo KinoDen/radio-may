@@ -93,6 +93,13 @@
 .val{font-family:'VT323',monospace;font-size:22px;line-height:22px;white-space:nowrap;text-shadow:var(--tglow)}
 .cond{font-size:11px;line-height:13px;font-weight:600;letter-spacing:1px;white-space:nowrap}
 
+
+.weather-marquee{display:block;width:100%;min-width:0;overflow:hidden;white-space:nowrap}
+.weather-marquee-track{display:inline-flex;width:max-content;white-space:nowrap;will-change:transform;animation:weatherMarq 12s linear infinite}
+.weather-marquee-item{display:inline-block;flex:none;padding-right:42px}
+@keyframes weatherMarq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media (prefers-reduced-motion:reduce){.weather-marquee-track{animation:none}}
+
 @keyframes blink{50%{opacity:0}}
 .blink{animation:blink 1s steps(1) infinite}
 @keyframes marq{to{transform:translateX(-50%)}}
