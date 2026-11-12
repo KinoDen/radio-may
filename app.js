@@ -23,6 +23,27 @@
     } catch (e) {}
   }
   var onBack = function () { closeOverlay(); };
+
+  // Останавливаем воспроизведение, когда MAX закрывает мини-приложение.
+  // pagehide/beforeunload покрывают закрытие WebView на Android и iOS;
+  // appHide используется, если конкретная версия моста MAX отправляет это событие.
+  var exitHandled = false;
+  function stopPlaybackOnExit() {
+    if (exitHandled) return;
+    exitHandled = true;
+    try { doStop(); } catch (e) {
+      try {
+        if (audio) { audio.pause(); audio.removeAttribute('src'); audio.load(); }
+        releaseScreenWakeLock();
+      } catch (ignore) {}
+    }
+  }
+  window.addEventListener('pagehide', stopPlaybackOnExit);
+  window.addEventListener('beforeunload', stopPlaybackOnExit);
+  window.addEventListener('unload', stopPlaybackOnExit);
+  try {
+    if (WA && typeof WA.onEvent === 'function') WA.onEvent('appHide', stopPlaybackOnExit);
+  } catch (e) {}
   function bridgeBack(show) {
     try {
       var b = WA && WA.BackButton;
@@ -249,8 +270,9 @@
   }
 
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible' && wakeLockWanted && S.status === 'play') {
-      requestScreenWakeLock();
+    if (document.visibilityState === 'visible') {
+      exitHandled = false;
+      if (wakeLockWanted && S.status === 'play') requestScreenWakeLock();
     }
   });
 
