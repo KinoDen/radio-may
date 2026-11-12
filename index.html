@@ -198,6 +198,7 @@
       <input class="vol" id="vol" type="range" min="0" max="100" value="72" aria-label="Громкость">
     </div>
     <div class="lcd" id="volNum" style="width:54px;height:28px;display:flex;align-items:center;justify-content:center;font-family:'VT323',monospace;font-size:24px;text-shadow:var(--tglow)">72</div>
+    <button class="btn favbtn" id="btnFav" aria-label="Добавить в избранное" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C1 8.3 3 5 6.3 5c2 0 3.7 1.1 5.7 3.3C14 6.1 15.7 5 17.7 5 21 5 23 8.3 21.6 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
   </div>
 
   <!-- COUNTRY + SEARCH -->
@@ -245,6 +246,10 @@
   <div class="backdrop" id="ovBack" hidden></div>
   <div class="plist" id="ov" hidden>
     <div class="lcd">
+      <div class="ovtabs" id="ovTabs">
+        <button class="lamp" id="tabAll" type="button">ВСЕ</button>
+        <button class="lamp" id="tabFav" type="button">♥ ИЗБРАННОЕ</button>
+      </div>
       <div class="dl ovhead" id="ovTitle"></div>
       <input class="ovq" id="ovQ" type="text" autocomplete="off" aria-label="Фильтр">
       <div class="ovrows" id="ovRows"></div>

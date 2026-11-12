@@ -121,8 +121,10 @@
     cities: store.get('cities', null) || DEFAULT_CITIES.slice(),
     ci: store.get('ci', 0),
     weather: null, geo: [], geoBusy: false,
-    eqLive: false, ovMode: null
+    eqLive: false, ovMode: null, ovTab: 'all',
+    favs: store.get('favs', []) || []
   };
+  if (!Array.isArray(S.favs)) S.favs = [];
   if (S.ci >= S.cities.length || S.ci < 0) S.ci = 0;
   if (S.theme !== 'dark' && S.theme !== 'light') S.theme = 'dark';
 
@@ -638,6 +640,10 @@
     var conditionParts = [conditionText, windText].filter(function (part) { return !!part; });
     setWeatherMarquee($('cond'), conditionParts.join('   •   '));
 
+    var fb = $('btnFav'), isFav = !!(S.cur && favIndex(S.cur) >= 0);
+    setCls(fb, 'btn favbtn' + (isFav ? ' is-fav' : ''));
+    fb.setAttribute('aria-pressed', isFav);
+    fb.setAttribute('aria-label', isFav ? 'Убрать из избранного' : 'Добавить в избранное');
     setText($('volNum'), String(S.vol));
     $('vfill').style.width = S.vol + '%';
     if ($('vol').value !== String(S.vol)) $('vol').value = S.vol;
@@ -651,7 +657,16 @@
   }
 
   /* ---------- оверлей (станции / страны / города) ---------- */
-  function mkRow(idx, name, right, active, fn) {
+  function favIndex(st) { for (var k = 0; k < S.favs.length; k++) if (S.favs[k].id === st.id) return k; return -1; }
+  function toggleFav(st) {
+    if (!st) return;
+    var k = favIndex(st);
+    if (k >= 0) S.favs.splice(k, 1);
+    else S.favs.push({ id: st.id, n: st.n, u: st.u, b: st.b, c: st.c });
+    store.set('favs', S.favs);
+    render(); renderOverlay();
+  }
+  function mkRow(idx, name, right, active, fn, favSt) {
     var b = document.createElement('button');
     b.className = 'plrow' + (active ? ' on' : '');
     b.type = 'button';
@@ -659,6 +674,13 @@
     var n = document.createElement('span'); n.style.cssText = 'flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis'; n.textContent = name;
     var r = document.createElement('span'); r.className = 'right'; r.textContent = right || '';
     b.appendChild(i); b.appendChild(n); b.appendChild(r);
+    if (favSt) {
+      var h = document.createElement('span'); h.className = 'heart'; h.setAttribute('role', 'button');
+      var isF = favIndex(favSt) >= 0;
+      h.textContent = isF ? '♥' : '♡'; h.setAttribute('aria-label', isF ? 'Убрать из избранного' : 'В избранное');
+      h.addEventListener('click', function (e) { e.stopPropagation(); haptic(); toggleFav(favSt); });
+      b.appendChild(h);
+    }
     b.addEventListener('click', function () { haptic(); fn(); });
     return b;
   }
@@ -675,7 +697,23 @@
     var rows = $('ovRows'), title = $('ovTitle'), q = $('ovQ');
     var frag = document.createDocumentFragment();
 
+    var tabs = $('ovTabs');
+    tabs.hidden = m !== 'stations';
     if (m === 'stations') {
+      setCls($('tabAll'), 'lamp' + (S.ovTab === 'all' ? ' on' : ''));
+      setCls($('tabFav'), 'lamp' + (S.ovTab === 'fav' ? ' on' : ''));
+      setText($('tabAll'), 'ВСЕ · ' + S.list.length);
+      setText($('tabFav'), '♥ ИЗБРАННОЕ · ' + S.favs.length);
+    }
+    if (m === 'stations' && S.ovTab === 'fav') {
+      title.textContent = 'ИЗБРАННЫЕ СТАНЦИИ';
+      if (!S.favs.length) frag.appendChild(mkInfo('НАЖМИТЕ ♡ У СТАНЦИИ'));
+      S.favs.forEach(function (s, i) {
+        frag.appendChild(mkRow(p2(i + 1) + '.', s.n, s.b ? s.b + 'K' : '', !!(S.cur && S.cur.id === s.id), function () {
+          closeOverlay(); selectStation(s, true);
+        }, s));
+      });
+    } else if (m === 'stations') {
       title.textContent = 'СТРАНА: ' + countryName(S.cc).toUpperCase() + (S.query ? ' · «' + S.query.toUpperCase() + '»' : '');
       if (S.loading) frag.appendChild(mkInfo('ЗАГРУЗКА…'));
       else if (S.err) frag.appendChild(mkInfo('НЕТ СВЯЗИ С КАТАЛОГОМ'));
@@ -683,7 +721,7 @@
       else S.list.forEach(function (s, i) {
         frag.appendChild(mkRow(p2(i + 1) + '.', s.n, s.b ? s.b + 'K' : '', !!(S.cur && S.cur.id === s.id), function () {
           closeOverlay(); selectStation(s, true);
-        }));
+        }, s));
       });
     } else if (m === 'country') {
       title.textContent = 'ВЫБОР СТРАНЫ';
@@ -725,6 +763,7 @@
 
   function openOverlay(mode) {
     var wasOpen = !!S.ovMode;
+    if (!wasOpen || mode !== 'stations') S.ovTab = 'all';
     S.ovMode = mode;
     $('ov').hidden = false; $('ovBack').hidden = false;
     var q = $('ovQ');
@@ -759,6 +798,9 @@
   on('ctryBtn', function () { openOverlay('country'); });
   on('cityBtn', function () { openOverlay('city'); });
   on('btnList', function () { if (S.ovMode === 'stations') closeOverlay(); else openOverlay('stations'); });
+  on('btnFav', function () { toggleFav(S.cur); });
+  on('tabAll', function () { S.ovTab = 'all'; renderOverlay(); });
+  on('tabFav', function () { S.ovTab = 'fav'; renderOverlay(); });
   on('btnTheme', function () { S.theme = S.theme === 'dark' ? 'light' : 'dark'; store.set('theme', S.theme); render(); });
   $('ovBack').addEventListener('click', closeOverlay);
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeOverlay(); });
