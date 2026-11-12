@@ -44,6 +44,36 @@
   ];
   var hostIdx = 0;
 
+  // Избранные прямые потоки российских радиосетей.
+  // Источники: официальные потоки вещателей и опубликованные прямые адреса.
+  var FEATURED_STATIONS = [
+    // Зайцев.FM
+    { id: 'featured-zaycev-pop', n: 'ЗАЙЦЕВ.FM · POP', u: 'https://abs.zaycev.fm/pop256k', b: 256, c: 'MP3' },
+    { id: 'featured-zaycev-club', n: 'ЗАЙЦЕВ.FM · CLUB', u: 'https://abs.zaycev.fm/club256k', b: 256, c: 'MP3' },
+    { id: 'featured-zaycev-disco', n: 'ЗАЙЦЕВ.FM · DISCO', u: 'https://abs.zaycev.fm/disco256k', b: 256, c: 'MP3' },
+    { id: 'featured-zaycev-rock', n: 'ЗАЙЦЕВ.FM · NEW ROCK', u: 'https://abs.zaycev.fm/rock256k', b: 256, c: 'MP3' },
+    { id: 'featured-zaycev-rus', n: 'ЗАЙЦЕВ.FM · RUS', u: 'https://abs.zaycev.fm/rus256k', b: 256, c: 'MP3' },
+    { id: 'featured-zaycev-shanson', n: 'ЗАЙЦЕВ.FM · ШАНСОН', u: 'https://abs.zaycev.fm/shanson256k', b: 256, c: 'MP3' },
+
+    // Радио Рекорд
+    { id: 'featured-record-main', n: 'RECORD · ОСНОВНОЙ', u: 'https://radiorecord.hostingradio.ru/rr_main96.aacp', b: 96, c: 'AAC' },
+    { id: 'featured-record-russian-mix', n: 'RECORD · RUSSIAN MIX', u: 'https://radiorecord.hostingradio.ru/rus96.aacp', b: 96, c: 'AAC' },
+    { id: 'featured-record-alltimers', n: 'RECORD · ХИТЫ ВСЕХ ВРЕМЁН', u: 'https://radiorecord.hostingradio.ru/alltimers96.aacp', b: 96, c: 'AAC' },
+    { id: 'featured-record-90s', n: 'RECORD · СУПЕРДИСКОТЕКА 90-Х', u: 'https://radiorecord.hostingradio.ru/sd9096.aacp', b: 96, c: 'AAC' },
+    { id: 'featured-record-russianhits', n: 'RECORD · RUSSIAN HITS', u: 'https://radiorecord.hostingradio.ru/russianhits96.aacp', b: 96, c: 'AAC' },
+    { id: 'featured-record-pump', n: 'RECORD · КОЛБАСНЫЙ ЦЕХ', u: 'https://radiorecord.hostingradio.ru/pump96.aacp', b: 96, c: 'AAC' },
+    { id: 'featured-record-festivals', n: 'RECORD · FESTIVALS', u: 'https://radiorecord.hostingradio.ru/livedjsets96.aacp', b: 96, c: 'AAC' },
+    { id: 'featured-record-deep', n: 'RECORD · DEEP', u: 'https://radiorecord.hostingradio.ru/deep96.aacp', b: 96, c: 'AAC' },
+    { id: 'featured-record-chill', n: 'RECORD · CHILL-OUT', u: 'https://radiorecord.hostingradio.ru/chil96.aacp', b: 96, c: 'AAC' },
+    { id: 'featured-record-tales', n: 'RECORD · СКАЗКИ MC V', u: 'https://radiorecord.hostingradio.ru/skazki96.aacp', b: 96, c: 'AAC' },
+    { id: 'featured-record-bbq', n: 'RECORD · НА ШАШЛЫКИ!', u: 'https://radiorecord.hostingradio.ru/nashashlyki96.aacp', b: 96, c: 'AAC' },
+    { id: 'featured-record-house', n: 'RECORD · HOUSE', u: 'https://radiorecord.hostingradio.ru/house96.aacp', b: 96, c: 'AAC' },
+
+    // MAXIMUM и ПИ FM
+    { id: 'featured-maximum', n: 'MAXIMUM · ОСНОВНОЙ', u: 'https://maximum.hostingradio.ru/maximum128.mp3', b: 128, c: 'MP3' },
+    { id: 'featured-pifm', n: 'ПИ FM · МОСКВА', u: 'https://cdn.pifm.ru/mp3', b: 128, c: 'MP3' }
+  ];
+
   var DEFAULT_CITIES = [
     { n: 'Москва', la: 55.7558, lo: 37.6173 },
     { n: 'Санкт-Петербург', la: 59.9343, lo: 30.3351 },
@@ -117,6 +147,29 @@
     return next();
   }
 
+
+  function featuredForQuery(query) {
+    if (S.cc !== 'RU') return [];
+    var q = (query || '').trim().toLowerCase();
+    return FEATURED_STATIONS.filter(function (st) {
+      return !q || st.n.toLowerCase().indexOf(q) >= 0;
+    });
+  }
+
+  function mergeFeatured(dynamicStations, query) {
+    var featured = featuredForQuery(query);
+    var seen = {};
+    featured.concat(dynamicStations || []).forEach(function (st) { seen[st.u] = true; });
+    var merged = [], names = {};
+    featured.concat(dynamicStations || []).forEach(function (st) {
+      var key = (st.n || '').toLowerCase();
+      if (!st.u || names[key]) return;
+      names[key] = true;
+      merged.push(st);
+    });
+    return merged.slice(0, 120);
+  }
+
   var loadSeq = 0;
   function loadList() {
     var seq = ++loadSeq;
@@ -124,6 +177,7 @@
     // Показываем последний успешно загруженный каталог, пока сеть отвечает.
     var cached = store.get('stations_' + S.cc, []);
     if (!S.list.length && cached && cached.length) S.list = cached;
+    S.list = mergeFeatured(S.list, S.query);
     render();
     var q = S.query.trim();
     var path = '/json/stations/search?countrycode=' + encodeURIComponent(S.cc) +
@@ -142,7 +196,7 @@
         seen[k] = 1;
         out.push({ id: s.stationuuid, n: nm, u: u, b: s.bitrate || 0, c: (s.codec || '').toUpperCase() });
       });
-      S.list = out.slice(0, 60);
+      S.list = mergeFeatured(out, q);
       store.set('stations_' + S.cc, S.list);
       S.loading = false;
       render();
@@ -151,7 +205,7 @@
       if (seq !== loadSeq) return;
       S.loading = false; S.err = true;
       // Не стираем ранее сохранённые станции при временной недоступности API.
-      if (!S.list.length) S.list = cached || [];
+      S.list = mergeFeatured((S.list && S.list.length ? S.list : (cached || [])), S.query);
       render();
       if (S.ovMode) renderOverlay();
     });
@@ -166,6 +220,39 @@
       cb();
     }, function () { S.countries = []; cb(); });
   }
+
+  /* ---------- предотвращение выключения экрана ---------- */
+  var screenWakeLock = null;
+  var wakeLockWanted = false;
+
+  function requestScreenWakeLock() {
+    wakeLockWanted = true;
+    if (!('wakeLock' in navigator) || !navigator.wakeLock || document.visibilityState !== 'visible') return;
+    if (screenWakeLock && !screenWakeLock.released) return;
+    navigator.wakeLock.request('screen').then(function (lock) {
+      screenWakeLock = lock;
+      lock.addEventListener('release', function () {
+        if (screenWakeLock === lock) screenWakeLock = null;
+      });
+    }).catch(function () {
+      // Браузер или устройство может не поддерживать Screen Wake Lock.
+    });
+  }
+
+  function releaseScreenWakeLock() {
+    wakeLockWanted = false;
+    if (screenWakeLock) {
+      var lock = screenWakeLock;
+      screenWakeLock = null;
+      try { lock.release(); } catch (e) {}
+    }
+  }
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && wakeLockWanted && S.status === 'play') {
+      requestScreenWakeLock();
+    }
+  });
 
   /* ---------- аудио ---------- */
   var audio = null, ctx = null, analyser = null, gain = null, curNode = null, fftBuf = null;
@@ -199,6 +286,7 @@
   }
 
   function stopStream() {
+    releaseScreenWakeLock();
     S.gen++;
     S.playing = false;
     S.eqLive = false;
@@ -208,6 +296,7 @@
   function startStream() {
     stopStream();
     if (!S.cur) return;
+    requestScreenWakeLock();
     S.msg = 'ЗАГРУЗКА…';
     attempt(S.cur, true, S.gen);
     updateMediaSession();
@@ -272,8 +361,9 @@
   /* ---------- управление ---------- */
   function doPlay() {
     if (!S.cur) { if (!S.list.length) return; S.cur = S.list[0]; store.set('sid', S.cur.id); }
-    if (S.status === 'play' && S.playing) return;
+    if (S.status === 'play' && S.playing) { requestScreenWakeLock(); return; }
     S.status = 'play';
+    requestScreenWakeLock();
     startStream();
     render();
   }
@@ -336,41 +426,113 @@
   /* ---------- погода и время ---------- */
   function city() { return S.cities[S.ci] || S.cities[0]; }
 
+  function weatherFromWttr(j) {
+    var now = j && j.current_condition && j.current_condition[0];
+    if (!now || now.temp_C === undefined) throw new Error('wttr.in: no current conditions');
+    var wt = Number(now.weatherCode);
+    var map = {
+      113:0,116:2,119:3,122:3,143:45,248:45,260:48,263:51,266:53,281:56,284:57,
+      293:61,296:61,299:63,302:63,305:65,308:65,311:66,314:67,317:66,320:71,
+      323:71,326:73,329:75,332:75,335:75,338:75,350:77,353:80,356:81,359:82,
+      362:66,365:67,368:85,371:86,374:77,377:77,386:95,389:95,392:95,395:99
+    };
+    return {
+      t: Math.round(Number(now.temp_C)),
+      code: map[wt] === undefined ? 2 : map[wt],
+      off: null,
+      source: 'wttr.in',
+      updated: Date.now()
+    };
+  }
+
+  function weatherFromOpenMeteo(j) {
+    if (!j || !j.current || typeof j.current.temperature_2m !== 'number') {
+      throw new Error('Open-Meteo: no current conditions');
+    }
+    return {
+      t: Math.round(j.current.temperature_2m),
+      code: j.current.weather_code,
+      off: typeof j.utc_offset_seconds === 'number' ? j.utc_offset_seconds : null,
+      source: 'Open-Meteo',
+      updated: Date.now()
+    };
+  }
+
+  function weatherFromMetNo(j) {
+    var series = j && j.properties && j.properties.timeseries;
+    if (!series || !series.length) throw new Error('MET Norway: no forecast');
+    var now = series[0];
+    var details = now.data && (now.data.instant && now.data.instant.details);
+    if (!details || typeof details.air_temperature !== 'number') {
+      throw new Error('MET Norway: no temperature');
+    }
+    var symbol = '';
+    var next = now.data.next_1_hours || now.data.next_6_hours || now.data.next_12_hours;
+    if (next && next.summary) symbol = next.summary.symbol_code || '';
+    var code = 2;
+    if (/clearsky/.test(symbol)) code = 0;
+    else if (/fair/.test(symbol)) code = 1;
+    else if (/partlycloudy/.test(symbol)) code = 2;
+    else if (/cloudy/.test(symbol)) code = 3;
+    else if (/fog/.test(symbol)) code = 45;
+    else if (/heavyrain/.test(symbol)) code = 65;
+    else if (/rain/.test(symbol)) code = 61;
+    else if (/heavysnow/.test(symbol)) code = 75;
+    else if (/snow/.test(symbol)) code = 71;
+    else if (/thunder/.test(symbol)) code = 95;
+    else if (/sleet/.test(symbol)) code = 67;
+    return {
+      t: Math.round(details.air_temperature),
+      code: code,
+      off: null,
+      source: 'MET Norway',
+      updated: Date.now()
+    };
+  }
+
   function loadWeather() {
     var c = city();
     var cached = store.get('weather_' + c.n, null);
     S.weather = cached || null;
     render();
-    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + c.la + '&longitude=' + c.lo +
-      '&current=temperature_2m,weather_code&timezone=auto';
-    fetchJSON(url, 9000).then(function (j) {
-      if (city() !== c) return;
-      S.weather = {
-        t: Math.round(j.current.temperature_2m),
-        code: j.current.weather_code,
-        off: typeof j.utc_offset_seconds === 'number' ? j.utc_offset_seconds : null
-      };
-      store.set('weather_' + c.n, S.weather);
-      render();
-    }).catch(function () {
-      // Резервный погодный источник. Работает по координатам и не требует ключа.
-      var backup = 'https://wttr.in/' + encodeURIComponent(c.la + ',' + c.lo) + '?format=j1';
-      fetchJSON(backup, 9000).then(function (j) {
+
+    // Источники проверяются по очереди: wttr.in, MET Norway, затем Open-Meteo.
+    // Все запросы идут напрямую из браузера, без VPN и без ключей API.
+    var requests = [
+      function () {
+        var url = 'https://wttr.in/' + encodeURIComponent(c.la + ',' + c.lo) + '?format=j1&lang=ru';
+        return fetchJSON(url, 12000).then(weatherFromWttr);
+      },
+      function () {
+        var url = 'https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=' +
+          encodeURIComponent(c.la) + '&lon=' + encodeURIComponent(c.lo);
+        return fetchJSON(url, 12000).then(weatherFromMetNo);
+      },
+      function () {
+        var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + c.la + '&longitude=' + c.lo +
+          '&current=temperature_2m,weather_code&timezone=auto';
+        return fetchJSON(url, 12000).then(weatherFromOpenMeteo);
+      }
+    ];
+
+    function trySource(index) {
+      if (index >= requests.length) {
         if (city() !== c) return;
-        var now = j.current_condition && j.current_condition[0];
-        if (!now || now.temp_C === undefined) throw new Error('weather data missing');
-        var wt = Number(now.weatherCode);
-        // Приведение кодов wttr.in к близким кодам WMO, используемым дисплеем приложения.
-        var map = {113:0,116:2,119:3,122:3,143:45,248:45,260:48,263:51,266:53,281:56,284:57,293:61,296:61,299:63,302:63,305:65,308:65,311:66,314:67,317:66,320:71,323:71,326:73,329:75,332:75,335:75,338:75,350:77,353:80,356:81,359:82,362:66,365:67,368:85,371:86,374:77,377:77,386:95,389:95,392:95,395:99};
-        S.weather = { t: Math.round(Number(now.temp_C)), code: map[wt] === undefined ? 2 : map[wt], off: null };
-        store.set('weather_' + c.n, S.weather);
-        render();
-      }).catch(function () {
-        if (city() !== c) return;
+        // Не затираем последний успешно полученный прогноз при временном сбое сети.
         if (!S.weather) S.weather = { t: null, code: null, off: null };
         render();
+        return;
+      }
+      requests[index]().then(function (result) {
+        if (city() !== c) return;
+        S.weather = result;
+        store.set('weather_' + c.n, result);
+        render();
+      }).catch(function () {
+        trySource(index + 1);
       });
-    });
+    }
+    trySource(0);
   }
   function stepCity(d) {
     S.ci = (S.ci + d + S.cities.length) % S.cities.length;
