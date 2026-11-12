@@ -428,7 +428,7 @@
 
   function weatherFromWttr(j) {
     var now = j && j.current_condition && j.current_condition[0];
-    if (!now || now.temp_C === undefined) throw new Error('wttr.in: no current conditions');
+    if (!now || now.temp_C === undefined || !isFinite(Number(now.temp_C))) throw new Error('wttr.in: no current conditions');
     var wt = Number(now.weatherCode);
     var map = {
       113:0,116:2,119:3,122:3,143:45,248:45,260:48,263:51,266:53,281:56,284:57,
@@ -493,6 +493,7 @@
   function loadWeather() {
     var c = city();
     var cached = store.get('weather_' + c.n, null);
+    if (!cached || cached.t === undefined || cached.t === null || !isFinite(Number(cached.t))) cached = null;
     S.weather = cached || null;
     render();
 
@@ -539,7 +540,11 @@
     store.set('ci', S.ci);
     loadWeather();
   }
-  function fmtTemp(t) { return t > 0 ? '+' + t + '°' : (t < 0 ? '−' + Math.abs(t) + '°' : '0°'); }
+  function fmtTemp(t) {
+    var n = Math.round(Number(t));
+    if (!isFinite(n)) return '— °C';
+    return (n > 0 ? '+' + n : (n < 0 ? '−' + Math.abs(n) : '0')) + '°C';
+  }
   function p2(n) { return (n < 10 ? '0' : '') + n; }
   function clockParts() {
     var w = S.weather;
@@ -599,8 +604,11 @@
     setText($('listTab'), 'СПИСОК СТАНЦИЙ · ' + S.list.length);
 
     var c = city(), w = S.weather;
-    setText($('cityVal'), c.n.toUpperCase() + (w && w.t !== null ? ' ' + fmtTemp(w.t) : ''));
-    setText($('cond'), !w ? 'ЗАГРУЗКА…' : (w.t === null ? 'НЕТ ДАННЫХ' : (WMO[w.code] || '—')));
+    var tempValue = w && w.t !== null && w.t !== undefined && isFinite(Number(w.t)) ? Number(w.t) : null;
+    // Температура выводится отдельно и крупно, чтобы длинное название города её не обрезало.
+    setText($('cityVal'), tempValue === null ? '— °C' : fmtTemp(tempValue));
+    var conditionText = !w || tempValue === null ? (!w ? 'ЗАГРУЗКА…' : 'НЕТ ДАННЫХ') : (WMO[w.code] || 'ПОГОДА');
+    setText($('cond'), c.n.toUpperCase() + ' · ' + conditionText);
 
     setText($('volNum'), String(S.vol));
     $('vfill').style.width = S.vol + '%';
