@@ -32,9 +32,13 @@
   }
 
   /* ---------- данные ---------- */
+  // Сначала российское зеркало каталога, затем официальные узлы Radio Browser.
+  // Если один узел недоступен из сети пользователя, radioApi автоматически пробует следующий.
   var HOSTS = [
+    'https://api.muzloo.ru',
     'https://de1.api.radio-browser.info',
     'https://de2.api.radio-browser.info',
+    'https://nl1.api.radio-browser.info',
     'https://fi1.api.radio-browser.info',
     'https://at1.api.radio-browser.info'
   ];
@@ -46,7 +50,7 @@
     { n: 'Екатеринбург', la: 56.8389, lo: 60.6057 },
     { n: 'Новосибирск', la: 55.0084, lo: 82.9357 },
     { n: 'Казань', la: 55.7887, lo: 49.1221 },
-    { n: 'Амстердам', la: 52.3676, lo: 4.9041 }
+    { n: 'Воронеж', la: 51.6608, lo: 39.2003 }
   ];
 
   var WMO = {
@@ -116,7 +120,11 @@
   var loadSeq = 0;
   function loadList() {
     var seq = ++loadSeq;
-    S.loading = true; S.err = false; render();
+    S.loading = true; S.err = false;
+    // Показываем последний успешно загруженный каталог, пока сеть отвечает.
+    var cached = store.get('stations_' + S.cc, []);
+    if (!S.list.length && cached && cached.length) S.list = cached;
+    render();
     var q = S.query.trim();
     var path = '/json/stations/search?countrycode=' + encodeURIComponent(S.cc) +
       '&hidebroken=true&order=clickcount&reverse=true&limit=120&is_https=true' +
@@ -135,12 +143,15 @@
         out.push({ id: s.stationuuid, n: nm, u: u, b: s.bitrate || 0, c: (s.codec || '').toUpperCase() });
       });
       S.list = out.slice(0, 60);
+      store.set('stations_' + S.cc, S.list);
       S.loading = false;
       render();
       if (S.ovMode) renderOverlay();
     }, function () {
       if (seq !== loadSeq) return;
-      S.loading = false; S.err = true; S.list = [];
+      S.loading = false; S.err = true;
+      // Не стираем ранее сохранённые станции при временной недоступности API.
+      if (!S.list.length) S.list = cached || [];
       render();
       if (S.ovMode) renderOverlay();
     });
@@ -327,21 +338,38 @@
 
   function loadWeather() {
     var c = city();
-    S.weather = null; render();
+    var cached = store.get('weather_' + c.n, null);
+    S.weather = cached || null;
+    render();
     var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + c.la + '&longitude=' + c.lo +
       '&current=temperature_2m,weather_code&timezone=auto';
-    fetchJSON(url).then(function (j) {
+    fetchJSON(url, 9000).then(function (j) {
       if (city() !== c) return;
       S.weather = {
         t: Math.round(j.current.temperature_2m),
         code: j.current.weather_code,
         off: typeof j.utc_offset_seconds === 'number' ? j.utc_offset_seconds : null
       };
+      store.set('weather_' + c.n, S.weather);
       render();
-    }, function () {
-      if (city() !== c) return;
-      S.weather = { t: null, code: null, off: null };
-      render();
+    }).catch(function () {
+      // Резервный погодный источник. Работает по координатам и не требует ключа.
+      var backup = 'https://wttr.in/' + encodeURIComponent(c.la + ',' + c.lo) + '?format=j1';
+      fetchJSON(backup, 9000).then(function (j) {
+        if (city() !== c) return;
+        var now = j.current_condition && j.current_condition[0];
+        if (!now || now.temp_C === undefined) throw new Error('weather data missing');
+        var wt = Number(now.weatherCode);
+        // Приведение кодов wttr.in к близким кодам WMO, используемым дисплеем приложения.
+        var map = {113:0,116:2,119:3,122:3,143:45,248:45,260:48,263:51,266:53,281:56,284:57,293:61,296:61,299:63,302:63,305:65,308:65,311:66,314:67,317:66,320:71,323:71,326:73,329:75,332:75,335:75,338:75,350:77,353:80,356:81,359:82,362:66,365:67,368:85,371:86,374:77,377:77,386:95,389:95,392:95,395:99};
+        S.weather = { t: Math.round(Number(now.temp_C)), code: map[wt] === undefined ? 2 : map[wt], off: null };
+        store.set('weather_' + c.n, S.weather);
+        render();
+      }).catch(function () {
+        if (city() !== c) return;
+        if (!S.weather) S.weather = { t: null, code: null, off: null };
+        render();
+      });
     });
   }
   function stepCity(d) {
@@ -560,12 +588,22 @@
     S.geoBusy = true; renderOverlay();
     oTimer = setTimeout(function () {
       var url = 'https://geocoding-api.open-meteo.com/v1/search?count=8&language=ru&format=json&name=' + encodeURIComponent(v);
-      fetchJSON(url).then(function (j) {
+      fetchJSON(url, 8000).then(function (j) {
         S.geo = (j.results || []).map(function (r) {
           return { name: r.name, la: r.latitude, lo: r.longitude, sub: [r.admin1, r.country_code].filter(Boolean).join(', ') };
         });
         S.geoBusy = false; renderOverlay();
-      }, function () { S.geo = []; S.geoBusy = false; renderOverlay(); });
+      }).catch(function () {
+        // Резервный геокодер, если основной сервис недоступен из региона.
+        var alt = 'https://photon.komoot.io/api/?limit=8&lang=ru&q=' + encodeURIComponent(v);
+        fetchJSON(alt, 8000).then(function (j) {
+          S.geo = (j.features || []).map(function (f) {
+            var p = f.properties || {}, xy = f.geometry && f.geometry.coordinates || [];
+            return { name: p.name || p.city || p.street || v, la: xy[1], lo: xy[0], sub: [p.state, p.country].filter(Boolean).join(', ') };
+          }).filter(function (r) { return typeof r.la === 'number' && typeof r.lo === 'number'; });
+          S.geoBusy = false; renderOverlay();
+        }).catch(function () { S.geo = []; S.geoBusy = false; renderOverlay(); });
+      });
     }, 400);
   });
 
