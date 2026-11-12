@@ -43,6 +43,56 @@
   ];
   var hostIdx = 0;
 
+  // Резервный каталог прямых HTTPS-потоков, если Radio Browser недоступен.
+  var CURATED = {
+    RU: [
+      { id:'ru-pifm', n:'ПИ FM', u:'https://cdn.pifm.ru/mp3', b:128, c:'MP3' },
+      { id:'ru-marusya', n:'Маруся FM', u:'https://radio-holding.ru:9433/marusya_default', b:128, c:'MP3' },
+      { id:'ru-maximum', n:'Радио Максимум', u:'https://hls-01-maximum.hostingradio.ru/maximum/playlist.m3u8', b:128, c:'HLS' },
+      { id:'ru-record', n:'Радио Рекорд', u:'https://radio-srv1.11one.ru/rec64k', b:64, c:'AAC' },
+      { id:'ru-record-pirate', n:'Рекорд · Пиратская станция', u:'https://radiorecord.hostingradio.ru/ps96.aacp', b:96, c:'AAC' },
+      { id:'ru-mayak', n:'Радио Маяк', u:'https://icecast-vgtrk.cdnvideo.ru/mayakfm_mp3_192kbps', b:192, c:'MP3' },
+      { id:'ru-russia', n:'Радио России', u:'https://icecast-vgtrk.cdnvideo.ru/rrzonam_mp3_192kbps', b:192, c:'MP3' },
+      { id:'ru-zvezda', n:'Радио Звезда', u:'https://icecast-zvezda.mediacdn.ru/radio/zvezda_128', b:128, c:'MP3' },
+      { id:'ru-vanya', n:'Радио Ваня', u:'https://icecast-radiovanya.cdnvideo.ru/radiovanya', b:64, c:'AAC' },
+      { id:'ru-nashe', n:'Наше Радио', u:'https://nashe1.hostingradio.ru/nashe-256', b:256, c:'MP3' },
+      { id:'ru-europaplus', n:'Европа Плюс', u:'https://emgregion.hostingradio.ru:8064/moscow.europaplus.mp3', b:128, c:'MP3' },
+      { id:'ru-retro', n:'Ретро FM', u:'https://retroserver.streamr.ru:8043/retro256.mp3', b:256, c:'MP3' },
+      { id:'ru-dorozhnoe', n:'Дорожное Радио', u:'https://dorognoe.hostingradio.ru:8000/radio', b:128, c:'MP3' },
+      { id:'ru-rusradio', n:'Русское Радио', u:'https://dfm.hostingradio.ru/rusradio128.mp3', b:128, c:'MP3' },
+      { id:'ru-silver', n:'Серебряный дождь', u:'https://213.59.4.27:8000/silver128.mp3', b:128, c:'MP3' }
+    ],
+    US: [
+      { id:'us-paradise', n:'Radio Paradise', u:'https://stream.radioparadise.com/mp3-128', b:128, c:'MP3' },
+      { id:'us-kexp', n:'KEXP Seattle', u:'https://kexp-mp3-128.streamguys1.com/kexp128.mp3', b:128, c:'MP3' },
+      { id:'us-groovesalad', n:'SomaFM · Groove Salad', u:'https://ice5.somafm.com/groovesalad-128-mp3', b:128, c:'MP3' },
+      { id:'us-dronezone', n:'SomaFM · Drone Zone', u:'https://ice5.somafm.com/dronezone-128-mp3', b:128, c:'MP3' },
+      { id:'us-secretagent', n:'SomaFM · Secret Agent', u:'https://ice5.somafm.com/secretagent-128-mp3', b:128, c:'MP3' }
+    ],
+    GB: [
+      { id:'gb-nts1', n:'NTS Radio 1', u:'https://stream-relay-geo.ntslive.net/stream?client=direct', b:128, c:'MP3' },
+      { id:'gb-nts2', n:'NTS Radio 2', u:'https://stream-relay-geo.ntslive.net/stream2?client=direct', b:128, c:'MP3' }
+    ],
+    DE: [
+      { id:'de-dlf', n:'Deutschlandfunk', u:'https://st01.sslstream.dlf.de/dlf/01/128/mp3/stream.mp3?aggregator=web', b:128, c:'MP3' },
+      { id:'de-dlfkultur', n:'Deutschlandfunk Kultur', u:'https://st02.sslstream.dlf.de/dlf/02/128/mp3/stream.mp3?aggregator=web', b:128, c:'MP3' },
+      { id:'de-dlfnova', n:'Deutschlandfunk Nova', u:'https://st03.sslstream.dlf.de/dlf/03/128/mp3/stream.mp3?aggregator=web', b:128, c:'MP3' }
+    ],
+    FR: [
+      { id:'fr-fip', n:'FIP', u:'https://icecast.radiofrance.fr/fip-midfi.mp3?id=radiofrance', b:128, c:'MP3' },
+      { id:'fr-fiprock', n:'FIP Rock', u:'https://icecast.radiofrance.fr/fiprock-midfi.mp3?id=radiofrance', b:128, c:'MP3' },
+      { id:'fr-fipjazz', n:'FIP Jazz', u:'https://icecast.radiofrance.fr/fipjazz-midfi.mp3?id=radiofrance', b:128, c:'MP3' }
+    ],
+    NL: [
+      { id:'nl-nts', n:'NTS Radio', u:'https://stream-relay-geo.ntslive.net/stream?client=direct', b:128, c:'MP3' }
+    ]
+  };
+  var CURATED_COUNTRIES = [
+    {cc:'RU',name:'Россия',count:15},{cc:'US',name:'США',count:5},
+    {cc:'GB',name:'Великобритания',count:2},{cc:'DE',name:'Германия',count:3},
+    {cc:'FR',name:'Франция',count:3},{cc:'NL',name:'Нидерланды',count:1}
+  ];
+
   var DEFAULT_CITIES = [
     { n: 'Москва', la: 55.7558, lo: 37.6173 },
     { n: 'Санкт-Петербург', la: 59.9343, lo: 30.3351 },
@@ -92,6 +142,14 @@
     weather: null, weatherRetry: 0, geo: [], geoBusy: false,
     eqLive: false, ovMode: null
   };
+  S.cities = (Array.isArray(S.cities) ? S.cities : DEFAULT_CITIES.slice()).map(function (c) {
+    return {
+      n: String(c.n || c.name || c.city || 'Город'),
+      la: Number(c.la != null ? c.la : (c.lat != null ? c.lat : c.latitude)),
+      lo: Number(c.lo != null ? c.lo : (c.lon != null ? c.lon : c.longitude))
+    };
+  }).filter(function (c) { return isFinite(c.la) && isFinite(c.lo) && Math.abs(c.la) <= 90 && Math.abs(c.lo) <= 180; });
+  if (!S.cities.length) S.cities = DEFAULT_CITIES.slice();
   if (S.ci >= S.cities.length || S.ci < 0) S.ci = 0;
   if (S.theme !== 'dark' && S.theme !== 'light') S.theme = 'dark';
 
@@ -103,7 +161,6 @@
     var request = fetch(url, {
       method: 'GET',
       cache: 'no-store',
-      headers: { 'Accept': 'application/json' },
       signal: ctl ? ctl.signal : undefined
     }).then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -137,50 +194,28 @@
   var loadSeq = 0;
   function loadList() {
     var seq = ++loadSeq;
-    S.loading = true; S.err = false; render();
-    var q = S.query.trim();
-    var path = '/json/stations/search?countrycode=' + encodeURIComponent(S.cc) +
-      '&hidebroken=true&order=clickcount&reverse=true&limit=120&is_https=true' +
-      (q ? '&name=' + encodeURIComponent(q) : '');
-    return radioApi(path).then(function (arr) {
-      if (seq !== loadSeq) return;
-      var seen = {}, out = [];
-      arr.forEach(function (s) {
-        var u = s.url_resolved || s.url || '';
-        if (!/^https:\/\//i.test(u) || Number(s.hls) === 1) return;
-        var nm = (s.name || '').replace(/\s+/g, ' ').trim();
-        if (!nm) return;
-        var k = nm.toLowerCase();
-        if (seen[k]) return;
-        seen[k] = 1;
-        out.push({ id: s.stationuuid, n: nm, u: u, b: s.bitrate || 0, c: (s.codec || '').toUpperCase() });
-      });
-      S.list = out.slice(0, 60);
-      if (!S.cur && S.list.length) { S.cur = S.list[0]; store.set('sid', S.cur.id); }
-      S.loading = false; S.err = false; S.msg = null;
-      render();
-      if (S.ovMode) renderOverlay();
-    }, function () {
-      if (seq !== loadSeq) return;
-      S.loading = false; S.err = true; S.list = [];
-      S.msg = 'КАТАЛОГ НЕДОСТУПЕН · ПОВТОРИТЕ ПОЗЖЕ';
-      render();
-      if (S.ovMode) renderOverlay();
-    });
+    S.loading = true; S.err = false; S.msg = null; render();
+    var q = S.query.trim().toLowerCase();
+    // Встроенная подборка: прямые HTTPS-потоки от самих вещателей.
+    var out = (CURATED[S.cc] || []).slice();
+    if (q) out = out.filter(function (s) { return s.n.toLowerCase().indexOf(q) >= 0; });
+    S.list = out;
+    S.loading = false;
+    S.err = !out.length;
+    if (!S.cur || !out.some(function (s) { return s.id === S.cur.id; })) S.cur = out[0] || null;
+    if (S.cur) store.set('sid', S.cur.id);
+    render();
+    if (S.ovMode) renderOverlay();
+    return Promise.resolve();
   }
 
-  function withCountries(cb) {
-    if (S.countries) { cb(); return; }
-    radioApi('/json/countries').then(function (arr) {
-      S.countries = arr.filter(function (c) { return c.iso_3166_1 && c.stationcount > 0; }).map(function (c) {
-        return { cc: c.iso_3166_1, name: countryName(c.iso_3166_1), count: c.stationcount };
-      }).sort(function (a, b) { return a.name.localeCompare(b.name, 'ru'); });
-      cb();
-    }, function () { S.countries = []; cb(); });
+    function withCountries(cb) {
+    S.countries = CURATED_COUNTRIES.slice();
+    cb();
   }
 
   /* ---------- аудио ---------- */
-  var audio = null, ctx = null, analyser = null, gain = null, curNode = null, fftBuf = null;
+  var audio = null, ctx = null, analyser = null, gain = null, curNode = null, fftBuf = null, hlsPlayer = null;
 
   function ensureCtx() {
     if (!ctx) {
@@ -203,6 +238,7 @@
   }
 
   function dropAudio() {
+    if (hlsPlayer) { try { hlsPlayer.destroy(); } catch (e) {} hlsPlayer = null; }
     if (curNode) { try { curNode.disconnect(); } catch (e) {} curNode = null; }
     if (audio) {
       try { audio.pause(); audio.removeAttribute('src'); audio.load(); } catch (e) {}
@@ -259,7 +295,36 @@
       if (cors) { attempt(st, false, gen); return; }
       fail('ПОТОК НЕДОСТУПЕН — ЖМИТЕ ▶▶');
     });
-    a.src = st.u;
+    var isHls = /\.m3u8(?:$|\?)/i.test(st.u);
+    if (isHls && window.Hls && window.Hls.isSupported()) {
+      try {
+        hlsPlayer = new window.Hls({ enableWorker: true, lowLatencyMode: false, backBufferLength: 30 });
+        hlsPlayer.loadSource(st.u);
+        hlsPlayer.attachMedia(a);
+        hlsPlayer.on(window.Hls.Events.MANIFEST_PARSED, function () {
+          if (gen !== S.gen || a !== audio) return;
+          var hp = a.play();
+          if (hp && hp.catch) hp.catch(function () { if (gen === S.gen && a === audio) fail('НАЖМИТЕ PLAY ДЛЯ ЗАПУСКА'); });
+        });
+        hlsPlayer.on(window.Hls.Events.ERROR, function (_, data) {
+          if (gen !== S.gen || a !== audio || !data || !data.fatal) return;
+          if (data.type === window.Hls.ErrorTypes.NETWORK_ERROR) hlsPlayer.startLoad();
+          else if (data.type === window.Hls.ErrorTypes.MEDIA_ERROR) hlsPlayer.recoverMediaError();
+          else fail('ПОТОК HLS НЕДОСТУПЕН');
+        });
+        render();
+        return;
+      } catch (e) { if (cors) { attempt(st, false, gen); return; } }
+    }
+    if (isHls && a.canPlayType('application/vnd.apple.mpegurl')) {
+      a.src = st.u;
+    } else if (isHls) {
+      if (cors) { attempt(st, false, gen); return; }
+      fail('HLS НЕ ПОДДЕРЖИВАЕТСЯ ЭТИМ БРАУЗЕРОМ');
+      return;
+    } else {
+      a.src = st.u;
+    }
     var p = a.play();
     if (p && p.catch) p.catch(function (e) {
       if (gen !== S.gen || a !== audio) return;
@@ -356,29 +421,41 @@
   /* ---------- погода и время ---------- */
   function city() { return S.cities[S.ci] || S.cities[0]; }
 
+  var weatherSeq = 0;
   function loadWeather() {
-    var c = city();
+    var c = city(), seq = ++weatherSeq;
     S.weather = null; render();
-    var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + c.la + '&longitude=' + c.lo +
-      '&current=temperature_2m,weather_code&timezone=auto';
-    fetchJSON(url, 10000).then(function (j) {
-      if (city() !== c) return;
-      S.weatherRetry = 0;
-      S.weather = {
-        t: Math.round(j.current.temperature_2m),
-        code: j.current.weather_code,
-        off: typeof j.utc_offset_seconds === 'number' ? j.utc_offset_seconds : null
-      };
-      render();
-    }, function () {
-      if (city() !== c) return;
-      S.weather = { t: null, code: null, off: null };
-      render();
-      if (S.weatherRetry < 2) {
-        S.weatherRetry++;
-        setTimeout(function () { if (city() === c && S.weather && S.weather.t === null) loadWeather(); }, 12000);
-      }
-    });
+    var baseUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + encodeURIComponent(c.la) +
+      '&longitude=' + encodeURIComponent(c.lo) + '&timezone=auto';
+    function parseWeather(j) {
+      var cur = j && (j.current || j.current_weather);
+      var temp = cur && (typeof cur.temperature_2m === 'number' ? cur.temperature_2m : cur.temperature);
+      var code = cur && (typeof cur.weather_code === 'number' ? cur.weather_code : cur.weathercode);
+      if (typeof temp !== 'number') throw new Error('weather response incomplete');
+      return { t: Math.round(temp), code: typeof code === 'number' ? code : 0,
+        off: typeof j.utc_offset_seconds === 'number' ? j.utc_offset_seconds : null };
+    }
+    fetchJSON(baseUrl + '&current=temperature_2m,weather_code&forecast_days=1', 12000)
+      .catch(function () {
+        return fetchJSON(baseUrl + '&current_weather=true', 12000);
+      })
+      .then(function (j) {
+        if (seq !== weatherSeq || city() !== c) return;
+        S.weatherRetry = 0;
+        S.weather = parseWeather(j);
+        render();
+      })
+      .catch(function () {
+        if (seq !== weatherSeq || city() !== c) return;
+        S.weather = { t: null, code: null, off: null, error: true };
+        render();
+        if (S.weatherRetry < 3) {
+          S.weatherRetry++;
+          setTimeout(function () {
+            if (seq === weatherSeq && city() === c && S.weather && S.weather.t === null) loadWeather();
+          }, 10000);
+        }
+      });
   }
   function stepCity(d) {
     S.ci = (S.ci + d + S.cities.length) % S.cities.length;
@@ -445,7 +522,7 @@
     setText($('listTab'), 'СПИСОК СТАНЦИЙ · ' + S.list.length);
 
     var c = city(), w = S.weather;
-    setText($('cityVal'), clip(c.n.toUpperCase(), 12));
+    setText($('cityVal'), c.n.toUpperCase());
     setText($('cond'), !w ? 'ЗАГРУЗКА ПОГОДЫ…' : (w.t === null ? 'НЕТ ДАННЫХ' : fmtTemp(w.t) + ' · ' + (WMO[w.code] || '—')));
 
     setText($('volNum'), String(S.vol));
@@ -610,6 +687,7 @@
     var vv = window.visualViewport;
     var w = vv ? vv.width : window.innerWidth, h = vv ? vv.height : window.innerHeight;
     var s = Math.min(w / 390, h / 780, 1.6);
+    if (w < 600) s *= 0.90;
     $('stage').style.transform = 'scale(' + s.toFixed(4) + ')';
   }
   window.addEventListener('resize', fit);

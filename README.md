@@ -43,3 +43,10 @@ python3 -m http.server 8080
 - Сетевые запросы получили тайм-аут и обработку ошибок.
 - Погода повторно запрашивается после временного сбоя.
 - Воспроизведение без CORS остаётся доступным без подключения анализатора эквалайзера.
+
+
+## Radio MAY — curated stations and mobile layout
+- Russian stations expanded: ПИ FM, Маруся FM, Радио Максимум, Радио Рекорд, Пиратская станция, Маяк, Радио России, Звезда, Ваня, Наше Радио, Европа Плюс, Ретро FM, Дорожное Радио, Русское Радио, Серебряный дождь.
+- US and European selection is intentionally compact and focused on known international stations.
+- Added HLS.js playback support for the Maximum stream where the WebView does not support HLS natively.
+- Reduced mobile scale and adjusted the titleplate and weather city typography to prevent overlaps.

@@ -174,3 +174,35 @@
   .btn.sm{width:36px}
 }
 @media (prefers-reduced-motion:reduce){.sw .knob,.btn{transition:none}}
+
+
+/* MAX / узкие мобильные окна: элементы не должны перекрывать друг друга */
+@media (max-width: 430px) {
+  .plate { gap:4px; padding-left:6px; padding-right:6px; }
+  .plate > div { min-width:0; }
+  .plate .name { font-size:20px; line-height:22px; letter-spacing:.5px; overflow:hidden; text-overflow:ellipsis; }
+  .plate .sub { font-size:7px; line-height:9px; letter-spacing:.25px; gap:4px !important; }
+  .plate .sub > span:first-child { overflow:hidden; text-overflow:ellipsis; }
+  .plate .screw { width:8px; height:8px; }
+  .sw { width:44px; height:38px; gap:2px; }
+  .sw .track { width:36px; height:17px; }
+  .sw .knob { width:15px; height:13px; }
+  .app.light .sw .knob { left:19px; }
+  .sw .lab { font-size:8px; line-height:9px; }
+  .weather-row { gap:5px !important; height:56px !important; }
+  .weather-row > div:first-child { width:56% !important; min-width:0; gap:2px !important; }
+  .weather-row .btn.sm { width:31px; min-width:31px; }
+  #cityBtn { padding:3px 4px !important; }
+  #cityVal { font-size:15px; line-height:16px; letter-spacing:0; }
+  #cond { font-size:8px; line-height:9px; letter-spacing:0; }
+  .weather-row > .lcd { padding-left:5px !important; padding-right:5px !important; }
+  .weather-row > .lcd > div[style*="font-size:40px"] { font-size:34px !important; line-height:30px !important; }
+  .weather-row #ss { font-size:18px !important; margin-left:3px !important; }
+}
+@media (max-width: 360px) {
+  .plate .name { font-size:18px; }
+  .plate .sub { font-size:6px; }
+  .sw { width:40px; }
+  .weather-row > div:first-child { width:58% !important; }
+  #cityVal { font-size:13px; }
+}
