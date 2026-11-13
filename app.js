@@ -413,15 +413,71 @@
     });
   }
 
+  /* ---------- шторка уведомлений / Bluetooth (Media Session) ---------- */
+  // Кнопки «вперёд/назад» в шторке и на магнитоле (AVRCP) листают избранное;
+  // если избранное пусто — весь список страны. Станция сразу включается.
+  function stepRemote(d) {
+    var arr = S.favs.length ? S.favs : S.list;
+    if (!arr.length) return;
+    var i = -1;
+    if (S.cur) for (var k = 0; k < arr.length; k++) if (arr[k].id === S.cur.id) { i = k; break; }
+    i = i < 0 ? (d > 0 ? 0 : arr.length - 1) : (i + d + arr.length) % arr.length;
+    selectStation(arr[i], true);
+  }
+
+  function mediaArtwork(name) {
+    var t = String(name || '').toUpperCase();
+    if (t.length > 22) t = t.slice(0, 21) + '…';
+    t = t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">' +
+      '<defs><linearGradient id="r" x1="0" x2="1"><stop offset="0" stop-color="#ff5a36"/><stop offset=".35" stop-color="#f7b32b"/><stop offset=".7" stop-color="#5dd36f"/><stop offset="1" stop-color="#2f8fe0"/></linearGradient>' +
+      '<radialGradient id="g" cx=".5" cy=".4" r=".8"><stop offset="0" stop-color="#2a2d33"/><stop offset="1" stop-color="#14161a"/></radialGradient></defs>' +
+      '<rect width="512" height="512" fill="url(#g)"/>' +
+      '<rect x="28" y="92" width="456" height="328" rx="24" fill="#23262b" stroke="#4b5059" stroke-width="6"/>' +
+      '<rect x="52" y="114" width="408" height="156" rx="10" fill="#f1e6c6"/>' +
+      '<rect x="52" y="114" width="408" height="16" rx="8" fill="url(#r)"/>' +
+      '<circle cx="82" cy="164" r="16" fill="none" stroke="#3a2a1c" stroke-width="3"/>' +
+      '<text x="82" y="171" text-anchor="middle" font-family="sans-serif" font-size="20" font-weight="700" fill="#3a2a1c">A</text>' +
+      '<text x="270" y="176" text-anchor="middle" font-family="Impact,Arial Black,sans-serif" font-size="38" letter-spacing="5" fill="#3a2a1c">РАДИО МАЙ</text>' +
+      '<rect x="68" y="196" width="376" height="42" rx="6" fill="#e3d3a0"/>' +
+      '<text x="256" y="226" text-anchor="middle" font-family="Courier New,monospace" font-size="26" font-weight="700" fill="#3a2a1c">' + t + '</text>' +
+      '<rect x="76" y="278" width="360" height="116" rx="16" fill="#0c0d0f" stroke="#2f3338" stroke-width="3"/>' +
+      '<g transform="translate(180 336)"><circle r="40" fill="#6b4a37"/><circle r="22" fill="#f4f4f4"/><circle r="9" fill="#14161a"/></g>' +
+      '<g transform="translate(332 336)"><circle r="40" fill="#6b4a37"/><circle r="22" fill="#f4f4f4"/><circle r="9" fill="#14161a"/></g>' +
+      '<path d="M150 372 L180 376 L332 376 L362 372" stroke="#6b4a37" stroke-width="4" fill="none"/>' +
+      '<circle cx="46" cy="106" r="5" fill="#9aa0a8"/><circle cx="466" cy="106" r="5" fill="#9aa0a8"/><circle cx="46" cy="406" r="5" fill="#9aa0a8"/><circle cx="466" cy="406" r="5" fill="#9aa0a8"/>' +
+      '</svg>';
+    return [{ src: 'data:image/svg+xml;utf8,' + encodeURIComponent(svg), sizes: '512x512', type: 'image/svg+xml' }];
+  }
+
+  var msKey = null, msState = null, msBound = false;
   function updateMediaSession() {
-    if (!('mediaSession' in navigator) || !S.cur) return;
+    if (!('mediaSession' in navigator)) return;
+    var ms = navigator.mediaSession;
     try {
-      navigator.mediaSession.metadata = new MediaMetadata({ title: S.cur.n, artist: 'Радио Май · ' + countryName(S.cc) });
-      navigator.mediaSession.setActionHandler('play', doPlay);
-      navigator.mediaSession.setActionHandler('pause', doPause);
-      navigator.mediaSession.setActionHandler('stop', doStop);
-      navigator.mediaSession.setActionHandler('previoustrack', function () { stepStation(-1); });
-      navigator.mediaSession.setActionHandler('nexttrack', function () { stepStation(1); });
+      if (!msBound) {
+        msBound = true;
+        var bind = function (name, fn) { try { ms.setActionHandler(name, fn); } catch (e) {} };
+        bind('play', doPlay);
+        bind('pause', doPause);
+        bind('stop', doStop);
+        bind('previoustrack', function () { stepRemote(-1); });
+        bind('nexttrack', function () { stepRemote(1); });
+      }
+      if (S.cur) {
+        var key = S.cur.id + '|' + S.cc;
+        if (key !== msKey) {
+          msKey = key;
+          ms.metadata = new MediaMetadata({
+            title: S.cur.n,
+            artist: 'Радио Май · ' + countryName(S.cc),
+            album: S.favs.length ? 'Избранное' : 'Радио',
+            artwork: mediaArtwork(S.cur.n)
+          });
+        }
+      }
+      var state = S.status === 'play' ? 'playing' : (S.status === 'pause' ? 'paused' : 'none');
+      if (state !== msState) { msState = state; ms.playbackState = state; }
     } catch (e) {}
   }
 
@@ -589,6 +645,7 @@
 
   function render() {
     var st = S.status;
+    updateMediaSession();
     setCls($('app'), 'app ' + S.theme + ' s-' + st);
     setCls(document.body, S.theme);
     setText($('themeLabel'), S.theme === 'dark' ? 'НОЧЬ' : 'ДЕНЬ');
