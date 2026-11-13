@@ -125,6 +125,9 @@
     favs: store.get('favs', []) || []
   };
   if (!Array.isArray(S.favs)) S.favs = [];
+  // Внутри Android-приложения звук играет нативный плеер (шторка, Bluetooth, магнитола)
+  var NATIVE = !!window.RadioAndroid;
+  function nat(fn) { if (!NATIVE) return; try { fn(window.RadioAndroid); } catch (e) {} }
   if (S.ci >= S.cities.length || S.ci < 0) S.ci = 0;
   if (S.theme !== 'dark' && S.theme !== 'light') S.theme = 'dark';
 
@@ -288,6 +291,7 @@
   }
 
   function stopStream() {
+    nat(function (R) { R.pause(); });
     releaseScreenWakeLock();
     S.gen++;
     S.playing = false;
@@ -295,7 +299,29 @@
     dropAudio();
   }
 
+  var natKey = '';
+  function nativeSync(force, play) {
+    if (!NATIVE || !S.cur) return;
+    var arr = stepArr();
+    if (favIdxIn(arr, S.cur) < 0) arr = [S.cur];
+    var key = arr.map(function (x) { return x.id; }).join(',') + '|' + S.cur.id;
+    if (!force && key === natKey) return;
+    natKey = key;
+    var json = JSON.stringify(arr.map(function (x) { return { id: x.id, n: x.n, u: x.u }; }));
+    var sub = 'Радио Май · ' + (S.favCtx && arr === S.favs ? 'Избранное' : countryName(S.cc));
+    nat(function (R) { R.setQueue(json, S.cur.id, !!play, sub); });
+  }
+  function favIdxIn(arr, st) { for (var k = 0; k < arr.length; k++) if (arr[k].id === st.id) return k; return -1; }
+
   function startStream() {
+    if (NATIVE) {
+      S.gen++; S.playing = false; S.eqLive = false;
+      if (!S.cur) return;
+      S.msg = 'ЗАГРУЗКА…';
+      nat(function (R) { R.setVolume(S.vol / 100); });
+      nativeSync(true, true);
+      return;
+    }
     stopStream();
     if (!S.cur) return;
     requestScreenWakeLock();
@@ -348,13 +374,14 @@
   }
 
   function fail(text) {
-    stopStream();
+    stopStream(); nat(function (R) { R.stop(); });
     S.status = 'stop'; S.elapsed = 0; S.msg = text;
     render();
   }
 
   function setVol(v) {
     S.vol = v; store.set('vol', v);
+    nat(function (R) { R.setVolume(v / 100); });
     if (gain) { try { gain.gain.value = v / 100; } catch (e) {} }
     if (audio && !curNode) { try { audio.volume = v / 100; } catch (e) {} }
     render();
@@ -374,21 +401,29 @@
     else if (S.status === 'pause') doPlay();
   }
   function doStop() {
-    stopStream(); S.status = 'stop'; S.elapsed = 0; S.msg = null; render();
+    stopStream(); nat(function (R) { R.stop(); }); S.status = 'stop'; S.elapsed = 0; S.msg = null; render();
   }
-  function selectStation(st, autoplay) {
+  function selectStation(st, autoplay, ctx) {
+    if (ctx) S.favCtx = ctx === 'fav';
     S.cur = st; S.elapsed = 0; S.msg = null;
     if (st) store.set('sid', st.id);
     if (autoplay) { S.status = 'play'; startStream(); }
     else if (S.status === 'play') startStream();
     render();
   }
-  function stepStation(d) {
-    if (!S.list.length) return;
+  // Список для переключения: если играет станция из избранного (запущена из
+  // вкладки «Избранное») — листаем только избранное, иначе весь список страны.
+  function stepArr() {
+    if (S.favCtx && S.favs.length && S.cur && favIndex(S.cur) >= 0) return S.favs;
+    return S.list;
+  }
+  function stepStation(d, autoplay) {
+    var arr = stepArr();
+    if (!arr.length) return;
     var i = -1;
-    if (S.cur) for (var k = 0; k < S.list.length; k++) if (S.list[k].id === S.cur.id) { i = k; break; }
-    i = i < 0 ? 0 : (i + d + S.list.length) % S.list.length;
-    selectStation(S.list[i], false);
+    if (S.cur) for (var k = 0; k < arr.length; k++) if (arr[k].id === S.cur.id) { i = k; break; }
+    i = i < 0 ? (d > 0 ? 0 : arr.length - 1) : (i + d + arr.length) % arr.length;
+    selectStation(arr[i], !!autoplay);
   }
 
   function setCountry(cc) {
@@ -414,16 +449,9 @@
   }
 
   /* ---------- шторка уведомлений / Bluetooth (Media Session) ---------- */
-  // Кнопки «вперёд/назад» в шторке и на магнитоле (AVRCP) листают избранное;
-  // если избранное пусто — весь список страны. Станция сразу включается.
-  function stepRemote(d) {
-    var arr = S.favs.length ? S.favs : S.list;
-    if (!arr.length) return;
-    var i = -1;
-    if (S.cur) for (var k = 0; k < arr.length; k++) if (arr[k].id === S.cur.id) { i = k; break; }
-    i = i < 0 ? (d > 0 ? 0 : arr.length - 1) : (i + d + arr.length) % arr.length;
-    selectStation(arr[i], true);
-  }
+  // Кнопки «вперёд/назад» в шторке и на магнитоле (AVRCP) переключают станции
+  // в том же списке, что и экранные кнопки. Станция сразу включается.
+  function stepRemote(d) { stepStation(d, true); }
 
   function mediaArtwork(name) {
     var t = String(name || '').toUpperCase();
@@ -646,6 +674,7 @@
   function render() {
     var st = S.status;
     updateMediaSession();
+    nativeSync(false, false);
     setCls($('app'), 'app ' + S.theme + ' s-' + st);
     setCls(document.body, S.theme);
     setText($('themeLabel'), S.theme === 'dark' ? 'НОЧЬ' : 'ДЕНЬ');
@@ -771,7 +800,7 @@
       if (!S.favs.length) frag.appendChild(mkInfo('НАЖМИТЕ ♡ У СТАНЦИИ'));
       S.favs.forEach(function (s, i) {
         frag.appendChild(mkRow(p2(i + 1) + '.', s.n, s.b ? s.b + 'K' : '', !!(S.cur && S.cur.id === s.id), function () {
-          closeOverlay(); selectStation(s, true);
+          closeOverlay(); selectStation(s, true, 'fav');
         }, s));
       });
     } else if (m === 'stations') {
@@ -781,7 +810,7 @@
       else if (!S.list.length) frag.appendChild(mkInfo('НЕТ СОВПАДЕНИЙ'));
       else S.list.forEach(function (s, i) {
         frag.appendChild(mkRow(p2(i + 1) + '.', s.n, s.b ? s.b + 'K' : '', !!(S.cur && S.cur.id === s.id), function () {
-          closeOverlay(); selectStation(s, true);
+          closeOverlay(); selectStation(s, true, 'all');
         }, s));
       });
     } else if (m === 'country') {
@@ -1038,6 +1067,32 @@
   }, 1000);
   setInterval(function () { if (S.weather && S.weather.t !== null) loadWeather(); }, 600000);
 
+  /* ---------- мост с Android-плеером ---------- */
+  window.__radio = {
+    onState: function (st) {
+      if (S.status !== 'play') return;
+      if (st === 'playing') { S.playing = true; S.msg = null; }
+      else if (st === 'buffering') { S.playing = false; S.msg = 'БУФЕРИЗАЦИЯ…'; }
+      else if (st === 'error') { fail('ПОТОК НЕДОСТУПЕН — ЖМИТЕ ▶▶'); return; }
+      render();
+    },
+    onItem: function (id) {                       // станцию переключили из шторки / с магнитолы
+      if (S.cur && S.cur.id === id) return;
+      var arr = stepArr(), f = null;
+      for (var k = 0; k < arr.length; k++) if (arr[k].id === id) f = arr[k];
+      if (!f) return;
+      S.cur = f; S.elapsed = 0; S.playing = false; S.status = 'play'; S.msg = null;
+      store.set('sid', f.id);
+      render();
+    },
+    onCmd: function (c) {
+      if (c === 'pause' && S.status === 'play') doPause();
+      else if (c === 'play' && S.status !== 'play') doPlay();
+      else if (c === 'stop' && S.status !== 'stop') doStop();
+    }
+  };
+  nat(function (R) { R.reset(); R.setVolume(S.vol / 100); });
+
   /* ---------- старт ---------- */
   render();
   loadWeather();
@@ -1046,6 +1101,7 @@
     if (sid) for (var i = 0; i < S.list.length; i++) if (S.list[i].id === sid) found = S.list[i];
     S.cur = found || S.list[0] || null;
     if (S.cur) store.set('sid', S.cur.id);
+    S.favCtx = !!(S.cur && favIndex(S.cur) >= 0);
     render();
   });
 })();
