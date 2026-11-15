@@ -7,8 +7,8 @@
 <title>Радио Май</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Russo+One&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=genre3">
-<link rel="stylesheet" href="app.css?v=genre3">
+<link rel="stylesheet" href="style.css?v=fav2">
+<link rel="stylesheet" href="app.css?v=fav2">
 <script src="https://st.max.ru/js/max-web-app.js"></script>
 </head>
 <body class="dark">
@@ -201,26 +201,15 @@
     <button class="btn favbtn" id="btnFav" aria-label="Добавить в избранное" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C1 8.3 3 5 6.3 5c2 0 3.7 1.1 5.7 3.3C14 6.1 15.7 5 17.7 5 21 5 23 8.3 21.6 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
   </div>
 
-  <!-- GENRES + SEARCH -->
+  <!-- COUNTRY + SEARCH -->
   <div style="display:flex;gap:8px;height:46px;flex:none">
-    <div class="lcd genre-strip" id="genreStrip" aria-label="Выбор жанра">
-      <button type="button" class="genre-chip active" data-genre="ALL">ВСЕ</button>
-      <button type="button" class="genre-chip" data-genre="ROCK">РОК</button>
-      <button type="button" class="genre-chip" data-genre="POP">ПОП</button>
-      <button type="button" class="genre-chip" data-genre="JAZZ">ДЖАЗ</button>
-      <button type="button" class="genre-chip" data-genre="NEWS">НОВОСТИ</button>
-      <button type="button" class="genre-chip" data-genre="ELECTRONIC">ЭЛЕКТРО</button>
-      <button type="button" class="genre-chip" data-genre="DANCE">ТАНЦЫ</button>
-      <button type="button" class="genre-chip" data-genre="RETRO">РЕТРО</button>
-      <button type="button" class="genre-chip" data-genre="CLASSICAL">КЛАССИКА</button>
-      <button type="button" class="genre-chip" data-genre="HIPHOP">ХИП-ХОП</button>
-      <button type="button" class="genre-chip" data-genre="REGGAE">РЕГГИ</button>
-      <button type="button" class="genre-chip" data-genre="FOLK">ФОЛК</button>
-      <button type="button" class="genre-chip" data-genre="LATIN">ЛАТИНА</button>
-      <button type="button" class="genre-chip" data-genre="AMBIENT">ЧИЛЛ-АУТ</button>
-      <button type="button" class="genre-chip" data-genre="COUNTRY">КАНТРИ</button>
-      <button type="button" class="genre-chip" data-genre="TALK">РАЗГОВОРНОЕ</button>
-      <button type="button" class="genre-chip" data-genre="OTHER">ДРУГОЕ</button>
+    <div style="width:214px;display:flex;gap:3px">
+      <button class="btn sm" id="btnCtryPrev" aria-label="Предыдущий жанр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L7 12l8 7z"/></svg></button>
+      <button class="lcd lcdbtn" id="ctryBtn" aria-label="Текущий жанр" style="flex:1;min-width:0;padding:4px 6px;display:flex;flex-direction:column;justify-content:center">
+        <span class="dl" id="ctryCode">ЖАНР</span>
+        <span class="val" id="ctryName">—</span>
+      </button>
+      <button class="btn sm" id="btnCtryNext" aria-label="Следующий жанр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l8 7-8 7z"/></svg></button>
     </div>
     <div class="lcd" style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;padding:0 8px">
       <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;position:relative;z-index:1;color:var(--lcd-on)"><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
@@ -269,6 +258,6 @@
 
 </div>
 </div>
-<script src="app.js?v=genre3"></script>
+<script src="app.js?v=fav2"></script>
 </body>
 </html>

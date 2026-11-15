@@ -114,9 +114,10 @@
     msg: null,
     theme: store.get('theme', 'dark'),
     vol: store.get('vol', 72),
-    cc: 'RU',
-    list: [], cur: null, query: '', genre: 'ALL', elapsed: 0,
+    cc: 'RU', genre: store.get('genre', 0),
+    list: [], catalog: [], cur: null, query: '', elapsed: 0,
     loading: true, err: false,
+    countries: null,
     cities: store.get('cities', null) || DEFAULT_CITIES.slice(),
     ci: store.get('ci', 0),
     weather: null, geo: [], geoBusy: false,
@@ -124,15 +125,7 @@
     favs: store.get('favs', []) || []
   };
   if (!Array.isArray(S.favs)) S.favs = [];
-  var INTERNATIONAL_RANKS = { GB: [6,10,12,14,26,39,52], US: [3,5,9,10,12,16,17,36,43,60,61,64,67] };
-  var GENRES = [
-    {id:'ALL', label:'ВСЕ'}, {id:'ROCK',label:'РОК'}, {id:'POP',label:'ПОП'},
-    {id:'JAZZ',label:'ДЖАЗ'}, {id:'NEWS',label:'НОВОСТИ'}, {id:'ELECTRONIC',label:'ЭЛЕКТРО'},
-    {id:'DANCE',label:'ТАНЦЕВАЛЬНАЯ'}, {id:'RETRO',label:'РЕТРО'}, {id:'CLASSICAL',label:'КЛАССИКА'},
-    {id:'HIPHOP',label:'ХИП-ХОП'}, {id:'REGGAE',label:'РЕГГИ'}, {id:'FOLK',label:'ФОЛК'},
-    {id:'LATIN',label:'ЛАТИНА'}, {id:'AMBIENT',label:'ЧИЛЛ-АУТ'}, {id:'COUNTRY',label:'КАНТРИ'},
-    {id:'TALK',label:'РАЗГОВОРНОЕ'}, {id:'OTHER',label:'ДРУГОЕ'}
-  ];
+  if (typeof S.genre !== 'number' || S.genre < 0 || S.genre >= 9) S.genre = 0;
   // Внутри Android-приложения звук играет нативный плеер (шторка, Bluetooth, магнитола)
   var NATIVE = !!window.RadioAndroid;
   function nat(fn) { if (!NATIVE) return; try { fn(window.RadioAndroid); } catch (e) {} }
@@ -183,77 +176,61 @@
     return merged.slice(0, 120);
   }
 
-  function stationGenres(st) {
-    var raw = ((st.tags || '') + ' ' + (st.n || '')).toLowerCase();
-    var out = [];
-    function add(id, re) { if (re.test(raw)) out.push(id); }
-    add('ROCK', /(rock|metal|punk|grunge|альтернатив|рок|метал|панк)/);
-    add('POP', /(pop|hits|hit|top.?40|поп|хит|хиты)/);
-    add('JAZZ', /(jazz|blues|джаз|блюз)/);
-    add('NEWS', /(news|новост|информ|радио.?свобод|business.?news)/);
-    add('ELECTRONIC', /(electro|electronic|techno|trance|house|deep|drum.?and.?bass|драм|техно|транс|электрон)/);
-    add('DANCE', /(dance|disco|club|дискотек|танцев|клуб)/);
-    add('RETRO', /(retro|oldies|80s|90s|70s|ретро|восьмидесят|девяност)/);
-    add('CLASSICAL', /(classic|classical|opera|классик|опера)/);
-    add('HIPHOP', /(hip.?hop|rap|рэп|хип.?хоп)/);
-    add('REGGAE', /(reggae|ska|регги|ска)/);
-    add('FOLK', /(folk|ethnic|world music|фолк|народн|этно)/);
-    add('LATIN', /(latin|salsa|bossa|латин|сальса)/);
-    add('AMBIENT', /(ambient|chill.?out|lounge|new age|эмбиент|лаунж|чилл)/);
-    add('COUNTRY', /(country|кантри)/);
-    add('TALK', /(talk|speech|spoken|разговор|подкаст|юмор)/);
-    if (!out.length) out.push('OTHER');
-    return out;
+  var GENRES = ['ВСЕ','РОК','ПОП','ДЖАЗ','НОВОСТИ','ЭЛЕКТРОННАЯ МУЗЫКА','РЕТРО','КЛАССИКА','ДРУГИЕ'];
+  var UK_POS = [6,10,12,14,26,39,52], US_POS = [3,5,9,10,12,16,17,36,43,60,61,64,67];
+  function classifyStation(st) {
+    var t = ((st.n || '') + ' ' + (st.tags || '')).toLowerCase();
+    var g = [];
+    if (/news|новост|talk|говор|information/.test(t)) g.push('НОВОСТИ');
+    if (/rock|рок|metal|punk|alternative/.test(t)) g.push('РОК');
+    if (/pop|поп|hit|хит|top40|эстрад/.test(t)) g.push('ПОП');
+    if (/jazz|джаз|blues|блюз|swing/.test(t)) g.push('ДЖАЗ');
+    if (/electro|electronic|dance|house|techno|trance|club|диско|танцев/.test(t)) g.push('ЭЛЕКТРОННАЯ МУЗЫКА');
+    if (/retro|ретро|80s|90s|oldies|дискотек/.test(t)) g.push('РЕТРО');
+    if (/classical|классик|орга?n|symphony/.test(t)) g.push('КЛАССИКА');
+    if (!g.length) g.push('ДРУГИЕ');
+    return g;
   }
-  function normalizeStation(s, cc, rank) {
-    var u = s.url_resolved || '';
-    var nm = (s.name || '').replace(/\s+/g, ' ').trim();
-    if (!/^https:\/\//i.test(u) || s.hls || !nm) return null;
-    var st = { id: s.stationuuid || (cc + '-' + rank), n: nm, u: u, b: s.bitrate || 0,
-      c: (s.codec || '').toUpperCase(), cc: cc, tags: s.tags || '', rank: rank };
-    st.genres = stationGenres(st);
-    return st;
+  function stationFromApi(s, cc) {
+    var u=s.url_resolved||'';
+    if (!/^https:\/\//i.test(u) || s.hls) return null;
+    var n=(s.name||'').replace(/\s+/g,' ').trim();
+    if (!n) return null;
+    var st={id:s.stationuuid||('radio-'+cc+'-'+encodeURIComponent(u)),n:n,u:u,b:s.bitrate||0,c:(s.codec||'').toUpperCase(),cc:cc,tags:s.tags||''};
+    st.genres=classifyStation(st); return st;
   }
-  var loadSeq = 0;
+  var loadSeq=0;
+  function fetchCountry(cc, limit) {
+    var path='/json/stations/search?countrycode='+cc+'&hidebroken=true&order=clickcount&reverse=true&limit='+limit+'&is_https=true';
+    return radioApi(path).then(function(a){ return (a||[]).map(function(s){return stationFromApi(s,cc);}).filter(Boolean); });
+  }
   function loadList() {
-    var seq = ++loadSeq;
-    S.loading = true; S.err = false;
-    var cached = store.get('stations_INT', []);
-    if (!S.list.length && cached && cached.length) S.list = cached;
-    render();
-    function countryRequest(cc, limit) {
-      var path = '/json/stations/search?countrycode=' + cc +
-        '&hidebroken=true&order=clickcount&reverse=true&limit=' + limit + '&is_https=true';
-      return radioApi(path).then(function(arr) {
-        return (arr || []).map(function(x, i) { return normalizeStation(x, cc, i + 1); });
-      });
-    }
-    return Promise.all([
-      countryRequest('RU', 120).catch(function(){ return []; }),
-      countryRequest('GB', 70).catch(function(){ return []; }),
-      countryRequest('US', 70).catch(function(){ return []; })
-    ]).then(function(groups) {
-        if (seq !== loadSeq) return;
-        var ru = mergeFeatured(groups[0].filter(Boolean), '').map(function(st) { st.cc = 'RU'; st.genres = stationGenres(st); return st; });
-        var intl = [];
-        [['GB', groups[1]], ['US', groups[2]]].forEach(function(pair) {
-          var cc = pair[0], list = pair[1], wanted = INTERNATIONAL_RANKS[cc];
-          wanted.forEach(function(pos) { var st = list[pos - 1]; if (st) intl.push(st); });
-        });
-        var seen = {}, combined = [];
-        ru.concat(intl).forEach(function(st) { if (!seen[st.u]) { seen[st.u] = true; combined.push(st); } });
-        S.list = combined;
-        store.set('stations_INT', S.list);
-        S.loading = false; S.err = !groups[0].length && !groups[1].length && !groups[2].length;
-        render(); if (S.ovMode) renderOverlay();
-      }, function() {
-        if (seq !== loadSeq) return;
-        S.loading = false; S.err = true;
-        S.list = cached && cached.length ? cached : S.list;
-        render(); if (S.ovMode) renderOverlay();
-      });
+    var seq=++loadSeq; S.loading=true; S.err=false; render();
+    return Promise.all([fetchCountry('RU',500),fetchCountry('GB',120),fetchCountry('US',120)]).then(function(parts){
+      if(seq!==loadSeq)return;
+      var ru=FEATURED_STATIONS.map(function(st){var x={id:st.id,n:st.n,u:st.u,b:st.b,c:st.c,cc:'RU',tags:st.n};x.genres=classifyStation(x);return x;}).concat(parts[0]), uk=UK_POS.map(function(n){return parts[1][n-1];}).filter(Boolean),
+          us=US_POS.map(function(n){return parts[2][n-1];}).filter(Boolean);
+      var seen={}, all=[];
+      ru.concat(uk,us).forEach(function(st){if(!st||seen[st.id])return;seen[st.id]=1;all.push(st);});
+      S.catalog=all;
+      S.list=all.filter(function(st){var g=GENRES[S.genre]||'ВСЕ'; return (g==='ВСЕ'||(st.genres||[]).indexOf(g)>=0) && (!S.query || st.n.toLowerCase().indexOf(S.query.toLowerCase())>=0);});
+      store.set('stations_catalog',S.catalog); store.set('stations_RU',S.list);
+      S.loading=false; S.err=false;
+      if(S.cur && !S.list.some(function(x){return x.id===S.cur.id;})) { /* не сбрасываем текущий поток */ }
+      render(); if(S.ovMode)renderOverlay();
+    }).catch(function(){
+      if(seq!==loadSeq)return;
+      S.catalog=store.get('stations_catalog',[])||[];
+      S.list=S.catalog.filter(function(st){var g=GENRES[S.genre]||'ВСЕ'; return (g==='ВСЕ'||(st.genres||[]).indexOf(g)>=0) && (!S.query||st.n.toLowerCase().indexOf(S.query.toLowerCase())>=0);});
+      S.loading=false; S.err=!S.list.length; render(); if(S.ovMode)renderOverlay();
+    });
   }
-
+  function stepGenre(d) {
+    S.genre=(S.genre+d+GENRES.length)%GENRES.length; store.set('genre',S.genre);
+    var g=GENRES[S.genre], filtered=S.catalog.filter(function(st){return g==='ВСЕ'||(st.genres||classifyStation(st)).indexOf(g)>=0;});
+    S.list=filtered.filter(function(st){return !S.query||st.n.toLowerCase().indexOf(S.query.toLowerCase())>=0;});
+    render(); if(S.ovMode)renderOverlay();
+  }
   /* ---------- предотвращение выключения экрана ---------- */
   var screenWakeLock = null;
   var wakeLockWanted = false;
@@ -282,8 +259,8 @@
   }
 
   document.addEventListener('visibilitychange', function () {
-    if (document.visibilityState === 'visible') {
-      if (wakeLockWanted && S.status === 'play') requestScreenWakeLock();
+    if (document.visibilityState === 'visible' && wakeLockWanted && S.status === 'play') {
+      requestScreenWakeLock();
     }
   });
 
@@ -336,7 +313,7 @@
     if (!force && key === natKey) return;
     natKey = key;
     var json = JSON.stringify(arr.map(function (x) { return { id: x.id, n: x.n, u: x.u }; }));
-    var sub = 'Радио Май · ' + (S.favCtx && arr === S.favs ? 'Избранное' : 'МЕЖДУНАРОДНЫЙ КАТАЛОГ');
+    var sub = 'Радио Май · ' + (S.favCtx && arr === S.favs ? 'Избранное' : (S.cur.cc || 'RU'));
     nat(function (R) { R.setQueue(json, S.cur.id, !!play, sub); });
   }
   function favIdxIn(arr, st) { for (var k = 0; k < arr.length; k++) if (arr[k].id === st.id) return k; return -1; }
@@ -361,13 +338,23 @@
   function attempt(st, cors, gen) {
     dropAudio();
     var a = new Audio();
-    // Оставляем поток прямым HTMLAudioElement: WebAudio-граф может быть
-    // приостановлен WebView при сворачивании и обрывать слышимый звук.
-    // Эквалайзер в этом режиме работает в безопасном SIM-режиме.
+    if (cors) a.crossOrigin = 'anonymous';
     a.preload = 'none';
     audio = a;
     S.eqLive = false;
-    a.volume = S.vol / 100;
+    var wired = false;
+    if (cors) {
+      ensureCtx();
+      if (ctx && analyser) {
+        try {
+          curNode = ctx.createMediaElementSource(a);
+          curNode.connect(analyser);
+          wired = true;
+          S.eqLive = true;
+        } catch (e) { curNode = null; }
+      }
+    }
+    a.volume = wired ? 1 : S.vol / 100;
 
     a.addEventListener('playing', function () {
       if (gen !== S.gen || a !== audio) return;
@@ -433,8 +420,7 @@
   // вкладки «Избранное») — листаем только избранное, иначе весь список страны.
   function stepArr() {
     if (S.favCtx && S.favs.length && S.cur && favIndex(S.cur) >= 0) return S.favs;
-    if (S.genre === 'ALL') return S.list;
-    return S.list.filter(function(st) { return (st.genres || stationGenres(st)).indexOf(S.genre) >= 0; });
+    return S.list;
   }
   function stepStation(d, autoplay) {
     var arr = stepArr();
@@ -443,28 +429,6 @@
     if (S.cur) for (var k = 0; k < arr.length; k++) if (arr[k].id === S.cur.id) { i = k; break; }
     i = i < 0 ? (d > 0 ? 0 : arr.length - 1) : (i + d + arr.length) % arr.length;
     selectStation(arr[i], !!autoplay);
-  }
-
-  function setCountry(cc) {
-    if (cc === S.cc && S.list.length) return;
-    S.cc = cc; store.set('cc', cc); store.set('sid', null);
-    S.query = ''; $('q').value = ''; S.cur = null;
-    loadList().then(function () {
-      S.cur = S.list[0] || null;
-      if (S.cur) store.set('sid', S.cur.id);
-      if (S.status === 'play' && S.cur) startStream(); else if (!S.cur) { stopStream(); S.status = 'stop'; }
-      render();
-    });
-  }
-  function stepCountry(d) {
-    withCountries(function () {
-      var arr = S.countries || [];
-      if (!arr.length) return;
-      var i = -1;
-      for (var k = 0; k < arr.length; k++) if (arr[k].cc === S.cc) { i = k; break; }
-      i = i < 0 ? 0 : (i + d + arr.length) % arr.length;
-      setCountry(arr[i].cc);
-    });
   }
 
   /* ---------- шторка уведомлений / Bluetooth (Media Session) ---------- */
@@ -517,7 +481,7 @@
           msKey = key;
           ms.metadata = new MediaMetadata({
             title: S.cur.n,
-            artist: 'Радио Май · ' + 'МЕЖДУНАРОДНЫЙ КАТАЛОГ',
+            artist: 'Радио Май · ' + (S.cur.cc || 'RU'),
             album: S.favs.length ? 'Избранное' : 'Радио',
             artwork: mediaArtwork(S.cur.n)
           });
@@ -715,7 +679,7 @@
     var cur = S.cur;
     setText($('infoBitrate'), cur && cur.b ? cur.b + ' KBPS' : '— KBPS');
     setText($('infoCodec'), cur ? ((cur.c || 'STREAM') + (S.playing ? (S.eqLive ? ' · FFT' : ' · SIM') : '')) : '—');
-    setText($('infoCountry'), 'RU · UK · USA');
+    setText($('infoCountry'), cur ? (cur.cc || 'RU') + ' · ' + (cur.cc === 'GB' ? 'ВЕЛИКОБРИТАНИЯ' : cur.cc === 'US' ? 'США' : 'РОССИЯ') : '—');
 
     var name = cur ? cur.n : (S.loading ? 'ЗАГРУЗКА…' : (S.err ? 'НЕТ СВЯЗИ' : 'НЕТ СТАНЦИЙ'));
     var mq;
@@ -724,13 +688,14 @@
     else if (S.err && !cur) mq = 'НЕТ СВЯЗИ С КАТАЛОГОМ РАДИОСТАНЦИЙ';
     else if (!cur) mq = 'СТАНЦИИ НЕ НАЙДЕНЫ';
     else if (st === 'stop') mq = 'НАЖМИТЕ PLAY · ' + name;
-    else mq = (cur.cc || 'RU') + ' — ' + name + (cur.b ? ' · ' + cur.b + ' KBPS' : '');
+    else mq = (cur && cur.cc ? cur.cc : 'RU') + ' — ' + name + (cur.b ? ' · ' + cur.b + ' KBPS' : '');
     mq = mq.toUpperCase();
     setText($('mq1'), mq); setText($('mq2'), mq);
     setText($('stationLabel'), clip(name, 34));
     $('cassette').setAttribute('aria-label', 'Аудиокассета Радио Май: ' + name);
 
-    Array.prototype.forEach.call($('genreStrip').querySelectorAll('[data-genre]'), function(x) { x.classList.toggle('active', x.getAttribute('data-genre') === S.genre); });
+    setText($('ctryCode'), 'МУЗЫКАЛЬНЫЙ ЖАНР');
+    setText($('ctryName'), GENRES[S.genre] || 'ВСЕ');
     setText($('listTab'), 'СПИСОК СТАНЦИЙ · ' + S.list.length);
 
     var c = city(), w = S.weather;
@@ -757,7 +722,7 @@
   function tickClock() {
     var k = clockParts();
     setText($('hh'), k.h); setText($('mm'), k.m); setText($('ss'), k.s);
-    setText($('clkLabel'), k.city ? 'ВРЕМЯ · ' + clip(city().n.toUpperCase(), 11) : 'ВРЕМЯ');
+    setText($('clkLabel'), 'ЧАСЫ');
   }
 
   /* ---------- оверлей (станции / страны / города) ---------- */
@@ -822,21 +787,26 @@
         }, s));
       });
     } else if (m === 'stations') {
-      title.textContent = 'РАДИОСТАНЦИИ · ' + (GENRES.find(function(g){return g.id===S.genre;}) || GENRES[0]).label + (S.query ? ' · «' + S.query.toUpperCase() + '»' : '');
-      var visibleStations = S.list.filter(function(st) {
-        var q = S.query.trim().toLowerCase();
-        var textMatch = !q || (st.n + ' ' + (st.tags || '')).toLowerCase().indexOf(q) >= 0;
-        var genreMatch = S.genre === 'ALL' || (st.genres || stationGenres(st)).indexOf(S.genre) >= 0;
-        return textMatch && genreMatch;
-      });
-      if (S.loading && !S.list.length) frag.appendChild(mkInfo('ЗАГРУЗКА…'));
-      else if (S.err && !S.list.length) frag.appendChild(mkInfo('НЕТ СВЯЗИ С КАТАЛОГОМ'));
-      else if (!visibleStations.length) frag.appendChild(mkInfo('НЕТ СОВПАДЕНИЙ'));
-      else visibleStations.forEach(function (s, i) {
+      title.textContent = 'ЖАНР: ' + (GENRES[S.genre] || 'ВСЕ') + (S.query ? ' · «' + S.query.toUpperCase() + '»' : '');
+      if (S.loading) frag.appendChild(mkInfo('ЗАГРУЗКА…'));
+      else if (S.err) frag.appendChild(mkInfo('НЕТ СВЯЗИ С КАТАЛОГОМ'));
+      else if (!S.list.length) frag.appendChild(mkInfo('НЕТ СОВПАДЕНИЙ'));
+      else S.list.forEach(function (s, i) {
         frag.appendChild(mkRow(p2(i + 1) + '.', s.n, s.b ? s.b + 'K' : '', !!(S.cur && S.cur.id === s.id), function () {
           closeOverlay(); selectStation(s, true, 'all');
         }, s));
       });
+    } else if (m === 'country') {
+      title.textContent = 'ВЫБОР СТРАНЫ';
+      var f = q.value.trim().toLowerCase();
+      if (!S.countries) frag.appendChild(mkInfo('ЗАГРУЗКА…'));
+      else {
+        var arr = S.countries.filter(function (c) { return !f || c.name.toLowerCase().indexOf(f) >= 0 || c.cc.toLowerCase() === f; });
+        if (!arr.length) frag.appendChild(mkInfo('НЕТ СОВПАДЕНИЙ'));
+        arr.forEach(function (c) {
+          frag.appendChild(mkRow(c.cc, c.name, String(c.count), c.cc === S.cc, function () { closeOverlay(); setCountry(c.cc); }));
+        });
+      }
     } else if (m === 'city') {
       var qs = q.value.trim();
       if (qs.length < 2) {
@@ -872,10 +842,11 @@
     var q = $('ovQ');
     q.value = '';
     q.hidden = mode === 'stations';
-    q.placeholder = 'НАЙТИ ГОРОД';
+    q.placeholder = mode === 'country' ? 'ПОИСК ЖАНРА' : 'НАЙТИ ГОРОД';
     $('btnList').setAttribute('aria-expanded', 'true');
     renderOverlay();
     if (!wasOpen) bridgeBack(true);
+    
     $('ovRows').scrollTop = 0;
   }
   function closeOverlay() {
@@ -893,14 +864,11 @@
   on('btnStop', doStop);
   on('btnPrev', function () { stepStation(-1); });
   on('btnNext', function () { stepStation(1); });
-  $('genreStrip').addEventListener('click', function(e) {
-    var b = e.target.closest('[data-genre]'); if (!b) return;
-    S.genre = b.getAttribute('data-genre');
-    Array.prototype.forEach.call($('genreStrip').querySelectorAll('[data-genre]'), function(x) { x.classList.toggle('active', x === b); });
-    render(); if (S.ovMode === 'stations') renderOverlay();
-  });
+  on('btnCtryPrev', function () { stepGenre(-1); });
+  on('btnCtryNext', function () { stepGenre(1); });
   on('btnCityPrev', function () { stepCity(-1); });
   on('btnCityNext', function () { stepCity(1); });
+  on('ctryBtn', function () { stepGenre(1); });
   on('cityBtn', function () { openOverlay('city'); });
   on('btnList', function () { if (S.ovMode === 'stations') closeOverlay(); else openOverlay('stations'); });
   on('btnFav', function () { toggleFav(S.cur); });
@@ -919,8 +887,8 @@
     qTimer = setTimeout(function () {
       S.query = v;
       if (S.ovMode !== 'stations') openOverlay('stations');
-      render(); if (S.ovMode === 'stations') renderOverlay();
-    }, 250);
+      loadList();
+    }, 450);
   });
 
   var oTimer = null;
@@ -1107,6 +1075,17 @@
     }
   };
   nat(function (R) { R.reset(); R.setVolume(S.vol / 100); });
+
+  /* Перестановка индикаторов: часы наверх, таймер воспроизведения вниз */
+  (function swapTimeDisplays(){
+    var elapsed=$('elapsed'), clockDigits=$('hh').parentNode;
+    var elapsedHost=elapsed.parentNode, clockHost=clockDigits.parentNode;
+    if(!elapsed||!clockDigits||!elapsedHost||!clockHost)return;
+    elapsedHost.insertBefore(clockDigits, elapsed);
+    clockHost.appendChild(elapsed);
+    elapsed.style.fontFamily="'VT323', monospace"; elapsed.style.fontSize='40px'; elapsed.style.lineHeight='34px'; elapsed.style.textShadow='var(--tglow)';
+    $('clkLabel').textContent='ЧАСЫ';
+  })();
 
   /* ---------- старт ---------- */
   render();
