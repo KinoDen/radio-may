@@ -225,6 +225,12 @@
       S.loading=false; S.err=!S.list.length; render(); if(S.ovMode)renderOverlay();
     });
   }
+  function stationsInGenreCount() {
+    var g = GENRES[S.genre] || 'ВСЕ';
+    return (S.catalog || []).filter(function (st) {
+      return g === 'ВСЕ' || (st.genres || classifyStation(st)).indexOf(g) >= 0;
+    }).length;
+  }
   function stepGenre(d) {
     S.genre=(S.genre+d+GENRES.length)%GENRES.length; store.set('genre',S.genre);
     var g=GENRES[S.genre], filtered=S.catalog.filter(function(st){return g==='ВСЕ'||(st.genres||classifyStation(st)).indexOf(g)>=0;});
@@ -696,7 +702,7 @@
 
     setText($('ctryCode'), 'МУЗЫКАЛЬНЫЙ ЖАНР');
     setText($('ctryName'), GENRES[S.genre] || 'ВСЕ');
-    setText($('listTab'), 'СПИСОК СТАНЦИЙ · ' + S.list.length);
+    setText($('listTab'), 'СПИСОК СТАНЦИЙ · ' + stationsInGenreCount());
 
     var c = city(), w = S.weather;
     var tempValue = w && w.t !== null && w.t !== undefined && isFinite(Number(w.t)) ? Number(w.t) : null;
