@@ -7,8 +7,8 @@
 <title>Радио Май</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Russo+One&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=fav2">
-<link rel="stylesheet" href="app.css?v=fav2">
+<link rel="stylesheet" href="style.css?v=gen1">
+<link rel="stylesheet" href="app.css?v=gen1">
 <script src="https://st.max.ru/js/max-web-app.js"></script>
 </head>
 <body class="dark">
@@ -43,7 +43,7 @@
         <span class="lamp" id="lampStereo">STEREO</span>
       </div>
       <div style="display:flex;align-items:center;gap:12px;height:56px">
-        <div class="digits"><span class="ghost">88:88</span><span class="live" id="elapsed">00:00</span></div>
+        <div class="digits"><span class="live" id="clockTop">--:--</span></div>
         <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:11px;font-weight:600;line-height:14px;text-align:right;letter-spacing:.5px">
           <span id="infoBitrate">— KBPS</span>
           <span id="infoCodec">—</span>
@@ -201,15 +201,15 @@
     <button class="btn favbtn" id="btnFav" aria-label="Добавить в избранное" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C1 8.3 3 5 6.3 5c2 0 3.7 1.1 5.7 3.3C14 6.1 15.7 5 17.7 5 21 5 23 8.3 21.6 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
   </div>
 
-  <!-- GENRE SWITCHER + SEARCH -->
+  <!-- GENRE + SEARCH -->
   <div style="display:flex;gap:8px;height:46px;flex:none">
     <div style="width:214px;display:flex;gap:3px">
-      <button class="btn sm" id="btnCtryPrev" aria-label="Предыдущий жанр" title="Предыдущий жанр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L7 12l8 7z"/></svg></button>
-      <button class="lcd lcdbtn" id="ctryBtn" aria-label="Текущий жанр; нажмите для следующего жанра" style="flex:1;min-width:0;padding:4px 6px;display:flex;flex-direction:column;justify-content:center">
+      <button class="btn sm" id="btnCtryPrev" aria-label="Предыдущий жанр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L7 12l8 7z"/></svg></button>
+      <button class="lcd lcdbtn" id="ctryBtn" aria-label="Выбрать жанр" style="flex:1;min-width:0;padding:4px 6px;display:flex;flex-direction:column;justify-content:center">
         <span class="dl" id="ctryCode">ЖАНР</span>
         <span class="val" id="ctryName">—</span>
       </button>
-      <button class="btn sm" id="btnCtryNext" aria-label="Следующий жанр" title="Следующий жанр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l8 7-8 7z"/></svg></button>
+      <button class="btn sm" id="btnCtryNext" aria-label="Следующий жанр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l8 7-8 7z"/></svg></button>
     </div>
     <div class="lcd" style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;padding:0 8px">
       <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;position:relative;z-index:1;color:var(--lcd-on)"><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
@@ -217,7 +217,7 @@
     </div>
   </div>
 
-  <!-- WEATHER + CLOCK -->
+  <!-- WEATHER + PLAYBACK TIME -->
   <div style="display:flex;gap:8px;height:58px;flex:none">
     <div style="width:214px;display:flex;gap:3px">
       <button class="btn sm" style="height:100%" id="btnCityPrev" aria-label="Предыдущий город"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L7 12l8 7z"/></svg></button>
@@ -229,9 +229,8 @@
       <button class="btn sm" style="height:100%" id="btnCityNext" aria-label="Следующий город"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l8 7-8 7z"/></svg></button>
     </div>
     <div class="lcd" style="flex:1;min-width:0;padding:4px 8px;display:flex;flex-direction:column;justify-content:center">
-      <div class="dl" id="clkLabel" style="overflow:hidden;text-overflow:ellipsis">ВРЕМЯ</div>
       <div style="display:flex;align-items:baseline;font-family:'VT323',monospace;font-size:40px;line-height:34px;text-shadow:var(--tglow)">
-        <span id="hh">--</span><span class="blink">:</span><span id="mm">--</span><span id="ss" style="font-size:22px;margin-left:6px">--</span>
+        <span id="pbH">00</span><span class="blink">:</span><span id="pbM">00</span><span id="pbS" style="font-size:22px;margin-left:6px">00</span>
       </div>
     </div>
   </div>
@@ -258,6 +257,7 @@
 
 </div>
 </div>
-<script src="app.js?v=fav2"></script>
+<script src="genres.js?v=gen1"></script>
+<script src="app.js?v=gen1"></script>
 </body>
 </html>
