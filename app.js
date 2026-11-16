@@ -47,7 +47,6 @@
   // Жанры (genres.js). Для станций без тегов жанр задан вручную по названию потока/формату сети;
   // где формат достоверно определить нельзя — «ДРУГИЕ».
   var GN = window.RM_GENRES;
-  var GENRES = GN.LIST;
 
   // Отбор зарубежных станций: ПОРЯДКОВЫЕ НОМЕРА (с 1) в исходном списке по популярности для страны —
   // это тот же запрос и тот же фильтр (https, без HLS, без повторов по названию), что показывал
@@ -132,7 +131,6 @@
     msg: null,
     theme: store.get('theme', 'dark'),
     vol: store.get('vol', 72),
-    genre: store.get('genre', 'all'),
     base: [],              // каталог (РФ + выбранные GB/US) с учётом поиска
     full: [],              // каталог без поискового запроса — для списка доступных жанров
     list: [], cur: null, query: '',
@@ -150,7 +148,6 @@
   function nat(fn) { if (!NATIVE) return; try { fn(window.RadioAndroid); } catch (e) {} }
   if (S.ci >= S.cities.length || S.ci < 0) S.ci = 0;
   if (S.theme !== 'dark' && S.theme !== 'light') S.theme = 'dark';
-  if (!GENRES.some(function (g) { return g.id === S.genre; })) S.genre = 'all';
 
   /* ---------- время воспроизведения (по меткам времени, не по счётчику таймера) ---------- */
   function markPlaying(v) {
@@ -263,52 +260,14 @@
   }
   S.foreign = [];
 
-  /* ---------- жанры ---------- */
-  function availableGenres() {
-    if (!S.full.length) return GENRES;
-    return GENRES.filter(function (g) {
-      return g.id === 'all' || S.full.some(function (st) { return inGenre(st, g.id); });
-    });
-  }
-  function genreName(id) { return GN.nameOf(id); }
-  function genreCount(id) { return S.full.filter(function (st) { return inGenre(st, id); }).length; }
-
-  // Ручная корректировка жанров по порядковым номерам внутри исходного жанра.
-  // Номера считаются от 1 в текущем полном каталоге; исходные данные не мутируем,
-  // поэтому повторная загрузка/перерисовка не меняет результат и не создаёт дублей.
-  function applyManualGenreMoves(stations) {
-    var out = stations.map(function (st) {
-      var copy = {};
-      Object.keys(st).forEach(function (k) { copy[k] = st[k]; });
-      copy.g = gOf(st).slice();
-      return copy;
-    });
-
-    function moveRanks(from, to, ranks) {
-      var source = out.filter(function (st) { return st.g.indexOf(from) >= 0; });
-      ranks.forEach(function (rank) {
-        var st = source[rank - 1];
-        if (!st) return;
-        // Удаляем исходный жанр. В целевом жанре оставляем ровно одно вхождение.
-        st.g = st.g.filter(function (id) { return id !== from; });
-        if (st.g.indexOf(to) < 0) st.g.push(to);
-      });
-    }
-
-    moveRanks('rock', 'pop', [5, 9, 13, 14]);
-    moveRanks('other', 'pop', [1, 2, 3, 4, 7, 13, 14]);
-    moveRanks('other', 'jazz', [19]);
-    return out;
-  }
-
-  // Пересобрать итоговый список: РФ + GB/US, поиск, ручные переносы, фильтр по жанру.
+  /* ---------- список станций (без разделения по жанрам) ---------- */
+  // Пересобрать итоговый список: РФ + GB/US и поиск. Все станции — в одном списке.
   // Текущую станцию и воспроизведение не трогаем.
   function applyGenre() {
     var q = S.query.trim().toLowerCase();
-    var raw = S.ru.concat(S.foreign.filter(function (st) { return matchQuery(st, q); }));
-    S.base = applyManualGenreMoves(raw);
-    if (!q) S.full = S.base;
-    S.list = S.base.filter(function (st) { return inGenre(st, S.genre); });
+    S.base = S.ru.concat(S.foreign.filter(function (st) { return matchQuery(st, q); }));
+    S.full = S.base;
+    S.list = S.base;
   }
   S.ru = [];
 
@@ -461,7 +420,7 @@
     if (!force && key === natKey) return;
     natKey = key;
     var json = JSON.stringify(arr.map(function (x) { return { id: x.id, n: x.n, u: x.u }; }));
-    var sub = 'Радио Май · ' + (S.favCtx && arr === S.favs ? 'Избранное' : genreName(S.genre));
+    var sub = 'Радио Май · ' + (S.favCtx && arr === S.favs ? 'Избранное' : 'Все станции');
     nat(function (R) { R.setQueue(json, S.cur.id, !!play, sub); });
   }
   function favIdxIn(arr, st) { for (var k = 0; k < arr.length; k++) if (arr[k].id === st.id) return k; return -1; }
@@ -599,24 +558,6 @@
     selectStation(arr[i], !!autoplay);
   }
 
-  // Переключение жанра меняет только список станций. Текущая станция, воспроизведение, громкость,
-  // избранное и поиск не трогаются; случайная станция не запускается.
-  function setGenre(id) {
-    if (id === S.genre) return;
-    S.genre = id; store.set('genre', id);
-    applyGenre();
-    render();
-    if (S.ovMode === 'stations' || S.ovMode === 'genre') renderOverlay();
-  }
-  function stepGenre(d) {
-    var arr = availableGenres();
-    var i = -1;
-    for (var k = 0; k < arr.length; k++) if (arr[k].id === S.genre) { i = k; break; }
-    if (i < 0) i = 0; // текущий жанр недоступен — начинаем с первого
-    else i = (i + d + arr.length) % arr.length;
-    setGenre(arr[i].id);
-  }
-
   /* ---------- шторка уведомлений / Bluetooth (Media Session) ---------- */
   // Кнопки «вперёд/назад» в шторке и на магнитоле (AVRCP) переключают станции
   // в том же списке, что и экранные кнопки. Станция сразу включается.
@@ -667,7 +608,7 @@
           msKey = key;
           ms.metadata = new MediaMetadata({
             title: S.cur.n,
-            artist: 'Радио Май · ' + (S.cur.cc ? countryName(S.cur.cc) : genreName(S.genre)),
+            artist: 'Радио Май · ' + (S.cur.cc ? countryName(S.cur.cc) : 'Все станции'),
             album: S.favs.length ? 'Избранное' : 'Радио',
             artwork: mediaArtwork(S.cur.n)
           });
@@ -827,10 +768,10 @@
     track.appendChild(second);
     el.appendChild(track);
   }
-  // Длинное название жанра («ЭЛЕКТРОННАЯ МУЗЫКА») не влезает в окно — прокручиваем его так же, как строки погоды.
-  function setGenreName(text) {
-    var el = $('ctryName');
-    if (text.length > 12) setWeatherMarquee(el, text);
+  // Короткое название города стоит на месте, длинное — прокручивается.
+  function setCityName(text) {
+    var el = $('cityVal');
+    if (text.length > 13) setWeatherMarquee(el, text);
     else {
       if (el.getAttribute('data-marquee')) { el.removeAttribute('data-marquee'); el.classList.remove('weather-marquee'); el.textContent = ''; }
       setText(el, text);
@@ -876,8 +817,6 @@
     setText($('stationLabel'), clip(name, 34));
     $('cassette').setAttribute('aria-label', 'Аудиокассета Радио Май: ' + name);
 
-    setText($('ctryCode'), 'ЖАНР');
-    setGenreName(genreName(S.genre));
     setText($('listTab'), 'СПИСОК СТАНЦИЙ · ' + S.list.length);
 
     var c = city(), w = S.weather;
@@ -887,7 +826,8 @@
       ? 'ВЕТЕР ' + Math.round(Number(w.wind)) + ' КМ/Ч' : '';
     // Верхняя строка: город и температура. Нижняя строка: состояние и ветер.
     // Обе строки прокручиваются независимо, поэтому состояние погоды больше не стоит на месте.
-    setWeatherMarquee($('cityVal'), c.n.toUpperCase() + '   •   ' + (tempValue === null ? '— °C' : fmtTemp(tempValue)));
+    setText($('wxTemp'), tempValue === null ? '— °C' : fmtTemp(tempValue));
+    setCityName(c.n.toUpperCase());
     var conditionParts = [conditionText, windText].filter(function (part) { return !!part; });
     setWeatherMarquee($('cond'), conditionParts.join('   •   '));
 
@@ -899,17 +839,14 @@
     $('vfill').style.width = S.vol + '%';
     if ($('vol').value !== String(S.vol)) $('vol').value = S.vol;
     tickClock();
+    wxSetup();
+    scIdle();
   }
 
   // Верхний зелёный дисплей — местное время устройства (ЧЧ:ММ).
-  // Нижний правый блок — время воспроизведения текущей станции (Ч:ММ и секунды), по меткам времени.
   function tickClock() {
     var d = new Date();
     setText($('clockTop'), p2(d.getHours()) + ':' + p2(d.getMinutes()));
-    var e = elapsedSec();
-    setText($('pbH'), p2(Math.floor(e / 3600) % 100));
-    setText($('pbM'), p2(Math.floor(e / 60) % 60));
-    setText($('pbS'), p2(e % 60));
   }
 
   /* ---------- оверлей (станции / страны / города) ---------- */
@@ -974,7 +911,7 @@
         }, s));
       });
     } else if (m === 'stations') {
-      title.textContent = 'ЖАНР: ' + genreName(S.genre) + (S.query ? ' · «' + S.query.toUpperCase() + '»' : '');
+      title.textContent = 'ВСЕ СТАНЦИИ' + (S.query ? ' · «' + S.query.toUpperCase() + '»' : '');
       if (S.loading) frag.appendChild(mkInfo('ЗАГРУЗКА…'));
       else if (S.err) frag.appendChild(mkInfo('НЕТ СВЯЗИ С КАТАЛОГОМ'));
       else if (!S.list.length) frag.appendChild(mkInfo('НЕТ СОВПАДЕНИЙ'));
@@ -982,12 +919,6 @@
         frag.appendChild(mkRow(p2(i + 1) + '.', s.n, s.b ? s.b + 'K' : '', !!(S.cur && S.cur.id === s.id), function () {
           closeOverlay(); selectStation(s, true, 'all');
         }, s));
-      });
-    } else if (m === 'genre') {
-      title.textContent = 'ВЫБОР ЖАНРА';
-      var ag = availableGenres();
-      ag.forEach(function (g, i) {
-        frag.appendChild(mkRow(p2(i + 1) + '.', g.name, S.full.length ? String(genreCount(g.id)) : '', g.id === S.genre, function () { closeOverlay(); setGenre(g.id); }));
       });
     } else if (m === 'city') {
       var qs = q.value.trim();
@@ -1023,7 +954,7 @@
     $('ov').hidden = false; $('ovBack').hidden = false;
     var q = $('ovQ');
     q.value = '';
-    q.hidden = mode === 'stations' || mode === 'genre';
+    q.hidden = mode === 'stations';
     q.placeholder = 'НАЙТИ ГОРОД';
     $('btnList').setAttribute('aria-expanded', 'true');
     renderOverlay();
@@ -1045,11 +976,8 @@
   on('btnStop', doStop);
   on('btnPrev', function () { stepStation(-1); });
   on('btnNext', function () { stepStation(1); });
-  on('btnCtryPrev', function () { stepGenre(-1); });
-  on('btnCtryNext', function () { stepGenre(1); });
   on('btnCityPrev', function () { stepCity(-1); });
   on('btnCityNext', function () { stepCity(1); });
-  on('ctryBtn', function () { openOverlay('genre'); });
   on('cityBtn', function () { openOverlay('city'); });
   on('btnList', function () { if (S.ovMode === 'stations') closeOverlay(); else openOverlay('stations'); });
   on('btnFav', function () { toggleFav(S.cur); });
@@ -1150,6 +1078,262 @@
   var EDGES = [];
   for (var ei = 0; ei <= 20; ei++) EDGES.push(Math.round(Math.pow(260, ei / 20)));
 
+
+  /* ---------- анимация погоды (пиксельный «LCD»-стиль) ---------- */
+  var FX = { cv: $('wxfx'), g: null, W: 74, H: 56, kind: 'clear', n: 0, wind: 0, hail: false, partly: false,
+    key: '', parts: [], streaks: [], t: 0, flash: 0, nextFlash: 3, bolt: null, color: '#5dff98', theme: '', dirty: true, stars: [] };
+  FX.g = FX.cv.getContext ? FX.cv.getContext('2d') : null;
+  var REDUCE = false;
+  try { REDUCE = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
+  for (var si = 0; si < 14; si++) FX.stars.push({ x: 3 + Math.floor(Math.random() * 68), y: 3 + Math.floor(Math.random() * 30), ph: Math.random() * 6.28 });
+
+  function wxKind(code) {
+    if (code === null || code === undefined) return { kind: 'clear', n: 0 };
+    if (code === 0 || code === 1) return { kind: 'clear', n: 0 };
+    if (code === 2) return { kind: 'clear', n: 0, partly: true };
+    if (code === 3) return { kind: 'cloud', n: 0 };
+    if (code === 45 || code === 48) return { kind: 'fog', n: 0 };
+    if (code >= 51 && code <= 55) return { kind: 'drizzle', n: 22 };
+    if (code === 56 || code === 57 || code === 66 || code === 67) return { kind: 'sleet', n: 34 };
+    if (code === 61 || code === 63 || code === 80 || code === 81) return { kind: 'rain', n: 42 };
+    if (code === 65 || code === 82) return { kind: 'rain', n: 70 };
+    if (code === 71 || code === 73 || code === 77) return { kind: 'snow', n: 32 };
+    if (code === 75 || code === 85 || code === 86) return { kind: 'snow', n: 58 };
+    if (code === 95) return { kind: 'storm', n: 60 };
+    if (code === 96 || code === 99) return { kind: 'storm', n: 60, hail: true };
+    return { kind: 'cloud', n: 0 };
+  }
+  function wxSetup() {
+    if (!FX.g) return;
+    var w = S.weather;
+    var ok = w && w.t !== null && w.t !== undefined && isFinite(Number(w.t));
+    var k = wxKind(ok ? w.code : null);
+    var wind = ok && w.wind !== null && w.wind !== undefined && isFinite(Number(w.wind)) ? Number(w.wind) : 0;
+    var wb = wind >= 40 ? 3 : wind >= 25 ? 2 : wind >= 12 ? 1 : 0;
+    var key = [k.kind, k.n, !!k.hail, !!k.partly, wb, S.theme].join('|');
+    if (key === FX.key) return;
+    FX.key = key;
+    FX.kind = k.kind; FX.n = k.n; FX.hail = !!k.hail; FX.partly = !!k.partly; FX.wind = wind;
+    FX.wb = wb;
+    var cs = getComputedStyle($('app'));
+    FX.color = (cs.getPropertyValue('--lcd-on') || '#5dff98').trim();
+    FX.theme = S.theme;
+    var W = FX.W, H = FX.H, P = [], i;
+    var drift = wb * 5;                                    // боковой снос частиц, px/с
+    for (i = 0; i < k.n; i++) {
+      var p = { x: Math.random() * W, y: Math.random() * H, ph: Math.random() * 6.28, f: 1 + Math.random() * 2, big: Math.random() < .25 };
+      if (k.kind === 'snow') { p.vy = 5 + Math.random() * 9; p.vx = drift; }
+      else if (k.kind === 'drizzle') { p.vy = 26 + Math.random() * 10; p.vx = drift * .5; }
+      else if (k.kind === 'sleet') { p.vy = 18 + Math.random() * 30; p.vx = drift; p.snow = i % 2 === 0; if (p.snow) p.vy *= .35; }
+      else { p.vy = 60 + Math.random() * 35; p.vx = drift * 1.5; }
+      P.push(p);
+    }
+    if (k.hail) for (i = 0; i < 10; i++) P.push({ x: Math.random() * W, y: Math.random() * H, vy: 70 + Math.random() * 30, vx: drift, hail: true, ph: 0, f: 1 });
+    FX.parts = P;
+    var sc = [], ns = wb ? 4 + wb * 3 : 0;
+    for (i = 0; i < ns; i++) sc.push({ x: Math.random() * W, y: 4 + Math.random() * (H - 8), len: 6 + Math.random() * 10, v: 35 + wind * 1.4 + Math.random() * 30 });
+    FX.streaks = sc;
+    FX.clouds = [];
+    var nc = k.kind === 'cloud' ? 4 : (k.kind === 'clear' ? (k.partly ? 1 : 0) : (k.kind === 'fog' ? 0 : 2));
+    for (i = 0; i < nc; i++) FX.clouds.push({ x: (i + Math.random()) * (W / nc) - 6, y: k.kind === 'cloud' ? 3 + i * 9 : (k.kind === 'clear' ? 20 : 1 + i * 3), s: k.kind === 'cloud' ? 2 : 2, v: 2 + Math.random() * 2 + wind * .15 });
+    FX.dirty = true;
+  }
+
+  function wxCloud(g, x, y, s) {
+    g.fillRect(x + 2 * s, y, 4 * s, s);
+    g.fillRect(x + s, y + s, 7 * s, s);
+    g.fillRect(x, y + 2 * s, 9 * s, s);
+  }
+  function wxDisc(g, cx, cy, r, notX, notY, notR) {
+    for (var yy = -r; yy <= r; yy++) for (var xx = -r; xx <= r; xx++) {
+      if (xx * xx + yy * yy > r * r + 1) continue;
+      if (notR && (xx - notX) * (xx - notX) + (yy - notY) * (yy - notY) <= notR * notR) continue;
+      g.fillRect(cx + xx, cy + yy, 1, 1);
+    }
+  }
+  function wxFrame(dt) {
+    var g = FX.g;
+    if (!g) return;
+    if (REDUCE && !FX.dirty) return;
+    if (REDUCE) dt = 0;
+    FX.dirty = false;
+    var W = FX.W, H = FX.H, t = (FX.t += dt), i, p;
+    g.clearRect(0, 0, W, H);
+    g.fillStyle = FX.color;
+    var k = FX.kind;
+
+    // небо: солнце (день) или луна со звёздами (ночь)
+    if (k === 'clear') {
+      if (S.theme === 'light') {
+        g.globalAlpha = .6; wxDisc(g, 58, 15, 6);
+        g.globalAlpha = .45;
+        for (i = 0; i < 8; i++) {
+          var a = t * .5 + i * Math.PI / 4;
+          g.fillRect(Math.round(58 + Math.cos(a) * 11), Math.round(15 + Math.sin(a) * 11), 1, 1);
+          g.fillRect(Math.round(58 + Math.cos(a) * 13), Math.round(15 + Math.sin(a) * 13), 1, 1);
+        }
+      } else {
+        g.globalAlpha = .6; wxDisc(g, 58, 15, 7, -3, -2, 6);
+        for (i = 0; i < FX.stars.length; i++) {
+          var st = FX.stars[i];
+          g.globalAlpha = .25 + .5 * Math.max(0, Math.sin(t * 1.3 + st.ph));
+          g.fillRect(st.x, st.y, 1, 1);
+        }
+      }
+    }
+    // туман: медленные полосы
+    if (k === 'fog') {
+      for (i = 0; i < 6; i++) {
+        var fy = 6 + i * 9, off = (t * (i % 2 ? 5 : -4) + i * 17) % 24;
+        g.globalAlpha = .14 + .1 * Math.sin(t * .6 + i);
+        g.fillRect(0, fy, W, 2);
+        g.globalAlpha = .38;
+        for (var fx = -24; fx < W + 24; fx += 24) g.fillRect(Math.round(fx + off), fy, 13, 1);
+      }
+    }
+    // облака
+    var cl = FX.clouds || [];
+    for (i = 0; i < cl.length; i++) {
+      var c = cl[i];
+      c.x += c.v * dt;
+      if (c.x > W + 4) c.x = -22;
+      g.globalAlpha = (k === 'storm' || k === 'rain' || k === 'sleet' || k === 'drizzle') ? .5 : .38;
+      wxCloud(g, Math.round(c.x), c.y, c.s);
+    }
+    // осадки
+    var wxs = (FX.wb || 0);
+    for (i = 0; i < FX.parts.length; i++) {
+      p = FX.parts[i];
+      p.y += p.vy * dt;
+      p.x += (p.vx + (k === 'snow' || p.snow ? Math.sin(t * p.f + p.ph) * 5 : 0)) * dt;
+      if (p.y > H) { p.y = -3; p.x = Math.random() * W; }
+      if (p.x > W) p.x -= W; else if (p.x < 0) p.x += W;
+      var px = Math.round(p.x), py = Math.round(p.y);
+      if (p.hail) { g.globalAlpha = .95; g.fillRect(px, py, 2, 2); }
+      else if (k === 'snow' || p.snow) { g.globalAlpha = p.big ? .95 : .7; if (p.big) { g.fillRect(px, py, 2, 2); } else g.fillRect(px, py, 1, 1); }
+      else if (k === 'drizzle') { g.globalAlpha = .55; g.fillRect(px, py, 1, 1); }
+      else { g.globalAlpha = .75; g.fillRect(px, py, 1, 2); if (wxs) g.fillRect(px - 1, py - 1, 1, 1); if (wxs > 1) g.fillRect(px - 2, py - 2, 1, 1); }
+    }
+    // ветер: волнистые штрихи
+    for (i = 0; i < FX.streaks.length; i++) {
+      var s = FX.streaks[i];
+      s.x += s.v * dt;
+      if (s.x - s.len > W) { s.x = -4; s.y = 4 + Math.random() * (H - 8); }
+      g.globalAlpha = .4;
+      for (var j = 0; j < s.len; j++) {
+        var xx = Math.round(s.x - j);
+        if (xx < 0 || xx >= W) continue;
+        g.fillRect(xx, Math.round(s.y + Math.sin((xx) * .35 + t * 3) * 1.2), 1, 1);
+      }
+    }
+    // гроза: вспышки и молния
+    if (k === 'storm') {
+      FX.nextFlash -= dt;
+      if (FX.nextFlash <= 0) {
+        FX.flash = 1; FX.nextFlash = 2.5 + Math.random() * 4;
+        var bx = 18 + Math.random() * 38, by = 8, pts = [[bx, by]];
+        while (by < 44) { bx += Math.round((Math.random() - .5) * 8); by += 4 + Math.floor(Math.random() * 4); pts.push([bx, by]); }
+        FX.bolt = pts;
+      }
+      if (FX.flash > 0) {
+        g.globalAlpha = FX.flash * .28; g.fillRect(0, 0, W, H);
+        g.globalAlpha = Math.min(1, FX.flash * 1.6);
+        var b = FX.bolt || [];
+        for (i = 1; i < b.length; i++) {
+          var x0 = b[i - 1][0], y0 = b[i - 1][1], x1 = b[i][0], y1 = b[i][1], n = Math.max(Math.abs(x1 - x0), Math.abs(y1 - y0));
+          for (var q = 0; q <= n; q++) g.fillRect(Math.round(x0 + (x1 - x0) * q / n), Math.round(y0 + (y1 - y0) * q / n), 1, 1);
+        }
+        FX.flash = Math.max(0, FX.flash - dt * 2.4);
+      }
+    }
+    g.globalAlpha = 1;
+  }
+
+  /* ---------- СКАН ЭФИРА: фишка вместо времени воспроизведения ---------- */
+  // Нажатие запускает «прокрутку» шкалы: стрелка прыгает по частотам случайных станций каталога,
+  // замедляется и «ловит» одну из них — станция сразу включается. Частота станции условная (87.5–108.0),
+  // но для каждой станции всегда одна и та же.
+  var SC = { cv: $('scCv'), g: null, pos: .5, target: .5, busy: false, timer: null, msgTimer: null, drawn: -1, key: '' };
+  SC.g = SC.cv.getContext ? SC.cv.getContext('2d') : null;
+  function freqOf(st) {
+    var id = String((st && (st.id || st.n)) || ''), h = 7;
+    for (var i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+    return 875 + (h % 206);                                   // десятые доли МГц
+  }
+  function fmtFreq(f) { return 'FM ' + (f / 10).toFixed(1); }
+  function posOf(f) { return (f - 875) / 205; }
+  function scDraw(force) {
+    var g = SC.g;
+    if (!g) return;
+    var key = SC.pos.toFixed(3) + '|' + S.theme + '|' + S.list.length + '|' + (S.cur ? S.cur.id : '');
+    if (!force && key === SC.key) return;
+    SC.key = key;
+    var cs = SC.cs || (SC.cs = {});
+    var app = getComputedStyle($('app'));
+    var on = (app.getPropertyValue('--lcd-on') || '#5dff98').trim(), dim = (app.getPropertyValue('--lcd-dim') || '#3b8f5c').trim();
+    var W = 128, H = 16;
+    g.clearRect(0, 0, W, H);
+    g.fillStyle = dim;
+    for (var x = 0; x < W; x += 4) g.fillRect(x, H - (x % 20 === 0 ? 7 : 4), 1, x % 20 === 0 ? 7 : 4);
+    // точки — станции каталога
+    g.fillStyle = on; g.globalAlpha = .55;
+    var arr = S.list;
+    for (var i = 0; i < arr.length; i++) g.fillRect(Math.round(posOf(freqOf(arr[i])) * (W - 3)) + 1, 2, 1, 2);
+    g.globalAlpha = 1;
+    // текущая станция — рамка-метка, стрелка — красная «игла»
+    if (S.cur) g.fillRect(Math.round(posOf(freqOf(S.cur)) * (W - 3)), 0, 3, 1);
+    var nx = Math.round(SC.pos * (W - 3));
+    g.fillStyle = S.theme === 'dark' ? '#ff5a4d' : '#b3261e';
+    g.fillRect(nx + 1, 0, 1, H);
+    g.fillRect(nx, 0, 3, 1);
+  }
+  function scIdle() {
+    if (!SC.g) return;
+    if (!SC.busy) {
+      var f = S.cur ? freqOf(S.cur) : null;
+      SC.target = f === null ? .5 : posOf(f);
+      setText($('scFreq'), f === null ? 'FM --.-' : fmtFreq(f));
+      if (!SC.msgTimer) setText($('scName'), S.list.length > 1 ? 'ЛОВИ ВОЛНУ ▶' : '—');
+    }
+    scDraw(false);
+  }
+  function scMsg(text, ms) {
+    setText($('scName'), text);
+    clearTimeout(SC.msgTimer);
+    SC.msgTimer = setTimeout(function () { SC.msgTimer = null; scIdle(); }, ms);
+  }
+  function scanStop() {
+    clearTimeout(SC.timer); SC.timer = null; SC.busy = false;
+    $('btnScan').classList.remove('busy');
+  }
+  function scanStart() {
+    if (SC.busy) { scanStop(); clearTimeout(SC.msgTimer); SC.msgTimer = null; scMsg('СКАН ОТМЕНЁН', 1200); return; }
+    var arr = S.list;
+    if (arr.length < 2) { scMsg('НЕТ СТАНЦИЙ', 1500); return; }
+    clearTimeout(SC.msgTimer); SC.msgTimer = null;
+    var hops = [], pool = arr.filter(function (st) { return !S.cur || st.id !== S.cur.id; });
+    for (var i = 0; i < 9; i++) hops.push(pool[Math.floor(Math.random() * pool.length)]);
+    var final = hops[hops.length - 1];
+    SC.busy = true; $('btnScan').classList.add('busy');
+    var n = 0;
+    (function step() {
+      var st = hops[n], f = freqOf(st);
+      SC.target = posOf(f);
+      setText($('scFreq'), fmtFreq(f));
+      setText($('scName'), clip(st.n.toUpperCase(), 18));
+      if (n < hops.length - 1) haptic();
+      n++;
+      if (n < hops.length) { SC.timer = setTimeout(step, 80 + n * n * 5); return; }
+      // зафиксировали — короткая пауза и включаем
+      SC.timer = setTimeout(function () {
+        scanStop();
+        selectStation(final, true, 'all');
+        scMsg('★ НАСТРОЕНО!', 1800);
+      }, 500);
+    })();
+  }
+  if ($('btnScan')) $('btnScan').addEventListener('click', function () { haptic(); scanStart(); });
+
   function frame(now) {
     requestAnimationFrame(frame);
     var st = S.status, playing = st === 'play';
@@ -1180,6 +1364,10 @@
     el.tape.setAttribute('d', dd);
     el.tapeSheen.setAttribute('d', dd);
     el.tapeSheen.setAttribute('stroke-dashoffset', (-A.dash).toFixed(2));
+
+    wxFrame(dt);
+    var dpos = SC.target - SC.pos;
+    if (Math.abs(dpos) > .0004) { SC.pos += dpos * (1 - Math.exp(-dt / (SC.busy ? .06 : .18))); scDraw(false); }
 
     // спектр: реальный (AnalyserNode) или имитация, если сервер потока не отдаёт CORS
     var live = S.playing && S.eqLive && analyser && fftBuf;
@@ -1258,10 +1446,8 @@
   loadWeather();
   loadList().then(function () {
     var sid = store.get('sid', null), found = null;
-    // Сохранённую станцию ищем во всём каталоге: она может не входить в выбранный жанр — это нормально.
     if (sid) for (var i = 0; i < S.base.length; i++) if (S.base[i].id === sid) found = S.base[i];
     // Сохранённый жанр, в котором (пока) нет станций, сбрасываем на «ВСЕ»
-    if (S.genre !== 'all' && availableGenres().every(function (g) { return g.id !== S.genre; })) { S.genre = 'all'; store.set('genre', 'all'); applyGenre(); }
     S.cur = found || S.list[0] || null;
     if (S.cur) store.set('sid', S.cur.id);
     S.favCtx = !!(S.cur && favIndex(S.cur) >= 0);

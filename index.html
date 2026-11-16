@@ -7,8 +7,8 @@
 <title>Радио Май</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600;700&family=Russo+One&family=VT323&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=gen1">
-<link rel="stylesheet" href="app.css?v=gen1">
+<link rel="stylesheet" href="style.css?v=gen2">
+<link rel="stylesheet" href="app.css?v=gen2">
 <script src="https://st.max.ru/js/max-web-app.js"></script>
 </head>
 <body class="dark">
@@ -201,37 +201,31 @@
     <button class="btn favbtn" id="btnFav" aria-label="Добавить в избранное" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.6-9.3C1 8.3 3 5 6.3 5c2 0 3.7 1.1 5.7 3.3C14 6.1 15.7 5 17.7 5 21 5 23 8.3 21.6 11.7 19.5 16.4 12 21 12 21z"/></svg></button>
   </div>
 
-  <!-- GENRE + SEARCH -->
-  <div style="display:flex;gap:8px;height:46px;flex:none">
+  <!-- WEATHER (2 блока) + SEARCH + СКАН ЭФИРА -->
+  <div style="display:flex;gap:8px;height:112px;flex:none">
     <div style="width:214px;display:flex;gap:3px">
-      <button class="btn sm" id="btnCtryPrev" aria-label="Предыдущий жанр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L7 12l8 7z"/></svg></button>
-      <button class="lcd lcdbtn" id="ctryBtn" aria-label="Выбрать жанр" style="flex:1;min-width:0;padding:4px 6px;display:flex;flex-direction:column;justify-content:center">
-        <span class="dl" id="ctryCode">ЖАНР</span>
-        <span class="val" id="ctryName">—</span>
+      <button class="btn sm wxarrow" id="btnCityPrev" aria-label="Предыдущий город"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L7 12l8 7z"/></svg></button>
+      <button class="lcd lcdbtn wx" id="cityBtn" aria-label="Выбрать город">
+        <canvas id="wxfx" width="74" height="56" aria-hidden="true"></canvas>
+        <span class="wxin">
+          <span class="dl">ПОГОДА</span>
+          <span class="wxtemp" id="wxTemp">—</span>
+          <span class="val" id="cityVal">—</span>
+          <span class="cond" id="cond">—</span>
+        </span>
       </button>
-      <button class="btn sm" id="btnCtryNext" aria-label="Следующий жанр"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l8 7-8 7z"/></svg></button>
+      <button class="btn sm wxarrow" id="btnCityNext" aria-label="Следующий город"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l8 7-8 7z"/></svg></button>
     </div>
-    <div class="lcd" style="flex:1;min-width:0;display:flex;align-items:center;gap:6px;padding:0 8px">
-      <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;position:relative;z-index:1;color:var(--lcd-on)"><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
-      <input class="srch" id="q" type="text" placeholder="ПОИСК" aria-label="Поиск станции" autocomplete="off" enterkeyhint="search">
-    </div>
-  </div>
-
-  <!-- WEATHER + PLAYBACK TIME -->
-  <div style="display:flex;gap:8px;height:58px;flex:none">
-    <div style="width:214px;display:flex;gap:3px">
-      <button class="btn sm" style="height:100%" id="btnCityPrev" aria-label="Предыдущий город"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5L7 12l8 7z"/></svg></button>
-      <button class="lcd lcdbtn" id="cityBtn" aria-label="Выбрать город" style="flex:1;min-width:0;padding:4px 6px;display:flex;flex-direction:column;justify-content:center;gap:1px">
-        <span class="dl">ПОГОДА</span>
-        <span class="val" id="cityVal">—</span>
-        <span class="cond" id="cond">—</span>
-      </button>
-      <button class="btn sm" style="height:100%" id="btnCityNext" aria-label="Следующий город"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l8 7-8 7z"/></svg></button>
-    </div>
-    <div class="lcd" style="flex:1;min-width:0;padding:4px 8px;display:flex;flex-direction:column;justify-content:center">
-      <div style="display:flex;align-items:baseline;font-family:'VT323',monospace;font-size:40px;line-height:34px;text-shadow:var(--tglow)">
-        <span id="pbH">00</span><span class="blink">:</span><span id="pbM">00</span><span id="pbS" style="font-size:22px;margin-left:6px">00</span>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px">
+      <div class="lcd" style="height:46px;flex:none;display:flex;align-items:center;gap:6px;padding:0 8px">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex:none;position:relative;z-index:1;color:var(--lcd-on)"><circle cx="10" cy="10" r="6" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>
+        <input class="srch" id="q" type="text" placeholder="ПОИСК" aria-label="Поиск станции" autocomplete="off" enterkeyhint="search">
       </div>
+      <button class="lcd lcdbtn scan" id="btnScan" aria-label="Скан эфира: поймать случайную станцию">
+        <span class="scrow"><span class="dl">СКАН</span><span class="dl scfreq" id="scFreq">FM --.-</span></span>
+        <canvas id="scCv" width="128" height="16" aria-hidden="true"></canvas>
+        <span class="scname" id="scName">ЛОВИ ВОЛНУ ▶</span>
+      </button>
     </div>
   </div>
 
@@ -257,7 +251,7 @@
 
 </div>
 </div>
-<script src="genres.js?v=gen1"></script>
-<script src="app.js?v=gen1"></script>
+<script src="genres.js?v=gen2"></script>
+<script src="app.js?v=gen2"></script>
 </body>
 </html>
