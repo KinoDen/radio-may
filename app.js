@@ -273,11 +273,40 @@
   function genreName(id) { return GN.nameOf(id); }
   function genreCount(id) { return S.full.filter(function (st) { return inGenre(st, id); }).length; }
 
-  // Пересобрать итоговый список: РФ + GB/US, поиск, затем фильтр по жанру.
+  // Ручная корректировка жанров по порядковым номерам внутри исходного жанра.
+  // Номера считаются от 1 в текущем полном каталоге; исходные данные не мутируем,
+  // поэтому повторная загрузка/перерисовка не меняет результат и не создаёт дублей.
+  function applyManualGenreMoves(stations) {
+    var out = stations.map(function (st) {
+      var copy = {};
+      Object.keys(st).forEach(function (k) { copy[k] = st[k]; });
+      copy.g = gOf(st).slice();
+      return copy;
+    });
+
+    function moveRanks(from, to, ranks) {
+      var source = out.filter(function (st) { return st.g.indexOf(from) >= 0; });
+      ranks.forEach(function (rank) {
+        var st = source[rank - 1];
+        if (!st) return;
+        // Удаляем исходный жанр. В целевом жанре оставляем ровно одно вхождение.
+        st.g = st.g.filter(function (id) { return id !== from; });
+        if (st.g.indexOf(to) < 0) st.g.push(to);
+      });
+    }
+
+    moveRanks('rock', 'pop', [5, 9, 13, 14]);
+    moveRanks('other', 'pop', [1, 2, 3, 4, 7, 13, 14]);
+    moveRanks('other', 'jazz', [19]);
+    return out;
+  }
+
+  // Пересобрать итоговый список: РФ + GB/US, поиск, ручные переносы, фильтр по жанру.
   // Текущую станцию и воспроизведение не трогаем.
   function applyGenre() {
     var q = S.query.trim().toLowerCase();
-    S.base = S.ru.concat(S.foreign.filter(function (st) { return matchQuery(st, q); }));
+    var raw = S.ru.concat(S.foreign.filter(function (st) { return matchQuery(st, q); }));
+    S.base = applyManualGenreMoves(raw);
     if (!q) S.full = S.base;
     S.list = S.base.filter(function (st) { return inGenre(st, S.genre); });
   }
